@@ -58,10 +58,9 @@ body{
 
     z-index:2;
 
+    transform:translateY(-40px);
+
 }
-
-
-
 .hero h1{
 
     font-size:90px;
