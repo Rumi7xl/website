@@ -1,86 +1,150 @@
-body{
-    background:red !important;
-}
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
 }
 
+
 body{
+
     background:#080808;
     color:white;
-    font-family:Arial, sans-serif;
+
+    font-family:Arial, Helvetica, sans-serif;
+
 }
 
 
-/* HERO */
+
+/* ANA GİRİŞ */
 
 .hero{
+
     height:100vh;
+
     display:flex;
     justify-content:center;
     align-items:center;
+
     text-align:center;
+
     position:relative;
+
+    overflow:hidden;
+
 }
 
 
-.hero:before{
+
+.hero::before{
+
     content:"RUMİ7XL";
+
     position:absolute;
-    font-size:180px;
+
+    font-size:200px;
+
     font-weight:900;
-    color:rgba(255,255,255,0.03);
+
+    color:rgba(145,70,255,0.05);
+
 }
+
 
 
 .hero-content{
+
     position:relative;
+
+    z-index:2;
+
 }
+
 
 
 .hero h1{
-    font-size:80px;
+
+    font-size:90px;
+
     color:#9146ff;
+
+    letter-spacing:5px;
+
 }
+
 
 
 .hero h2{
-    font-size:35px;
+
+    font-size:40px;
+
     margin-top:15px;
+
 }
+
 
 
 .hero p{
-    margin-top:20px;
+
     color:#aaa;
-    font-size:22px;
+
+    font-size:24px;
+
+    margin-top:20px;
+
 }
+
 
 
 .arrow{
+
     margin-top:60px;
-    font-size:50px;
+
+    font-size:55px;
+
     color:#9146ff;
+
+    animation:down 1.5s infinite;
+
 }
+
+
+
+@keyframes down{
+
+    50%{
+
+        transform:translateY(15px);
+
+    }
+
+}
+
+
+
 
 
 
 /* KARTLAR */
 
+
 .platform{
 
     width:90%;
+
     max-width:1200px;
 
     margin:80px auto;
 
     padding:50px;
 
+
     background:#111;
 
+    border:1px solid #222;
+
     border-radius:25px;
+
 
     display:flex;
 
@@ -88,9 +152,9 @@ body{
 
     justify-content:space-between;
 
+
     gap:40px;
 
-    border:1px solid #222;
 
     transition:.3s;
 
@@ -104,13 +168,14 @@ body{
 
     border-color:#9146ff;
 
-    box-shadow:0 0 30px #9146ff55;
+    box-shadow:0 0 35px rgba(145,70,255,.4);
 
 }
 
 
 
-.platform-info{
+
+.info{
 
     flex:1;
 
@@ -118,7 +183,7 @@ body{
 
 
 
-.platform-info h2{
+.info h2{
 
     font-size:45px;
 
@@ -128,7 +193,7 @@ body{
 
 
 
-.platform-info p{
+.info p{
 
     color:#bbb;
 
@@ -140,34 +205,57 @@ body{
 
 
 
-.platform a{
+.info a{
 
     display:inline-block;
 
     margin-top:30px;
 
+
+    padding:15px 40px;
+
+
     background:#9146ff;
 
     color:white;
 
+
     text-decoration:none;
 
-    padding:15px 35px;
 
     border-radius:12px;
+
+
+    font-size:18px;
+
+
+    transition:.3s;
 
 }
 
 
 
-.platform-image{
+.info a:hover{
+
+    transform:scale(1.05);
+
+    background:#772ce8;
+
+}
+
+
+
+
+
+.image{
 
     flex:1;
 
 }
 
 
-.platform-image img{
+
+.image img{
 
     width:100%;
 
@@ -177,21 +265,47 @@ body{
 
 
 
+
+
+
+
 /* TELEFON */
+
 
 @media(max-width:800px){
 
-    .platform{
 
-        flex-direction:column;
+.hero h1{
 
-    }
+    font-size:55px;
+
+}
 
 
-    .hero h1{
 
-        font-size:55px;
+.hero h2{
 
-    }
+    font-size:28px;
+
+}
+
+
+.platform{
+
+    flex-direction:column;
+
+    padding:30px;
+
+}
+
+
+
+.info h2{
+
+    font-size:35px;
+
+}
+
+
 
 }
