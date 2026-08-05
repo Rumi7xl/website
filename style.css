@@ -4,24 +4,38 @@
     box-sizing:border-box;
 }
 
+
 body{
+
     background:#080808;
     color:white;
+
     font-family:Arial, Helvetica, sans-serif;
+
 }
+
 
 
 /* HERO */
 
 .hero{
+
     height:100vh;
+
     display:flex;
+
     justify-content:center;
+
     align-items:center;
+
     text-align:center;
+
     position:relative;
+
     overflow:hidden;
+
 }
+
 
 
 .hero::before{
@@ -70,7 +84,7 @@ body{
     letter-spacing:10px;
 
     text-shadow:
-    0 0 20px rgba(145,70,255,.5);
+    0 0 30px rgba(145,70,255,.6);
 
 }
 
@@ -102,7 +116,11 @@ body{
 
     margin-top:25px;
 
-    display:inline-block;
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:10px;
 
     padding:12px 30px;
 
@@ -120,7 +138,7 @@ body{
 
 .arrow{
 
-    margin-top:55px;
+    margin-top:45px;
 
     font-size:60px;
 
@@ -146,7 +164,7 @@ body{
 
 
 
-/* PLATFORM KARTLARI */
+/* KARTLAR */
 
 
 .platform{
@@ -157,10 +175,17 @@ body{
 
     margin:70px auto;
 
-    padding:45px;
+    padding:50px;
 
 
-    background:#111;
+    background:
+
+    linear-gradient(
+    145deg,
+    #111,
+    #0d0d0d
+    );
+
 
     border:1px solid #222;
 
@@ -187,9 +212,11 @@ body{
     border-color:#9146ff;
 
     box-shadow:
+
     0 0 40px rgba(145,70,255,.25);
 
 }
+
 
 
 
@@ -232,15 +259,19 @@ body{
 
     padding:15px 45px;
 
+
     background:#9146ff;
 
     color:white;
+
 
     text-decoration:none;
 
     border-radius:12px;
 
+
     font-size:18px;
+
 
     transition:.3s;
 
@@ -253,6 +284,77 @@ body{
     background:#772ce8;
 
     transform:scale(1.05);
+
+}
+
+
+
+
+/* LOGO ALANI */
+
+
+.platform-logo{
+
+    width:70px;
+
+    height:70px;
+
+    border-radius:15px;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    margin-right:15px;
+
+    font-size:35px;
+
+    font-weight:900;
+
+}
+
+
+
+
+.kick-logo{
+
+    background:#53fc18;
+
+    color:black;
+
+}
+
+
+
+.youtube-logo{
+
+    background:red;
+
+    color:white;
+
+}
+
+
+
+.tiktok-logo{
+
+    background:black;
+
+    border:1px solid white;
+
+    color:white;
+
+}
+
+
+
+.instagram-logo{
+
+    background:#e1306c;
+
+    color:white;
 
 }
 
@@ -280,7 +382,6 @@ body{
 
 
 
-
 footer{
 
     text-align:center;
@@ -290,6 +391,8 @@ footer{
     color:#777;
 
 }
+
+
 
 
 
@@ -307,11 +410,13 @@ footer{
 }
 
 
+
 .hero h2{
 
     font-size:28px;
 
 }
+
 
 
 .hero p{
@@ -337,6 +442,7 @@ footer{
     font-size:35px;
 
 }
+
 
 
 .hero::before{
