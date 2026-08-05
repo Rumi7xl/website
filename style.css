@@ -19,9 +19,10 @@
 }
 
 
+
 /* KICK BUTON */
 
-.box:first-child a{
+.kick-card a{
 
     border-color:#53fc18;
 
@@ -31,11 +32,11 @@
 
 
 
-.box:first-child a:hover{
+.kick-card a:hover{
 
     background:#53fc18;
 
-    color:black;
+    color:#000;
 
     box-shadow:
     0 0 25px #53fc18;
@@ -44,9 +45,13 @@
 
 
 
+/* DİĞERLERİ */
+
 .box a:hover{
 
     background:#9146ff;
+
+    color:white;
 
     box-shadow:
     0 0 20px #9146ff;
