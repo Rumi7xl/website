@@ -6,26 +6,32 @@
 
 
 body{
+
     background:#080808;
+
     color:white;
+
     font-family:Arial, Helvetica, sans-serif;
+
 }
 
 
 
-/* BANNER */
+/* HERO */
 
 .hero{
 
     width:100%;
 
-    padding:20px 0;
+    min-height:100vh;
 
     display:flex;
 
     justify-content:center;
 
     align-items:center;
+
+    text-align:center;
 
 }
 
@@ -35,15 +41,24 @@ body{
 
     width:100%;
 
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
 }
 
+
+
+/* BANNER */
 
 
 .banner{
 
     width:92%;
 
-    max-width:1600px;
+    max-width:1500px;
 
     height:420px;
 
@@ -53,14 +68,97 @@ body{
 
     display:block;
 
-    margin:auto;
-
     border-radius:35px;
 
     box-shadow:
+
     0 0 80px rgba(145,70,255,.7);
 
 }
+
+
+
+
+
+/* YAZILAR */
+
+
+.hero h1{
+
+    margin-top:35px;
+
+    font-size:90px;
+
+    color:#9146ff;
+
+    letter-spacing:10px;
+
+    text-shadow:
+
+    0 0 30px rgba(145,70,255,.8);
+
+}
+
+
+
+.hero h2{
+
+    font-size:42px;
+
+    margin-top:15px;
+
+}
+
+
+
+.hero p{
+
+    margin-top:20px;
+
+    color:#aaa;
+
+    font-size:25px;
+
+}
+
+
+
+
+
+.live-box{
+
+    margin-top:25px;
+
+    display:inline-block;
+
+    padding:12px 30px;
+
+    background:#111;
+
+    border:1px solid #9146ff;
+
+    border-radius:30px;
+
+    color:white;
+
+}
+
+
+
+
+
+.arrow{
+
+    margin-top:45px;
+
+    font-size:60px;
+
+    color:#9146ff;
+
+}
+
+
+
 
 
 
@@ -97,6 +195,7 @@ body{
 
 
     background:
+
     linear-gradient(
     145deg,
     #151515,
@@ -120,9 +219,11 @@ body{
 
     text-align:center;
 
+
     transition:.3s;
 
 }
+
 
 
 
@@ -134,6 +235,7 @@ body{
     border-color:#9146ff;
 
     box-shadow:
+
     0 0 40px rgba(145,70,255,.45);
 
 }
@@ -150,19 +252,24 @@ body{
 
     border-radius:22px;
 
+
     display:flex;
 
     align-items:center;
 
     justify-content:center;
 
+
     font-size:42px;
 
     font-weight:900;
 
+
     margin-bottom:20px;
 
 }
+
+
 
 
 
@@ -209,6 +316,7 @@ body{
 
 
 
+
 .box h2{
 
     font-size:30px;
@@ -216,6 +324,7 @@ body{
     margin-bottom:10px;
 
 }
+
 
 
 
@@ -229,6 +338,7 @@ body{
     margin-bottom:20px;
 
 }
+
 
 
 
@@ -250,6 +360,7 @@ body{
 
 
 
+
 footer{
 
     text-align:center;
@@ -264,32 +375,61 @@ footer{
 
 
 
+
 @media(max-width:800px){
 
-    .banner{
 
-        width:100%;
+.banner{
 
-        height:250px;
+    width:100%;
 
-        border-radius:0;
+    height:250px;
 
-    }
+    border-radius:0;
 
-
-    .platforms{
-
-        flex-direction:column;
-
-        align-items:center;
-
-    }
+}
 
 
-    .box{
 
-        width:90%;
+.hero h1{
 
-    }
+    font-size:55px;
+
+}
+
+
+
+.hero h2{
+
+    font-size:28px;
+
+}
+
+
+
+.hero p{
+
+    font-size:18px;
+
+}
+
+
+
+.platforms{
+
+    flex-direction:column;
+
+    align-items:center;
+
+}
+
+
+
+.box{
+
+    width:90%;
+
+}
+
 
 }
