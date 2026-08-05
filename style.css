@@ -301,6 +301,7 @@ body{
     height:100px;
 
 }
+
 /* DİĞER LOGOLAR */
 
 
@@ -332,9 +333,41 @@ body{
 
 .youtube img{
 
-    width:110px;
+    width:125px;
 
-    height:110px;
+    height:125px;
+
+    object-fit:contain;
+
+}
+
+
+
+
+
+/* TIKTOK LOGO */
+
+.tiktok img{
+
+    width:65px;
+
+    height:65px;
+
+    object-fit:contain;
+
+}
+
+
+
+
+
+/* INSTAGRAM LOGO */
+
+.instagram img{
+
+    width:80px;
+
+    height:80px;
 
     object-fit:contain;
 
@@ -355,6 +388,8 @@ body{
     letter-spacing:1px;
 
 }
+
+
 
 
 
@@ -423,7 +458,7 @@ body{
 
 
 
-/* AÇIKLAMA YAZILARI */
+/* AÇIKLAMALAR */
 
 
 .box p{
@@ -478,6 +513,8 @@ body{
     transition:.3s;
 
 }
+
+
 
 
 
@@ -670,6 +707,8 @@ body{
 
 
 
+
+
 footer{
 
     text-align:center;
@@ -684,7 +723,10 @@ footer{
 
 
 
+
+
 @media(max-width:800px){
+
 
 .banner{
 
@@ -695,11 +737,13 @@ footer{
 }
 
 
+
 .hero h1{
 
     font-size:55px;
 
 }
+
 
 
 .platforms{
@@ -711,10 +755,13 @@ footer{
 }
 
 
+
 .box{
 
     width:90%;
 
 }
+
+
 
 }
