@@ -8,50 +8,31 @@
 body{
 
     background:#080808;
+
     color:white;
+
     font-family:Arial, Helvetica, sans-serif;
 
 }
 
 
 
-/* HERO */
+/* ÜST BANNER */
+
 
 .hero{
 
-    min-height:100vh;
-
     width:100%;
+
+    height:50vh;
 
     display:flex;
 
     justify-content:center;
 
-    align-items:flex-start;
-
-    position:relative;
+    align-items:center;
 
     overflow:hidden;
-
-}
-
-
-
-.hero::before{
-
-    content:"";
-
-    position:absolute;
-
-    inset:0;
-
-    background:
-
-    radial-gradient(
-    circle,
-    rgba(145,70,255,.35),
-    transparent 70%
-    );
 
 }
 
@@ -61,30 +42,19 @@ body{
 
     width:100%;
 
-    display:flex;
-
-    justify-content:center;
-
-    position:relative;
-
-    z-index:2;
+    height:100%;
 
 }
 
 
 
-
-
-/* BANNER */
-
-
 .banner{
 
-    width:100vw;
+    width:100%;
 
-    max-width:none;
+    height:100%;
 
-    height:auto;
+    object-fit:cover;
 
     display:block;
 
@@ -92,10 +62,9 @@ body{
 
     box-shadow:
 
-    0 0 100px rgba(145,70,255,.8);
+    0 0 80px rgba(145,70,255,.7);
 
 }
-
 
 
 
@@ -109,18 +78,20 @@ body{
 
     width:90%;
 
-    max-width:1300px;
+    max-width:1400px;
 
-    margin:60px auto 80px;
+    margin:60px auto;
 
 
     display:flex;
 
     justify-content:center;
 
+    align-items:center;
+
     gap:30px;
 
-    flex-wrap:wrap;
+    flex-wrap:nowrap;
 
 }
 
@@ -130,16 +101,16 @@ body{
 
 .box{
 
-    width:260px;
+    width:280px;
 
-    height:300px;
+    height:280px;
 
 
     background:
 
     linear-gradient(
     145deg,
-    #111,
+    #151515,
     #090909
     );
 
@@ -168,9 +139,10 @@ body{
 
 
 
+
 .box:hover{
 
-    transform:translateY(-12px);
+    transform:translateY(-10px);
 
     border-color:#9146ff;
 
@@ -186,11 +158,12 @@ body{
 
 .platform-logo{
 
-    width:90px;
+    width:85px;
 
-    height:90px;
+    height:85px;
 
-    border-radius:25px;
+
+    border-radius:22px;
 
 
     display:flex;
@@ -200,7 +173,7 @@ body{
     align-items:center;
 
 
-    font-size:45px;
+    font-size:42px;
 
     font-weight:900;
 
@@ -208,6 +181,7 @@ body{
     margin-bottom:20px;
 
 }
+
 
 
 
@@ -257,6 +231,7 @@ body{
 
 
 
+
 .box h2{
 
     font-size:30px;
@@ -287,13 +262,18 @@ body{
 
     padding:10px 25px;
 
+
     background:#9146ff;
+
 
     color:white;
 
+
     text-decoration:none;
 
+
     border-radius:20px;
+
 
     transition:.3s;
 
@@ -330,22 +310,44 @@ footer{
 
 
 
+@media(max-width:1200px){
+
+
+.platforms{
+
+    flex-wrap:wrap;
+
+}
+
+
+}
+
+
+
+
 
 @media(max-width:800px){
 
 
-.banner{
+.hero{
 
-    width:100%;
-
-    border-radius:0;
+    height:35vh;
 
 }
+
 
 
 .box{
 
     width:90%;
+
+}
+
+
+
+.platforms{
+
+    flex-direction:column;
 
 }
 
