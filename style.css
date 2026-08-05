@@ -270,9 +270,9 @@ body{
 .platform-logo img{
 
 
-    width:30px;
+    width:65px;
 
-    height:30px;
+    height:65px;
 
 
     object-fit:contain;
@@ -298,17 +298,11 @@ body{
 .kick img{
 
 
-    width:30px;
+    width:65px;
 
-    height:30px;
+    height:65px;
 
 }
-
-
-
-
-
-
 /* DİĞER LOGOLAR */
 
 
@@ -421,6 +415,7 @@ body{
 
     box-shadow:
 
+
     0 0 25px #53fc18;
 
 }
@@ -436,6 +431,13 @@ body{
     color:white;
 
 }
+
+
+
+
+
+
+
 /* HAKKIMDA */
 
 
@@ -538,7 +540,6 @@ body{
 
 
 
-
 footer{
 
 
@@ -551,7 +552,6 @@ footer{
     color:#777;
 
 }
-
 
 
 
