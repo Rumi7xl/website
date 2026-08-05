@@ -6,12 +6,9 @@
 
 
 body{
-
     background:#080808;
     color:white;
-
     font-family:Arial, Helvetica, sans-serif;
-
 }
 
 
@@ -20,7 +17,7 @@ body{
 
 .hero{
 
-    height:100vh;
+    min-height:100vh;
 
     display:flex;
 
@@ -40,24 +37,14 @@ body{
 
 .hero::before{
 
-    content:"RUMİ7XL";
+    content:"";
 
     position:absolute;
 
-    top:50%;
-    left:50%;
+    inset:0;
 
-    transform:translate(-50%,-50%);
-
-    font-size:220px;
-
-    font-weight:900;
-
-    letter-spacing:15px;
-
-    color:rgba(145,70,255,0.035);
-
-    white-space:nowrap;
+    background:
+    radial-gradient(circle, rgba(145,70,255,.15), transparent 60%);
 
 }
 
@@ -69,22 +56,46 @@ body{
 
     z-index:2;
 
-    transform:translateY(-60px);
+    transform:translateY(-30px);
 
 }
 
 
 
+/* BANNER */
+
+.main-banner{
+
+    width:min(1100px,90vw);
+
+    border-radius:25px;
+
+    display:block;
+
+    margin:0 auto 35px;
+
+
+    box-shadow:
+
+    0 0 40px rgba(145,70,255,.45);
+
+
+}
+
+
+
+
 .hero h1{
 
-    font-size:100px;
+    font-size:90px;
 
     color:#9146ff;
 
     letter-spacing:10px;
 
     text-shadow:
-    0 0 30px rgba(145,70,255,.6);
+
+    0 0 30px rgba(145,70,255,.7);
 
 }
 
@@ -163,7 +174,6 @@ body{
 
 
 
-
 /* KARTLAR */
 
 
@@ -219,8 +229,6 @@ body{
 
 
 
-
-
 .info{
 
     flex:1;
@@ -272,7 +280,6 @@ body{
 
     font-size:18px;
 
-
     transition:.3s;
 
 }
@@ -286,78 +293,6 @@ body{
     transform:scale(1.05);
 
 }
-
-
-
-
-/* LOGO ALANI */
-
-
-.platform-logo{
-
-    width:70px;
-
-    height:70px;
-
-    border-radius:15px;
-
-    display:inline-flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    margin-right:15px;
-
-    font-size:35px;
-
-    font-weight:900;
-
-}
-
-
-
-
-.kick-logo{
-
-    background:#53fc18;
-
-    color:black;
-
-}
-
-
-
-.youtube-logo{
-
-    background:red;
-
-    color:white;
-
-}
-
-
-
-.tiktok-logo{
-
-    background:black;
-
-    border:1px solid white;
-
-    color:white;
-
-}
-
-
-
-.instagram-logo{
-
-    background:#e1306c;
-
-    color:white;
-
-}
-
 
 
 
@@ -381,7 +316,6 @@ body{
 
 
 
-
 footer{
 
     text-align:center;
@@ -395,12 +329,18 @@ footer{
 
 
 
-
-
 /* TELEFON */
 
 
 @media(max-width:800px){
+
+
+.main-banner{
+
+    width:95vw;
+
+}
+
 
 
 .hero h1{
@@ -442,14 +382,5 @@ footer{
     font-size:35px;
 
 }
-
-
-
-.hero::before{
-
-    font-size:90px;
-
-}
-
 
 }
