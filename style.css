@@ -718,3 +718,59 @@ footer{
 
 
 }
+
+/* SOSYAL MEDYA */
+
+.social-area{
+    width:90%;
+    max-width:900px;
+    margin:80px auto;
+    text-align:center;
+}
+
+
+.social-area h2{
+    font-size:40px;
+    color:#9146ff;
+    margin-bottom:25px;
+    letter-spacing:2px;
+}
+
+
+.social-box{
+
+    background:
+    linear-gradient(
+    145deg,
+    #151515,
+    #090909
+    );
+
+    border:1px solid #222;
+
+    border-radius:25px;
+
+    padding:35px;
+
+    box-shadow:
+    0 0 40px rgba(145,70,255,.15);
+
+}
+
+
+.social-box p{
+
+    color:#aaa;
+
+    font-size:20px;
+
+    margin:15px;
+
+}
+
+
+.social-box span{
+
+    color:white;
+
+}
