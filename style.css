@@ -6,11 +6,12 @@
 
 
 body{
-    background:#080808;
+
+    background:#050505;
     color:white;
     font-family:Arial, Helvetica, sans-serif;
-}
 
+}
 
 
 /* HERO */
@@ -20,9 +21,7 @@ body{
     min-height:100vh;
 
     display:flex;
-
     justify-content:center;
-
     align-items:center;
 
     text-align:center;
@@ -44,7 +43,7 @@ body{
     inset:0;
 
     background:
-    radial-gradient(circle, rgba(145,70,255,.15), transparent 60%);
+    radial-gradient(circle,rgba(145,70,255,.25),transparent 60%);
 
 }
 
@@ -53,32 +52,22 @@ body{
 .hero-content{
 
     position:relative;
-
     z-index:2;
-
-    transform:translateY(-30px);
 
 }
 
 
 
-/* BANNER */
-
 .main-banner{
 
-    width:min(1100px,90vw);
+    width:min(1200px,95vw);
 
-    border-radius:25px;
-
-    display:block;
-
-    margin:0 auto 35px;
-
+    border-radius:20px;
 
     box-shadow:
+    0 0 50px rgba(145,70,255,.5);
 
-    0 0 40px rgba(145,70,255,.45);
-
+    margin-bottom:35px;
 
 }
 
@@ -94,8 +83,7 @@ body{
     letter-spacing:10px;
 
     text-shadow:
-
-    0 0 30px rgba(145,70,255,.7);
+    0 0 30px #9146ff;
 
 }
 
@@ -103,7 +91,7 @@ body{
 
 .hero h2{
 
-    font-size:42px;
+    font-size:40px;
 
     margin-top:15px;
 
@@ -125,160 +113,152 @@ body{
 
 .live-box{
 
+    display:inline-block;
+
     margin-top:25px;
 
-    display:inline-flex;
-
-    align-items:center;
-
-    gap:10px;
-
-    padding:12px 30px;
-
-    background:#111;
+    padding:12px 35px;
 
     border:1px solid #9146ff;
 
     border-radius:30px;
 
-    color:#ddd;
+    background:#111;
 
 }
+
 
 
 
 .arrow{
 
-    margin-top:45px;
+    margin-top:40px;
 
-    font-size:60px;
+    font-size:55px;
 
     color:#9146ff;
 
-    animation:down 1.5s infinite;
-
 }
-
-
-
-@keyframes down{
-
-    50%{
-
-        transform:translateY(15px);
-
-    }
-
-}
-
 
 
 
 /* KARTLAR */
 
 
-.platform{
+.cards{
 
     width:90%;
 
-    max-width:1200px;
+    max-width:1400px;
 
-    margin:70px auto;
+    margin:auto;
 
-    padding:50px;
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:25px;
+
+}
 
 
-    background:
 
-    linear-gradient(
-    145deg,
-    #111,
-    #0d0d0d
-    );
 
+.card{
+
+    background:#0d0d0d;
 
     border:1px solid #222;
 
     border-radius:25px;
 
+    padding:30px;
+
+    text-align:center;
+
+    transition:.3s;
+
+}
+
+
+
+.card:hover{
+
+    transform:translateY(-10px);
+
+    box-shadow:
+    0 0 40px rgba(145,70,255,.5);
+
+}
+
+
+
+
+.logo{
+
+    width:80px;
+
+    height:80px;
+
+    margin:auto;
+
+    border-radius:50%;
 
     display:flex;
 
     align-items:center;
 
-    gap:50px;
+    justify-content:center;
 
+    font-size:40px;
 
-    transition:.3s;
+    font-weight:bold;
 
-}
-
-
-
-.platform:hover{
-
-    transform:translateY(-8px);
-
-    border-color:#9146ff;
-
-    box-shadow:
-
-    0 0 40px rgba(145,70,255,.25);
+    border:2px solid white;
 
 }
 
 
 
-.info{
 
-    flex:1;
+.card h2{
 
-}
+    margin-top:20px;
 
-
-
-.info h2{
-
-    font-size:48px;
-
-    margin-bottom:20px;
+    font-size:32px;
 
 }
 
 
 
-.info p{
+.card p{
 
     color:#aaa;
 
-    font-size:20px;
+    margin-top:15px;
 
-    line-height:1.6;
+    line-height:1.5;
 
 }
 
 
 
-.info a{
 
-    margin-top:30px;
+.card a{
 
     display:inline-block;
 
-    padding:15px 45px;
+    margin-top:25px;
 
+    padding:12px 30px;
 
-    background:#9146ff;
-
-    color:white;
-
+    border-radius:30px;
 
     text-decoration:none;
 
-    border-radius:12px;
+    color:white;
 
-
-    font-size:18px;
+    border:1px solid #9146ff;
 
     transition:.3s;
 
@@ -286,30 +266,66 @@ body{
 
 
 
-.info a:hover{
+.card a:hover{
 
-    background:#772ce8;
-
-    transform:scale(1.05);
+    background:#9146ff;
 
 }
 
 
 
 
-.image{
+.card-image{
 
-    flex:1;
+    margin-top:25px;
 
 }
 
 
 
-.image img{
+.card-image img{
 
     width:100%;
 
-    border-radius:20px;
+    border-radius:15px;
+
+}
+
+
+
+
+/* RENKLER */
+
+
+.kick .logo{
+
+    background:#53fc18;
+
+    color:black;
+
+}
+
+
+
+.youtube .logo{
+
+    background:red;
+
+}
+
+
+
+.tiktok .logo{
+
+    background:#111;
+
+}
+
+
+
+.instagram .logo{
+
+    background:#e1306c;
 
 }
 
@@ -331,13 +347,12 @@ footer{
 
 /* TELEFON */
 
+@media(max-width:900px){
 
-@media(max-width:800px){
 
+.cards{
 
-.main-banner{
-
-    width:95vw;
+    grid-template-columns:1fr;
 
 }
 
@@ -357,30 +372,5 @@ footer{
 
 }
 
-
-
-.hero p{
-
-    font-size:18px;
-
-}
-
-
-
-.platform{
-
-    flex-direction:column;
-
-    padding:30px;
-
-}
-
-
-
-.info h2{
-
-    font-size:35px;
-
-}
 
 }
