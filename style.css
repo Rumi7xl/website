@@ -330,6 +330,7 @@ body{
 
 
 
+
 .box h2{
 
 
@@ -339,6 +340,22 @@ body{
     margin-bottom:10px;
 
 }
+
+
+
+.kick-card h2{
+
+    color:#53fc18;
+
+    text-shadow:
+
+    0 0 10px #53fc18,
+
+    0 0 20px #53fc18;
+
+}
+
+
 
 
 
@@ -404,6 +421,7 @@ body{
 }
 
 
+
 .kick-card a:hover{
 
 
@@ -415,10 +433,10 @@ body{
 
     box-shadow:
 
-
     0 0 25px #53fc18;
 
 }
+
 
 
 
