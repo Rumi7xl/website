@@ -108,7 +108,7 @@ body{
 
     background:#111;
 
-    border:1px1px solid #9146ff;
+    border:1px solid #9146ff;
 
     border-radius:30px;
 
@@ -328,6 +328,20 @@ body{
 
 
 
+/* YOUTUBE LOGO */
+
+.youtube img{
+
+    width:80px;
+
+    height:80px;
+
+    object-fit:contain;
+
+}
+
+
+
 
 
 
@@ -405,6 +419,8 @@ body{
 
 
 
+
+
 .box p{
 
 
@@ -467,6 +483,7 @@ body{
 }
 
 
+
 .kick-card a:hover{
 
 
@@ -479,6 +496,34 @@ body{
     box-shadow:
 
     0 0 25px #53fc18;
+
+}
+
+
+
+
+/* YOUTUBE BUTON */
+
+
+.youtube-card a{
+
+    border-color:#ff0000;
+
+    color:#ff0000;
+
+}
+
+
+
+.youtube-card a:hover{
+
+    background:#ff0000;
+
+    color:white;
+
+    box-shadow:
+
+    0 0 25px #ff0000;
 
 }
 
