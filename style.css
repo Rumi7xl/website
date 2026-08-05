@@ -60,13 +60,8 @@ body{
 
     z-index:2;
 
-    transform:translateY(-30px);
-
 }
 
-
-
-/* BANNER */
 
 
 .banner{
@@ -78,7 +73,6 @@ body{
     margin-bottom:35px;
 
     box-shadow:
-
     0 0 50px rgba(145,70,255,.5);
 
 }
@@ -95,7 +89,6 @@ body{
     letter-spacing:10px;
 
     text-shadow:
-
     0 0 30px rgba(145,70,255,.8);
 
 }
@@ -121,7 +114,6 @@ body{
     font-size:25px;
 
 }
-
 
 
 
@@ -157,18 +149,37 @@ body{
 
 
 
-/* KARTLAR */
+/* KARE KARTLAR */
 
 
-.platform{
+.platforms{
 
     width:90%;
 
-    max-width:1200px;
+    max-width:1300px;
 
-    margin:70px auto;
+    margin:80px auto;
 
-    padding:50px;
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:30px;
+
+    flex-wrap:wrap;
+
+}
+
+
+
+
+
+.box{
+
+    width:260px;
+
+    height:300px;
 
 
     background:
@@ -176,7 +187,7 @@ body{
     linear-gradient(
     145deg,
     #111,
-    #0b0b0b
+    #090909
     );
 
 
@@ -187,9 +198,14 @@ body{
 
     display:flex;
 
+    flex-direction:column;
+
+    justify-content:center;
+
     align-items:center;
 
-    gap:50px;
+
+    text-align:center;
 
 
     transition:.3s;
@@ -198,37 +214,41 @@ body{
 
 
 
-.platform:hover{
+.box:hover{
 
-    transform:translateY(-8px);
+    transform:translateY(-12px);
 
     border-color:#9146ff;
 
     box-shadow:
 
-    0 0 40px rgba(145,70,255,.3);
+    0 0 40px rgba(145,70,255,.45);
 
 }
 
 
 
 
+.platform-logo{
 
-.info{
+    width:90px;
 
-    flex:1;
+    height:90px;
 
-}
+    border-radius:25px;
 
-
-
-.title{
 
     display:flex;
 
+    justify-content:center;
+
     align-items:center;
 
-    gap:20px;
+
+    font-size:45px;
+
+    font-weight:900;
+
 
     margin-bottom:20px;
 
@@ -236,39 +256,8 @@ body{
 
 
 
-.title h2{
 
-    font-size:48px;
-
-}
-
-
-
-
-.logo{
-
-    width:70px;
-
-    height:70px;
-
-    border-radius:18px;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    font-size:35px;
-
-    font-weight:900;
-
-}
-
-
-
-
-.kick-logo{
+.kick{
 
     background:#53fc18;
 
@@ -278,7 +267,7 @@ body{
 
 
 
-.youtube-logo{
+.youtube{
 
     background:#ff0000;
 
@@ -288,7 +277,7 @@ body{
 
 
 
-.tiktok-logo{
+.tiktok{
 
     background:#111;
 
@@ -298,7 +287,7 @@ body{
 
 
 
-.instagram-logo{
+.instagram{
 
     background:#e1306c;
 
@@ -309,41 +298,39 @@ body{
 
 
 
+.box h2{
 
-.info p{
+    font-size:30px;
 
-    color:#aaa;
-
-    font-size:20px;
-
-    line-height:1.6;
+    margin-bottom:10px;
 
 }
 
 
 
+.box p{
+
+    color:#aaa;
+
+    font-size:15px;
+
+    margin-bottom:20px;
+
+}
 
 
-.info a{
 
-    display:inline-block;
+.box a{
 
-    margin-top:30px;
-
-    padding:15px 45px;
-
+    padding:10px 25px;
 
     background:#9146ff;
 
     color:white;
 
-
     text-decoration:none;
 
-    border-radius:12px;
-
-
-    font-size:18px;
+    border-radius:20px;
 
     transition:.3s;
 
@@ -351,7 +338,7 @@ body{
 
 
 
-.info a:hover{
+.box a:hover{
 
     background:#772ce8;
 
@@ -359,24 +346,6 @@ body{
 
 }
 
-
-
-
-.image{
-
-    flex:1;
-
-}
-
-
-
-.image img{
-
-    width:100%;
-
-    border-radius:20px;
-
-}
 
 
 
@@ -394,6 +363,7 @@ footer{
 
 
 
+
 @media(max-width:800px){
 
 
@@ -404,11 +374,13 @@ footer{
 }
 
 
+
 .hero h2{
 
     font-size:28px;
 
 }
+
 
 
 .hero p{
@@ -418,22 +390,12 @@ footer{
 }
 
 
-.platform{
 
-    flex-direction:column;
+.box{
 
-    padding:30px;
-
-}
-
-
-
-.title h2{
-
-    font-size:35px;
+    width:90%;
 
 }
-
 
 
 .banner{
