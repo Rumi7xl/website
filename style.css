@@ -12,7 +12,6 @@ body{
 }
 
 
-
 /* HERO */
 
 .hero{
@@ -21,9 +20,7 @@ body{
     min-height:100vh;
 
     display:flex;
-
     justify-content:center;
-
     align-items:center;
 
     text-align:center;
@@ -31,41 +28,32 @@ body{
 }
 
 
-
 .hero-content{
 
     width:100%;
 
     display:flex;
-
     flex-direction:column;
-
     align-items:center;
 
 }
 
 
-
 .banner{
 
     width:92%;
-
     max-width:1500px;
 
     height:420px;
 
     object-fit:cover;
 
-    object-position:center;
-
     border-radius:35px;
 
     box-shadow:
-    0 0 80px rgba(145,70,255,.7);
+    0 0 80px rgba(145,70,255,.5);
 
 }
-
-
 
 
 
@@ -78,9 +66,6 @@ body{
     color:#9146ff;
 
     letter-spacing:10px;
-
-    text-shadow:
-    0 0 30px rgba(145,70,255,.8);
 
 }
 
@@ -105,8 +90,6 @@ body{
     font-size:25px;
 
 }
-
-
 
 
 
@@ -139,10 +122,7 @@ body{
 
 
 
-
-
 /* KARTLAR */
-
 
 .platforms{
 
@@ -165,7 +145,6 @@ body{
 
 
 
-
 .box{
 
     width:280px;
@@ -173,7 +152,6 @@ body{
     height:430px;
 
     background:
-
     linear-gradient(
     145deg,
     #151515,
@@ -197,13 +175,11 @@ body{
     text-align:center;
 
 
-    overflow:hidden;
-
     transition:.3s;
 
+    overflow:hidden;
+
 }
-
-
 
 
 
@@ -214,19 +190,13 @@ body{
     border-color:#9146ff;
 
     box-shadow:
-
-    0 0 40px rgba(145,70,255,.5);
+    0 0 40px rgba(145,70,255,.4);
 
 }
 
 
 
-
-
-
-
-/* LOGOLAR */
-
+/* LOGO */
 
 .platform-logo{
 
@@ -236,21 +206,19 @@ body{
 
     border-radius:50%;
 
-
     display:flex;
-
-    justify-content:center;
 
     align-items:center;
 
-
-    overflow:hidden;
-
-    margin-bottom:20px;
+    justify-content:center;
 
     background:#050505;
 
     border:2px solid #333;
+
+    margin-bottom:20px;
+
+    overflow:hidden;
 
 }
 
@@ -288,15 +256,15 @@ body{
 
 
 
-/* DİĞER LOGOLAR */
+
+/* DİĞERLERİ */
 
 
 .youtube{
 
-    border-color:#ff0000;
+    border-color:red;
 
 }
-
 
 
 .tiktok{
@@ -304,7 +272,6 @@ body{
     border-color:white;
 
 }
-
 
 
 .instagram{
@@ -327,8 +294,6 @@ body{
 
 
 
-
-
 .box p{
 
     color:#aaa;
@@ -345,10 +310,7 @@ body{
 
 
 
-
-
-/* BUTONLAR */
-
+/* BUTON */
 
 .box a{
 
@@ -367,8 +329,6 @@ body{
     transition:.3s;
 
 }
-
-
 
 
 
@@ -391,12 +351,9 @@ body{
     color:black;
 
     box-shadow:
-
     0 0 25px #53fc18;
 
 }
-
-
 
 
 
@@ -406,20 +363,11 @@ body{
 
     color:white;
 
-    box-shadow:
-
-    0 0 20px #9146ff;
-
 }
 
 
 
-
-
-
-
 /* ALT RESİM */
-
 
 .card-image{
 
@@ -434,7 +382,6 @@ body{
     overflow:hidden;
 
 }
-
 
 
 .card-image img{
@@ -464,9 +411,7 @@ footer{
 
 
 
-
 @media(max-width:800px){
-
 
 .banner{
 
@@ -477,29 +422,11 @@ footer{
 }
 
 
-
 .hero h1{
 
     font-size:55px;
 
 }
-
-
-
-.hero h2{
-
-    font-size:28px;
-
-}
-
-
-
-.hero p{
-
-    font-size:18px;
-
-}
-
 
 
 .platforms{
@@ -511,12 +438,10 @@ footer{
 }
 
 
-
 .box{
 
     width:90%;
 
 }
-
 
 }
