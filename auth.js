@@ -29,7 +29,33 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// ŞIK BİLDİRİM (TOAST) FONKSİYONU
+window.switchTab = function(type) {
+  const loginForm = document.getElementById("loginForm");
+  const registerForm = document.getElementById("registerForm");
+  const loginBtn = document.getElementById("loginTabBtn");
+  const registerBtn = document.getElementById("registerTabBtn");
+
+  if (type === 'login') {
+    if (loginForm) loginForm.style.display = "flex";
+    if (registerForm) registerForm.style.display = "none";
+    if (loginBtn) loginBtn.classList.add("active");
+    if (registerBtn) registerBtn.classList.remove("active");
+  } else {
+    if (loginForm) loginForm.style.display = "none";
+    if (registerForm) registerForm.style.display = "flex";
+    if (registerBtn) registerBtn.classList.add("active");
+    if (loginBtn) loginBtn.classList.remove("active");
+  }
+};
+
+window.openAccountModal = function(type) {
+  const modal = document.getElementById("accountModal");
+  if (modal) {
+    modal.style.display = "flex";
+    window.switchTab(type);
+  }
+};
+
 function showToast(message, type = 'success') {
   let toast = document.getElementById("customToast");
   if (!toast) {
@@ -39,15 +65,14 @@ function showToast(message, type = 'success') {
       position: fixed;
       top: 20px;
       right: 20px;
-      background: #18181b;
+      background: #111;
       color: #fff;
-      border: 1px solid ${type === 'error' ? '#ef4444' : '#a855f7'};
+      border: 1px solid ${type === 'error' ? '#ef4444' : '#9146ff'};
       padding: 12px 20px;
-      border-radius: 10px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-      z-index: 99999;
+      border-radius: 12px;
+      box-shadow: 0 0 25px rgba(145, 70, 255, 0.4);
+      z-index: 999999;
       font-size: 0.95rem;
-      font-family: inherit;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -68,7 +93,6 @@ function showToast(message, type = 'success') {
   }, 3000);
 }
 
-// OTURUM DURUMUNA GÖRE SAĞ ÜSTÜ DÜZENLE
 onAuthStateChanged(auth, async (user) => {
   const accountBox = document.querySelector(".account-box");
   if (!accountBox) return;
@@ -77,7 +101,6 @@ onAuthStateChanged(auth, async (user) => {
     const name = user.displayName || user.email.split("@")[0];
     let photo = "https://api.dicebear.com/7.x/bottts/svg?seed=" + encodeURIComponent(name);
 
-    // Fotoğrafı Firestore veritabanından çek
     try {
       const userDoc = await getDoc(doc(db, "users", user.uid));
       if (userDoc.exists() && userDoc.data().photoURL) {
@@ -86,54 +109,69 @@ onAuthStateChanged(auth, async (user) => {
         photo = user.photoURL;
       }
     } catch (e) {
-      console.log("Profil fotosu veritabanından alınamadı:", e);
+      console.log(e);
     }
 
     accountBox.innerHTML = `
-      <div class="user-profile-menu" id="userProfileBtn">
-        <img src="${photo}" class="profile-avatar" alt="Profil">
-        <span style="color:#fff; font-weight:bold;">${name}</span>
-        <div class="dropdown-menu" id="dropdownMenu">
-          <a href="#" class="dropdown-item" id="openPhotoModalBtn">🖼️ Fotoğraf Değiştir</a>
-          <a href="#" class="dropdown-item" id="openPassModalBtn">🔑 Şifre Değiştir</a>
-          <a href="#" class="dropdown-item" id="logoutBtn" style="color: #ef4444;">🚪 Çıkış Yap</a>
+      <div style="position: relative; display: inline-block;">
+        <button id="userProfileBtn" style="background: #181818; border: 1px solid #333; color: white; padding: 8px 16px; border-radius: 20px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: bold;">
+          <img src="${photo}" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1px solid #9146ff;">
+          <span>${name}</span>
+        </button>
+        <div id="dropdownMenu" style="display: none; position: absolute; right: 0; top: 45px; background: #111; border: 1px solid #9146ff; border-radius: 15px; padding: 10px; width: 170px; box-shadow: 0 0 25px rgba(145,70,255,.4); z-index: 999999; flex-direction: column; gap: 8px;">
+          <a href="#" id="openPhotoModalBtn" style="color: #ddd; text-decoration: none; font-size: 0.85rem; padding: 6px 10px; border-radius: 8px; display: block;">🖼️ Fotoğraf Değiştir</a>
+          <a href="#" id="openPassModalBtn" style="color: #ddd; text-decoration: none; font-size: 0.85rem; padding: 6px 10px; border-radius: 8px; display: block;">🔑 Şifre Değiştir</a>
+          <a href="#" id="logoutBtn" style="color: #ef4444; text-decoration: none; font-size: 0.85rem; padding: 6px 10px; border-radius: 8px; display: block; font-weight: bold;">🚪 Çıkış Yap</a>
         </div>
       </div>
     `;
 
-    document.getElementById("userProfileBtn").onclick = (e) => {
+    const profileBtn = document.getElementById("userProfileBtn");
+    const dropdownMenu = document.getElementById("dropdownMenu");
+
+    profileBtn.onclick = (e) => {
       e.stopPropagation();
-      document.getElementById("dropdownMenu").classList.toggle("show");
+      dropdownMenu.style.display = dropdownMenu.style.display === "flex" ? "none" : "flex";
     };
 
     document.getElementById("openPhotoModalBtn").onclick = (e) => {
       e.preventDefault();
-      document.getElementById("photoModal").style.display = "flex";
+      dropdownMenu.style.display = "none";
+      const m = document.getElementById("photoModal");
+      if (m) m.style.display = "flex";
     };
 
     document.getElementById("openPassModalBtn").onclick = (e) => {
       e.preventDefault();
-      document.getElementById("passwordModal").style.display = "flex";
+      dropdownMenu.style.display = "none";
+      const m = document.getElementById("passwordModal");
+      if (m) m.style.display = "flex";
     };
 
-    document.getElementById("logoutBtn").onclick = () => {
-      signOut(auth).then(() => showToast("Başarıyla çıkış yapıldı."));
+    document.getElementById("logoutBtn").onclick = (e) => {
+      e.preventDefault();
+      signOut(auth).then(() => {
+        showToast("Başarıyla çıkış yapıldı.");
+        setTimeout(() => location.reload(), 500);
+      });
     };
 
   } else {
     accountBox.innerHTML = `
-      <a href="#" class="login-btn" onclick="window.openAccountModal ? window.openAccountModal('login') : (document.getElementById('accountModal').style.display='flex'); return false;">👤 Giriş Yap</a>
-      <a href="#" class="register-btn" onclick="window.openAccountModal ? window.openAccountModal('register') : (document.getElementById('accountModal').style.display='flex'); return false;">✨ Kayıt Ol</a>
+      <a href="#" class="login-btn" onclick="window.openAccountModal('login'); return false;">👤 Giriş Yap</a>
+      <a href="#" class="register-btn" onclick="window.openAccountModal('register'); return false;">✨ Kayıt Ol</a>
     `;
   }
 });
 
-document.addEventListener("click", () => {
+document.addEventListener("click", (e) => {
   const menu = document.getElementById("dropdownMenu");
-  if (menu) menu.classList.remove("show");
+  const btn = document.getElementById("userProfileBtn");
+  if (menu && btn && !btn.contains(e.target) && !menu.contains(e.target)) {
+    menu.style.display = "none";
+  }
 });
 
-// GÖRSEL SEÇİLDİĞİNDE ÖNİZLEME GÖSTER
 document.addEventListener("change", (e) => {
   if (e.target.id === "photoFileInput") {
     const file = e.target.files[0];
@@ -153,7 +191,6 @@ document.addEventListener("change", (e) => {
   }
 });
 
-// FORM İŞLEMLERİ
 document.addEventListener("submit", async (e) => {
   if (e.target.id === "loginForm") {
     e.preventDefault();
@@ -178,13 +215,12 @@ document.addEventListener("submit", async (e) => {
       await updateProfile(res.user, { displayName: username });
       document.getElementById("accountModal").style.display = "none";
       showToast("Kayıt başarıyla oluşturuldu!");
-      setTimeout(() => location.reload(), 1000);
+      setTimeout(() => location.reload(), 800);
     } catch (err) { 
       showToast("Kayıt Hatalı: " + err.message, 'error'); 
     }
   }
 
-  // PROFİL FOTOĞRAFI YÜKLEME
   if (e.target.id === "photoSettingsForm") {
     e.preventDefault();
     const fileInput = document.getElementById("photoFileInput");
@@ -233,16 +269,16 @@ document.addEventListener("submit", async (e) => {
           document.getElementById("photoModal").style.display = "none";
           
           if (submitBtn) {
-            submitBtn.innerText = "Fotoğrafı Yükle ve Kaydet";
+            submitBtn.innerText = "Yükle ve Kaydet";
             submitBtn.disabled = false;
           }
 
-          setTimeout(() => location.reload(), 800);
+          setTimeout(() => location.reload(), 600);
 
         } catch (err) {
           showToast("Fotoğraf Güncelleme Hatası: " + err.message, 'error');
           if (submitBtn) {
-            submitBtn.innerText = "Fotoğrafı Yükle ve Kaydet";
+            submitBtn.innerText = "Yükle ve Kaydet";
             submitBtn.disabled = false;
           }
         }
