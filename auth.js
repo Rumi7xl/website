@@ -1,15 +1,16 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
-
 import {
   getAuth,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  updateProfile,
   onAuthStateChanged,
   signOut,
   setPersistence,
   browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
 
+// Firebase Yapılandırması
 const firebaseConfig = {
   apiKey: "AIzaSyCiuXtHu3J9Va46a4KiETO2Jr5um2KoQ",
   authDomain: "rumi7xl-web.firebaseapp.com",
@@ -19,284 +20,144 @@ const firebaseConfig = {
   appId: "1:1077565304835:web:a672a4440797b76f42de36"
 };
 
+// Firebase Başlatma
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-setPersistence(auth, browserLocalPersistence);
+// Oturum Kalıcılığı
+setPersistence(auth, browserLocalPersistence).catch((err) => console.error("Persistence Error:", err));
 
+// DOM Elemanları
 const accountBox = document.querySelector(".account-box");
 const modal = document.getElementById("accountModal");
-
-const loginBtn = document.querySelector(".login-btn");
-const registerBtn = document.querySelector(".register-btn");
-
 const loginForm = document.getElementById("loginForm");
 const registerForm = document.getElementById("registerForm");
 
-const loginSubmit =
-  document.querySelector("#loginForm .account-submit");
-
-const registerSubmit =
-  document.querySelector("#registerForm .account-submit");
-
-if (loginBtn) {
-
-  loginBtn.onclick = (e) => {
-
-    e.preventDefault();
-
-    if (typeof showLogin === "function") {
-
-      showLogin();
-
-    }
-
-    if (modal) {
-
-      modal.style.display = "flex";
-
-    }
-
-  };
-
+// Modal Açma Fonksiyonu
+function openAuthModal(mode = "login") {
+  if (typeof window.showLogin === "function" && mode === "login") {
+    window.showLogin();
+  } else if (typeof window.showRegister === "function" && mode === "register") {
+    window.showRegister();
+  }
+  if (modal) {
+    modal.style.display = "flex";
+  }
 }
 
-if (registerBtn) {
-
-  registerBtn.onclick = (e) => {
-
-    e.preventDefault();
-
-    if (typeof showRegister === "function") {
-
-      showRegister();
-
-    }
-
-    if (modal) {
-
-      modal.style.display = "flex";
-
-    }
-
-  };
-
+// Modal Kapatma Fonksiyonu
+function closeAuthModal() {
+  if (modal) {
+    modal.style.display = "none";
+  }
 }
 
-if (loginSubmit) {
+// Tıklama Olaylarını Dinleme (Event Delegation)
+document.addEventListener("click", (e) => {
+  // Giriş Yap Butonları
+  if (e.target.closest(".login-btn")) {
+    e.preventDefault();
+    openAuthModal("login");
+  }
 
-  loginSubmit.onclick = async () => {
+  // Kayıt Ol Butonları
+  if (e.target.closest(".register-btn")) {
+    e.preventDefault();
+    openAuthModal("register");
+  }
 
-    const inputs =
-      document.querySelectorAll("#loginForm input");
+  // Çıkış Yap Butonu
+  if (e.target.closest("#logoutBtn")) {
+    e.preventDefault();
+    signOut(auth)
+      .then(() => {
+        window.location.reload();
+      })
+      .catch((err) => alert("Çıkış hatası: " + err.message));
+  }
+});
 
-    const email = inputs[0].value.trim();
-
-    const password = inputs[1].value;
+// GİRİŞ YAP FORM SUBMIT
+if (loginForm) {
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const inputs = loginForm.querySelectorAll("input");
+    const email = inputs[0]?.value.trim();
+    const password = inputs[1]?.value;
 
     if (!email || !password) {
-
-      alert("Bilgileri doldur.");
-
+      alert("Lütfen tüm alanları doldurun.");
       return;
-
     }
 
     try {
-
-      await signInWithEmailAndPassword(
-
-        auth,
-
-        email,
-
-        password
-
-      );
-
-      if (modal) {
-
-        modal.style.display = "none";
-
-      }
-
+      await signInWithEmailAndPassword(auth, email, password);
+      closeAuthModal();
+      loginForm.reset();
     } catch (err) {
-
-      alert(err.message);
-
+      alert("Giriş Hatası: " + err.message);
     }
-
-  };
-
+  });
 }
-if (registerSubmit) {
 
-  registerSubmit.onclick = async () => {
-
-    const inputs =
-      document.querySelectorAll("#registerForm input");
-
-    const username = inputs[0].value.trim();
-    const email = inputs[1].value.trim();
-    const password = inputs[2].value;
+// KAYIT OL FORM SUBMIT
+if (registerForm) {
+  registerForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const inputs = registerForm.querySelectorAll("input");
+    const username = inputs[0]?.value.trim();
+    const email = inputs[1]?.value.trim();
+    const password = inputs[2]?.value;
 
     if (!username || !email || !password) {
-
-      alert("Bilgileri doldur.");
-
+      alert("Lütfen tüm alanları doldurun.");
       return;
-
     }
 
     try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      
+      // Kullanıcı Adını Firebase Profiline Kaydet
+      await updateProfile(userCredential.user, {
+        displayName: username
+      });
 
-      await createUserWithEmailAndPassword(
-
-        auth,
-
-        email,
-
-        password
-
-      );
-
-      if (modal) {
-
-        modal.style.display = "none";
-
-      }
-
+      closeAuthModal();
+      registerForm.reset();
     } catch (err) {
-
-      alert(err.message);
-
+      alert("Kayıt Hatası: " + err.message);
     }
-
-  };
-
+  });
 }
 
+// OTURUM DURUMU DİNLENİYOR
 onAuthStateChanged(auth, (user) => {
-
   if (!accountBox) return;
 
   if (user) {
-
-    const name =
-      user.email.split("@")[0];
+    // Profil ismi varsa kullan yoksa mail adını al
+    const displayName = user.displayName || user.email.split("@")[0];
 
     accountBox.innerHTML = `
-
-      <a class="user-name">
-
-        👤 ${name}
-
+      <a class="user-name" style="cursor: default;">
+        👤 ${displayName}
       </a>
-
-      <a href="#" id="logoutBtn">
-
+      <a href="#" id="logoutBtn" style="margin-left: 10px; color: #ff4d4d;">
         🚪 Çıkış Yap
-
       </a>
-
     `;
-
-    const logoutBtn =
-      document.getElementById("logoutBtn");
-
-    if (logoutBtn) {
-
-      logoutBtn.onclick = async (e) => {
-
-        e.preventDefault();
-
-        try {
-
-          await signOut(auth);
-
-          location.reload();
-
-        } catch (err) {
-
-          alert(err.message);
-
-        }
-
-      };
-
-    }
-
   } else {
-
     accountBox.innerHTML = `
-
       <a href="#" class="login-btn">
-
         👤 Giriş Yap
-
       </a>
-
-      <a href="#" class="register-btn">
-
+      <a href="#" class="register-btn" style="margin-left: 8px;">
         ✨ Kayıt Ol
-
       </a>
-
     `;
-
-    const loginAgain =
-      accountBox.querySelector(".login-btn");
-
-    const registerAgain =
-      accountBox.querySelector(".register-btn");
-
-    if (loginAgain) {
-
-      loginAgain.onclick = (e) => {
-
-        e.preventDefault();
-
-        if (typeof showLogin === "function") {
-
-          showLogin();
-
-        }
-
-        if (modal) {
-
-          modal.style.display = "flex";
-
-        }
-
-      };
-
-    }
-
-    if (registerAgain) {
-
-      registerAgain.onclick = (e) => {
-
-        e.preventDefault();
-
-        if (typeof showRegister === "function") {
-
-          showRegister();
-
-        }
-
-        if (modal) {
-
-          modal.style.display = "flex";
-
-        }
-
-      };
-
-    }
-
   }
-
 });
 
+// Global Erişimler
 window.firebaseAuth = auth;
 window.logout = () => signOut(auth);
