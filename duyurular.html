@@ -212,6 +212,27 @@ alert(e.message);
 
 };
 
+
+onAuthStateChanged(auth,(user)=>{
+
+const box=document.querySelector(".account-box");
+
+if(user && box){
+
+box.innerHTML=`
+<a>👤 ${user.email.split("@")[0]}</a>
+<a href="#" id="logoutBtn">🚪 Çıkış Yap</a>
+`;
+
+document.getElementById("logoutBtn").onclick=(e)=>{
+e.preventDefault();
+signOut(auth).then(()=>location.reload());
+};
+
+}
+
+});
+
 </script>
 
 
