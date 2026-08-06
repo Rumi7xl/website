@@ -137,20 +137,22 @@ document.addEventListener("submit", async (e) => {
     } catch (err) { alert("Kayıt Hatalı: " + err.message); }
   }
 
-  // PROFİL FOTOĞRAFI YÜKLEME (FIRESTORE)
+  // PROFİL FOTOĞRAFI YÜKLEME (POP-UP UYARISI OLMADAN ŞIK GEÇİŞ)
   if (e.target.id === "photoSettingsForm") {
     e.preventDefault();
     const fileInput = document.getElementById("photoFileInput");
     const user = auth.currentUser;
 
     if (!user || !fileInput.files[0]) {
-      alert("Lütfen bir resim dosyası seç kanka!");
       return;
     }
 
     const file = fileInput.files[0];
     const submitBtn = e.target.querySelector("button[type='submit']");
-    if (submitBtn) submitBtn.innerText = "Yükleniyor...";
+    if (submitBtn) {
+      submitBtn.innerText = "Yükleniyor...";
+      submitBtn.disabled = true;
+    }
 
     const reader = new FileReader();
     reader.onload = function (evt) {
@@ -179,12 +181,20 @@ document.addEventListener("submit", async (e) => {
             updatedAt: Date.now()
           }, { merge: true });
 
-          alert("Profil fotoğrafın başarıyla güncellendi! 🔥");
-          document.getElementById("photoModal").style.display = "none";
-          location.reload();
+          if (submitBtn) submitBtn.innerText = "Güncellendi! ✨";
+          
+          // Çirkin uyarı kutusu yerine 0.5 saniye sonra pencereyi kapatıp sayfayı yeniliyoruz
+          setTimeout(() => {
+            document.getElementById("photoModal").style.display = "none";
+            location.reload();
+          }, 500);
+
         } catch (err) {
-          alert("Fotoğraf Güncelleme Hatası: " + err.message);
-          if (submitBtn) submitBtn.innerText = "Fotoğrafı Yükle ve Kaydet";
+          alert("Hata: " + err.message);
+          if (submitBtn) {
+            submitBtn.innerText = "Fotoğrafı Yükle ve Kaydet";
+            submitBtn.disabled = false;
+          }
         }
       };
     };
@@ -202,8 +212,8 @@ document.addEventListener("submit", async (e) => {
     try {
       if (newPass) {
         await updatePassword(user, newPass);
-        alert("Şifren başarıyla değiştirildi! 🔑");
         document.getElementById("passwordModal").style.display = "none";
+        location.reload();
       }
     } catch (err) {
       alert("Şifre Güncelleme Hatası: " + err.message);
