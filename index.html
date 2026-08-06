@@ -18,8 +18,14 @@
   "url": "https://rumi7xl.com/"
 }
 </script>
+
 <link href="favicon.png?v=2" rel="icon" type="image/png"/>
-<link href="style.css" rel="stylesheet"/>
+
+<!-- ÖNBELLEK ENGELLEME & DİNAMİK SÜRÜM (F5 GÜNCELLEMESİ İÇİN) -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<link href="style.css?v=1.1" rel="stylesheet"/>
 </head>
 <body>
 
@@ -89,7 +95,7 @@
 
 <footer>© 2026 RUMİ7XL</footer>
 
-<!-- HESAP POPUP -->
+<!-- HESAP POPUP (GİRİŞ / KAYIT) -->
 <div class="account-modal" id="accountModal">
   <div class="account-window">
     <button class="close-account" onclick="closeAccount()">✕</button>
@@ -101,6 +107,12 @@
     <form id="loginForm" class="account-form" autocomplete="on">
       <input type="email" name="email" placeholder="E-posta" autocomplete="username">
       <input type="password" name="password" placeholder="Şifre" autocomplete="current-password">
+      
+      <!-- YENİ ŞİFREMİ UNUTTUM LINKI -->
+      <div style="text-align: right; width: 100%; margin-top: -5px; margin-bottom: 5px;">
+        <a href="#" id="forgotPasswordBtn" style="color: #a855f7; font-size: 0.85rem; text-decoration: none;">Şifremi Unuttum?</a>
+      </div>
+
       <button type="submit" class="account-submit">Giriş Yap</button>
     </form>
 
@@ -109,6 +121,24 @@
       <input type="email" name="register-email" placeholder="E-posta" autocomplete="email">
       <input type="password" name="new-password" placeholder="Şifre" autocomplete="new-password">
       <button type="submit" class="account-submit">Kayıt Ol</button>
+    </form>
+  </div>
+</div>
+
+<!-- PROFİL AYARLARI POPUP -->
+<div class="settings-modal" id="settingsModal">
+  <div class="settings-window">
+    <button class="close-account" onclick="document.getElementById('settingsModal').style.display='none'">✕</button>
+    <h2>⚙️ Profil Ayarları</h2>
+    
+    <form id="profileSettingsForm">
+      <label style="color:#aaa; font-size:0.85rem; display:block; text-align:left; margin-bottom:5px;">Profil Fotoğrafı URL (Resim Bağlantısı):</label>
+      <input type="url" name="photoUrl" placeholder="https://resim-linki.com/foto.jpg">
+      
+      <label style="color:#aaa; font-size:0.85rem; display:block; text-align:left; margin-bottom:5px; margin-top:10px;">Yeni Şifre (Değiştirmek İstemiyorsan Boş Bırak):</label>
+      <input type="password" name="newPassword" placeholder="Yeni Şifreniz">
+      
+      <button type="submit" class="settings-btn">Kaydet ve Güncelle</button>
     </form>
   </div>
 </div>
@@ -148,8 +178,8 @@ window.closeAccount = closeAccount;
 window.showToast = showToast;
 </script>
 
-<!-- TEK KİMLİK DOĞRULAMA MODÜLÜ -->
-<script type="module" src="auth.js"></script>
+<!-- TEK KİMLİK DOĞRULAMA MODÜLÜ (VERSİYONLU) -->
+<script type="module" src="auth.js?v=1.1"></script>
 
 <style>
 #siteToast{
