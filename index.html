@@ -25,8 +25,8 @@
 </nav>
 
 <div class="account-box">
-    <a href="giris.html" class="login-btn">👤 Giriş Yap</a>
-    <a href="kayit.html" class="register-btn">✨ Kayıt Ol</a>
+    <a href="#" class="login-btn">👤 Giriş Yap</a>
+    <a href="#" class="register-btn">✨ Kayıt Ol</a>
 </div>
 
 
@@ -116,6 +116,113 @@ Canlı yayınlar, oyun içerikleri ve eğlenceli yayınlarla topluluğumla vakit
 </footer>
 
 
+<!-- HESAP POPUP -->
+
+<div class="account-modal" id="accountModal">
+
+<div class="account-window">
+
+<button class="close-account" onclick="closeAccount()">✕</button>
+
+<div class="account-tabs">
+
+<button id="loginTab" class="active" onclick="showLogin()">Giriş Yap</button>
+<button id="registerTab" onclick="showRegister()">Kayıt Ol</button>
+
+</div>
+
+
+<div id="loginForm" class="account-form">
+
+<input type="text" placeholder="Kullanıcı adı">
+
+<input type="password" placeholder="Şifre">
+
+<button class="account-submit">
+Giriş Yap
+</button>
+
+</div>
+
+
+<div id="registerForm" class="account-form" style="display:none;">
+
+<input type="text" placeholder="Kullanıcı adı">
+
+<input type="email" placeholder="E-posta">
+
+<input type="password" placeholder="Şifre">
+
+<button class="account-submit">
+Kayıt Ol
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+const modal = document.getElementById("accountModal");
+
+
+document.querySelector(".login-btn").onclick = function(e){
+    e.preventDefault();
+    showLogin();
+    modal.style.display="flex";
+};
+
+
+document.querySelector(".register-btn").onclick = function(e){
+    e.preventDefault();
+    showRegister();
+    modal.style.display="flex";
+};
+
+
+function showLogin(){
+
+document.getElementById("loginForm").style.display="flex";
+document.getElementById("registerForm").style.display="none";
+
+document.getElementById("loginTab").classList.add("active");
+document.getElementById("registerTab").classList.remove("active");
+
+}
+
+
+function showRegister(){
+
+document.getElementById("loginForm").style.display="none";
+document.getElementById("registerForm").style.display="flex";
+
+document.getElementById("registerTab").classList.add("active");
+document.getElementById("loginTab").classList.remove("active");
+
+}
+
+
+function closeAccount(){
+
+modal.style.display="none";
+
+}
+
+
+window.onclick=function(e){
+
+if(e.target==modal){
+
+modal.style.display="none";
+
+}
+
+};
+
+</script>
 
 </body>
 </html>
