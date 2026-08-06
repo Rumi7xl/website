@@ -29,6 +29,45 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+// ŞIK BİLDİRİM (TOAST) FONKSİYONU
+function showToast(message, type = 'success') {
+  let toast = document.getElementById("customToast");
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "customToast";
+    toast.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #18181b;
+      color: #fff;
+      border: 1px solid ${type === 'error' ? '#ef4444' : '#a855f7'};
+      padding: 12px 20px;
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      z-index: 99999;
+      font-size: 0.95rem;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      opacity: 0;
+      transform: translateY(-20px);
+    `;
+    document.body.appendChild(toast);
+  }
+
+  toast.innerHTML = (type === 'error' ? '❌ ' : '✨ ') + message;
+  toast.style.opacity = "1";
+  toast.style.transform = "translateY(0)";
+
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    toast.style.transform = "translateY(-20px)";
+  }, 3000);
+}
+
 // OTURUM DURUMUNA GÖRE SAĞ ÜSTÜ DÜZENLE
 onAuthStateChanged(auth, async (user) => {
   const accountBox = document.querySelector(".account-box");
@@ -77,7 +116,9 @@ onAuthStateChanged(auth, async (user) => {
       document.getElementById("passwordModal").style.display = "flex";
     };
 
-    document.getElementById("logoutBtn").onclick = () => signOut(auth);
+    document.getElementById("logoutBtn").onclick = () => {
+      signOut(auth).then(() => showToast("Başarıyla çıkış yapıldı."));
+    };
 
   } else {
     accountBox.innerHTML = `
@@ -121,7 +162,10 @@ document.addEventListener("submit", async (e) => {
     try {
       await signInWithEmailAndPassword(auth, email, pass);
       document.getElementById("accountModal").style.display = "none";
-    } catch (err) { alert("Giriş Hatalı: " + err.message); }
+      showToast("Giriş başarıyla yapıldı!");
+    } catch (err) { 
+      showToast("Giriş Hatalı: " + err.message, 'error'); 
+    }
   }
 
   if (e.target.id === "registerForm") {
@@ -133,17 +177,21 @@ document.addEventListener("submit", async (e) => {
       const res = await createUserWithEmailAndPassword(auth, email, pass);
       await updateProfile(res.user, { displayName: username });
       document.getElementById("accountModal").style.display = "none";
-      location.reload();
-    } catch (err) { alert("Kayıt Hatalı: " + err.message); }
+      showToast("Kayıt başarıyla oluşturuldu!");
+      setTimeout(() => location.reload(), 1000);
+    } catch (err) { 
+      showToast("Kayıt Hatalı: " + err.message, 'error'); 
+    }
   }
 
-  // PROFİL FOTOĞRAFI YÜKLEME (POP-UP UYARISI OLMADAN ŞIK GEÇİŞ)
+  // PROFİL FOTOĞRAFI YÜKLEME
   if (e.target.id === "photoSettingsForm") {
     e.preventDefault();
     const fileInput = document.getElementById("photoFileInput");
     const user = auth.currentUser;
 
     if (!user || !fileInput.files[0]) {
+      showToast("Lütfen bir resim dosyası seç kanka!", 'error');
       return;
     }
 
@@ -181,16 +229,18 @@ document.addEventListener("submit", async (e) => {
             updatedAt: Date.now()
           }, { merge: true });
 
-          if (submitBtn) submitBtn.innerText = "Güncellendi! ✨";
+          showToast("Profil fotoğrafın başarıyla güncellendi! 🔥");
+          document.getElementById("photoModal").style.display = "none";
           
-          // Çirkin uyarı kutusu yerine 0.5 saniye sonra pencereyi kapatıp sayfayı yeniliyoruz
-          setTimeout(() => {
-            document.getElementById("photoModal").style.display = "none";
-            location.reload();
-          }, 500);
+          if (submitBtn) {
+            submitBtn.innerText = "Fotoğrafı Yükle ve Kaydet";
+            submitBtn.disabled = false;
+          }
+
+          setTimeout(() => location.reload(), 800);
 
         } catch (err) {
-          alert("Hata: " + err.message);
+          showToast("Fotoğraf Güncelleme Hatası: " + err.message, 'error');
           if (submitBtn) {
             submitBtn.innerText = "Fotoğrafı Yükle ve Kaydet";
             submitBtn.disabled = false;
@@ -212,11 +262,11 @@ document.addEventListener("submit", async (e) => {
     try {
       if (newPass) {
         await updatePassword(user, newPass);
+        showToast("Şifren başarıyla değiştirildi! 🔑");
         document.getElementById("passwordModal").style.display = "none";
-        location.reload();
       }
     } catch (err) {
-      alert("Şifre Güncelleme Hatası: " + err.message);
+      showToast("Şifre Güncelleme Hatası: " + err.message, 'error');
     }
   }
 });
@@ -227,11 +277,11 @@ document.addEventListener("click", (e) => {
     const loginForm = document.getElementById("loginForm");
     const email = loginForm?.querySelector("input[type='email']")?.value.trim();
     if (!email) {
-      alert("Lütfen e-posta alanını doldurup tekrar 'Şifremi Unuttum'a tıklayın.");
+      showToast("Lütfen e-posta alanını doldurup tekrar deneyin.", 'error');
       return;
     }
     sendPasswordResetEmail(auth, email)
-      .then(() => alert("Şifre sıfırlama bağlantısı e-postana gönderildi! 📧"))
-      .catch((err) => alert("Hata: " + err.message));
+      .then(() => showToast("Şifre sıfırlama bağlantısı e-postana gönderildi! 📧"))
+      .catch((err) => showToast("Hata: " + err.message, 'error'));
   }
 });
