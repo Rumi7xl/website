@@ -5,6 +5,93 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RUMİ7XL - Öneriler</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* YT TARZI ÖNERİ SİSTEMİ ÖZEL STİLLERİ */
+    .suggest-card {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 18px;
+      padding: 20px;
+      display: flex;
+      gap: 15px;
+      align-items: flex-start;
+      position: relative;
+      transition: border-color 0.3s;
+    }
+    .suggest-card:hover { border-color: #333; }
+    
+    /* LIKE BUTTON YT STYLE */
+    .yt-like-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #aaa;
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .yt-like-btn:hover {
+      background: rgba(145, 70, 255, 0.15);
+      border-color: rgba(145, 70, 255, 0.4);
+      color: #fff;
+    }
+    .yt-like-btn.liked {
+      background: rgba(145, 70, 255, 0.2);
+      border-color: #9146ff;
+      color: #9146ff;
+      box-shadow: 0 0 15px rgba(145, 70, 255, 0.3);
+    }
+    .yt-like-btn:active { transform: scale(0.92); }
+    .yt-like-btn svg { fill: currentColor; width: 16px; height: 16px; transition: transform 0.2s; }
+    
+    /* 3 NOKTA MENÜSÜ */
+    .options-btn {
+      background: none;
+      border: none;
+      color: #777;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 50%;
+      transition: 0.2s;
+    }
+    .options-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
+    .options-dropdown {
+      display: none;
+      position: absolute;
+      right: 20px;
+      top: 45px;
+      background: #181818;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 6px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      z-index: 10;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .options-dropdown button {
+      background: none;
+      border: none;
+      color: #ddd;
+      padding: 8px 14px;
+      font-size: 13px;
+      text-align: left;
+      cursor: pointer;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: 0.2s;
+    }
+    .options-dropdown button:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .options-dropdown button.del-item:hover { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+  </style>
 </head>
 <body>
 
@@ -25,7 +112,6 @@
 
   <!-- BAŞLIK & ÖNERİ FORMU -->
   <div class="suggestions" style="max-width: 800px; margin: 40px auto; padding: 0 20px;">
-    
     <h1 style="font-size: 45px; color: #9146ff; text-align: center; text-shadow: 0 0 20px #9146ff; margin-bottom: 10px;">
       RUMİ7XL Öneriler
     </h1>
@@ -33,7 +119,7 @@
       İçerik, yayın ve oyun önerilerini burada paylaşabilirsin.
     </p>
 
-    <!-- YOUTUBE YORUM TARZI KUTU -->
+    <!-- KUTU -->
     <div style="background: linear-gradient(145deg, #151515, #090909); border: 1px solid #222; border-radius: 20px; padding: 20px; box-shadow: 0 0 25px rgba(145, 70, 255, 0.15); margin-bottom: 40px;">
       <textarea id="suggestInput" rows="3" placeholder="Yayıncıya bir öneri veya fikir yaz..." style="width: 100%; background: #111; border: 1px solid #333; border-radius: 12px; padding: 15px; color: white; font-family: inherit; font-size: 15px; outline: none; resize: vertical; box-sizing: border-box;"></textarea>
       
@@ -44,11 +130,34 @@
       </div>
     </div>
 
-    <!-- ÖNERİLER CANLI LİSTESİ -->
+    <!-- ÖNERİLER LİSTESİ -->
     <div class="suggestions-list" id="suggestionsList" style="display: flex; flex-direction: column; gap: 20px;">
       <p id="loadingText" style="color:#aaa; text-align:center;">Öneriler yükleniyor...</p>
     </div>
+  </div>
 
+  <!-- ÖZEL DÜZENLEME MODALI -->
+  <div id="editModal" class="account-modal">
+    <div class="account-window">
+      <button class="close-account" onclick="document.getElementById('editModal').style.display='none'">✕</button>
+      <h2 style="color:#9146ff; margin-bottom:15px; font-size:20px; text-align:center;">Önerini Düzenle</h2>
+      <div class="account-form">
+        <textarea id="editModalInput" rows="4" style="width:100%; background:#181818; border:1px solid #333; border-radius:15px; padding:12px; color:white; font-family:inherit; outline:none; resize:none;"></textarea>
+        <button id="saveEditBtn" class="account-submit">Kaydet ve Güncelle</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ÖZEL SİLME ONAY MODALI -->
+  <div id="deleteModal" class="account-modal">
+    <div class="account-window" style="text-align: center;">
+      <h2 style="color:#ef4444; margin-bottom:10px; font-size:20px;">Öneriyi Sil?</h2>
+      <p style="color:#aaa; font-size:14px; margin-bottom:20px;">Bu öneriyi silmek istediğine emin misin? Bu işlem geri alınamaz.</p>
+      <div style="display:flex; gap:10px;">
+        <button onclick="document.getElementById('deleteModal').style.display='none'" style="flex:1; padding:12px; border-radius:20px; border:1px solid #333; background:#181818; color:white; cursor:pointer;">İptal</button>
+        <button id="confirmDeleteBtn" style="flex:1; padding:12px; border-radius:20px; border:none; background:#ef4444; color:white; font-weight:bold; cursor:pointer;">Sil</button>
+      </div>
+    </div>
   </div>
 
   <!-- FOOTER -->
@@ -56,7 +165,7 @@
     <p>© 2026 RUMİ7XL - Tüm Hakları Saklıdır.</p>
   </footer>
 
-  <!-- MODALLAR -->
+  <!-- DİĞER MODALLAR -->
   <div id="accountModal" class="account-modal">
     <div class="account-window">
       <button class="close-account" onclick="document.getElementById('accountModal').style.display='none'">✕</button>
