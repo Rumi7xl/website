@@ -5,7 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RUMİ7XL | Öneriler</title>
 <link rel="icon" type="image/png" href="favicon.png?v=2">
-<link rel="stylesheet" href="style.css">
+
+<!-- ÖNBELLEK ENGELLEME & DİNAMİK SÜRÜM -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<link rel="stylesheet" href="style.css?v=1.1">
 </head>
 <body>
 
@@ -48,6 +53,7 @@
 </div>
 </section>
 
+<!-- HESAP POPUP -->
 <div class="account-modal" id="accountModal">
 <div class="account-window">
 <button class="close-account" onclick="closeAccount()">✕</button>
@@ -60,6 +66,11 @@
 <form id="loginForm" class="account-form" autocomplete="on">
 <input type="email" name="email" placeholder="E-posta" autocomplete="email">
 <input type="password" name="password" placeholder="Şifre" autocomplete="current-password">
+
+<div style="text-align: right; width: 100%; margin-top: -5px; margin-bottom: 5px;">
+  <a href="#" id="forgotPasswordBtn" style="color: #a855f7; font-size: 0.85rem; text-decoration: none;">Şifremi Unuttum?</a>
+</div>
+
 <button type="submit" class="account-submit">Giriş Yap</button>
 </form>
 
@@ -70,6 +81,34 @@
 <button type="submit" class="account-submit">Kayıt Ol</button>
 </form>
 </div>
+</div>
+
+<!-- PROFİL FOTOĞRAFI POPUP -->
+<div class="settings-modal" id="photoModal">
+  <div class="settings-window">
+    <button class="close-account" onclick="document.getElementById('photoModal').style.display='none'">✕</button>
+    <h2>🖼️ Profil Fotoğrafı</h2>
+    
+    <form id="photoSettingsForm" autocomplete="off">
+      <label style="color:#aaa; font-size:0.85rem; display:block; text-align:left; margin-bottom:5px;">Fotoğraf URL (Resim Bağlantısı):</label>
+      <input type="url" name="photoUrl" placeholder="https://resim-linki.com/foto.jpg" required autocomplete="off">
+      <button type="submit" class="settings-btn">Fotoğrafı Kaydet</button>
+    </form>
+  </div>
+</div>
+
+<!-- ŞİFRE DEĞİŞTİRME POPUP -->
+<div class="settings-modal" id="passwordModal">
+  <div class="settings-window">
+    <button class="close-account" onclick="document.getElementById('passwordModal').style.display='none'">✕</button>
+    <h2>🔑 Şifre Değiştir</h2>
+    
+    <form id="passwordSettingsForm" autocomplete="off">
+      <label style="color:#aaa; font-size:0.85rem; display:block; text-align:left; margin-bottom:5px;">Yeni Şifreniz:</label>
+      <input type="password" name="changePassword" placeholder="Yeni Şifreniz" required autocomplete="new-password">
+      <button type="submit" class="settings-btn">Şifreyi Güncelle</button>
+    </form>
+  </div>
 </div>
 
 <script>
@@ -96,6 +135,6 @@ window.showRegister = showRegister;
 window.closeAccount = closeAccount;
 </script>
 
-<script type="module" src="auth.js"></script>
+<script type="module" src="auth.js?v=1.1"></script>
 </body>
 </html>
