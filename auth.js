@@ -86,6 +86,21 @@ document.addEventListener("click", (e) => {
   }
 });
 
+// Header Alanını Güncelleyen Yardımcı Fonksiyon
+function updateHeaderUser(name) {
+  const accountBoxes = document.querySelectorAll(".account-box");
+  accountBoxes.forEach((accountBox) => {
+    accountBox.innerHTML = `
+      <a class="user-name" style="cursor: default; font-weight: bold;">
+        👤 ${name}
+      </a>
+      <a href="#" id="logoutBtn" style="margin-left: 10px; color: #ff4d4d;">
+        🚪 Çıkış Yap
+      </a>
+    `;
+  });
+}
+
 // Form Gönderme Dinleyicileri
 document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById("loginForm");
@@ -95,12 +110,14 @@ document.addEventListener("DOMContentLoaded", () => {
   if (loginForm) {
     const handleLogin = async (e) => {
       e.preventDefault();
-      const inputs = loginForm.querySelectorAll("input");
-      const email = inputs[0]?.value.trim();
-      const password = inputs[1]?.value;
+      const emailInput = loginForm.querySelector("input[type='email']") || loginForm.querySelectorAll("input")[0];
+      const passInput = loginForm.querySelector("input[type='password']") || loginForm.querySelectorAll("input")[1];
+
+      const email = emailInput?.value.trim();
+      const password = passInput?.value;
 
       if (!email || !password) {
-        alert("Lütfen tüm alanları doldurun.");
+        alert("Lütfen e-posta ve şifrenizi girin.");
         return;
       }
 
@@ -123,11 +140,13 @@ document.addEventListener("DOMContentLoaded", () => {
   if (registerForm) {
     const handleRegister = async (e) => {
       e.preventDefault();
-      const inputs = registerForm.querySelectorAll("input");
-      
-      const username = inputs[0]?.value.trim();
-      const email = inputs[1]?.value.trim();
-      const password = inputs[2]?.value;
+      const userInput = registerForm.querySelector("input[name='username']") || registerForm.querySelectorAll("input")[0];
+      const emailInput = registerForm.querySelector("input[type='email']") || registerForm.querySelectorAll("input")[1];
+      const passInput = registerForm.querySelector("input[type='password']") || registerForm.querySelectorAll("input")[2];
+
+      const username = userInput?.value.trim();
+      const email = emailInput?.value.trim();
+      const password = passInput?.value;
 
       if (!username || !email || !password) {
         alert("Lütfen tüm alanları (Kullanıcı Adı, E-posta, Şifre) doldurun.");
@@ -135,12 +154,16 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       try {
+        // 1. Hesap Oluştur
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         
-        // Kullanıcının yazdığı Kullanıcı Adını Firebase Profiline Kaydet
+        // 2. Kullanıcı Adını Firebase Profiline Kaydet
         await updateProfile(userCredential.user, {
           displayName: username
         });
+
+        // 3. Header'a Anında Yaz
+        updateHeaderUser(username);
 
         closeAuthModal();
         registerForm.reset();
@@ -156,22 +179,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// Oturum Durumu Takibi (Kullanıcı Adı Basma)
+// Oturum Durumu Takibi (Sayfa Yenilendiğinde veya Girişte)
 onAuthStateChanged(auth, (user) => {
   const accountBoxes = document.querySelectorAll(".account-box");
   accountBoxes.forEach((accountBox) => {
     if (user) {
-      // Girilen Kullanıcı Adını al, yoksa mailin başını göster
+      // Profil ismi VARSA onu bas, YOKSA mailin başını bas
       const usernameToShow = user.displayName || user.email.split("@")[0];
-
-      accountBox.innerHTML = `
-        <a class="user-name" style="cursor: default; font-weight: bold;">
-          👤 ${usernameToShow}
-        </a>
-        <a href="#" id="logoutBtn" style="margin-left: 10px; color: #ff4d4d;">
-          🚪 Çıkış Yap
-        </a>
-      `;
+      updateHeaderUser(usernameToShow);
     } else {
       accountBox.innerHTML = `
         <a href="#" class="login-btn">
