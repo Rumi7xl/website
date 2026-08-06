@@ -2,54 +2,80 @@
 <html lang="tr">
 
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>RUMİ7XL | İçerikler</title>
 
 <link rel="icon" type="image/png" href="favicon.png?v=2">
+
 <link rel="stylesheet" href="style.css">
 
 </head>
 
+
 <body>
+
 
 <header class="navbar">
 
-<a href="/" class="logo">RUMİ7XL</a>
+
+<a href="/" class="logo">
+RUMİ7XL
+</a>
+
 
 <nav class="nav-links">
+
 <a href="/">Ana Sayfa</a>
 <a href="topluluk.html">Topluluk</a>
 <a href="oneriler.html">Öneriler</a>
 <a href="icerikler.html">İçerikler</a>
 <a href="duyurular.html">Duyurular</a>
+
 </nav>
 
+
 <div class="account-box">
+
 <a href="#" class="login-btn">👤 Giriş Yap</a>
+
 <a href="#" class="register-btn">✨ Kayıt Ol</a>
+
 </div>
+
 
 </header>
 
 
+
+
+
 <section class="content-page">
 
+
 <h1>RUMİ7XL İçerikler</h1>
+
 
 <p>
 Canlı yayınlarım, videolarım ve özel içeriklerim burada.
 </p>
 
 
+
+
+
 <div class="content-card">
 
+
 <h2>🔴 CANLI DURUM</h2>
+
 
 <p>
 RUMİ7XL şu anda yayında
 </p>
+
 
 <p>
 🎮 Oyun: GTA V
@@ -57,17 +83,23 @@ RUMİ7XL şu anda yayında
 👥 İzleyici: 0
 </p>
 
+
 <a href="https://kick.com/rumi7xl" target="_blank">
 KICK'E GİT →
 </a>
+
 
 </div>
 
 
 
+
+
 <div class="content-card">
 
+
 <h2>🎥 KICK YAYINLARI</h2>
+
 
 <p>
 ⛏️ Minecraft
@@ -79,17 +111,18 @@ KICK'E GİT →
 🏎️ Simülasyon Oyunları
 </p>
 
+
 <a href="https://kick.com/rumi7xl" target="_blank">
 KANALA GİT →
 </a>
 
+
 </div>
-
-
-
 <div class="content-card">
 
+
 <h2>▶️ YOUTUBE İÇERİKLERİ</h2>
+
 
 <p>
 🎬 Yayın Kesitleri
@@ -101,120 +134,173 @@ KANALA GİT →
 🎞️ Özel Videolar
 </p>
 
+
 <a href="https://www.youtube.com/@Rumi7xl" target="_blank">
 VİDEOLARA GİT →
 </a>
 
+
 </div>
+
 
 
 </section>
 
 
 
+
+
 <div class="account-modal" id="accountModal">
+
+
 <div class="account-window">
-<button class="close-account" onclick="closeAccount()">✕</button>
+
+
+<button class="close-account" onclick="closeAccount()">
+✕
+</button>
+
+
 
 <div class="account-tabs">
-<button id="loginTab" class="active" onclick="showLogin()">Giriş Yap</button>
-<button id="registerTab" onclick="showRegister()">Kayıt Ol</button>
+
+
+<button id="loginTab" class="active" onclick="showLogin()">
+Giriş Yap
+</button>
+
+
+<button id="registerTab" onclick="showRegister()">
+Kayıt Ol
+</button>
+
+
 </div>
+
+
+
 
 <div id="loginForm" class="account-form">
-<input type="email" placeholder="E-posta" autocomplete="username">
-<input type="password" placeholder="Şifre" autocomplete="current-password">
-<button type="button" class="account-submit">Giriş Yap</button>
+
+
+<input type="email" placeholder="E-posta">
+
+<input type="password" placeholder="Şifre">
+
+
+<button type="button" class="account-submit">
+Giriş Yap
+</button>
+
+
 </div>
+
+
+
+
 
 <div id="registerForm" class="account-form" style="display:none;">
-<input type="text" placeholder="Kullanıcı adı" autocomplete="username">
-<input type="email" placeholder="E-posta" autocomplete="email">
-<input type="password" placeholder="Şifre" autocomplete="new-password">
-<button type="button" class="account-submit">Kayıt Ol</button>
-</div>
+
+
+<input type="text" placeholder="Kullanıcı adı">
+
+
+<input type="email" placeholder="E-posta">
+
+
+<input type="password" placeholder="Şifre">
+
+
+<button type="button" class="account-submit">
+Kayıt Ol
+</button>
+
 
 </div>
+
+
 </div>
+
+
+</div>
+
+
+
+
+
 
 <script>
+
+
 const modal=document.getElementById("accountModal");
 
+
+
 document.querySelector(".login-btn").onclick=(e)=>{
+
 e.preventDefault();
+
 showLogin();
+
 modal.style.display="flex";
+
 };
+
+
 
 document.querySelector(".register-btn").onclick=(e)=>{
+
 e.preventDefault();
+
 showRegister();
+
 modal.style.display="flex";
+
 };
+
+
 
 function showLogin(){
+
 loginForm.style.display="flex";
+
 registerForm.style.display="none";
+
 }
+
+
 
 function showRegister(){
+
 loginForm.style.display="none";
+
 registerForm.style.display="flex";
+
 }
+
+
 
 function closeAccount(){
+
 modal.style.display="none";
-}
-</script>
-
-<script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
-import {getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
-
-const app=initializeApp({
-apiKey:"AIzaSyCiuXtHu3J9Va46a4KiETO2Jr5um2KoQ",
-authDomain:"rumi7xl-web.firebaseapp.com",
-projectId:"rumi7xl-web",
-storageBucket:"rumi7xl-web.firebasestorage.app",
-messagingSenderId:"1077565304835",
-appId:"1:1077565304835:web:a672a4440797b76f42de36"
-});
-
-const auth=getAuth(app);
-
-document.querySelector("#loginForm .account-submit").onclick=async()=>{
-let i=document.querySelectorAll("#loginForm input");
-await signInWithEmailAndPassword(auth,i[0].value,i[1].value);
-location.reload();
-};
-
-document.querySelector("#registerForm .account-submit").onclick=async()=>{
-let i=document.querySelectorAll("#registerForm input");
-await createUserWithEmailAndPassword(auth,i[1].value,i[2].value);
-location.reload();
-};
-
-onAuthStateChanged(auth,(user)=>{
-
-const box=document.querySelector(".account-box");
-
-if(user && box){
-
-box.innerHTML=`
-<a>👤 ${user.email.split("@")[0]}</a>
-<a href="#" id="logoutBtn">🚪 Çıkış Yap</a>
-`;
-
-document.getElementById("logoutBtn").onclick=(e)=>{
-e.preventDefault();
-signOut(auth).then(()=>location.reload());
-};
 
 }
 
-});
+
 
 </script>
+
+
+
+
+
+<!-- ORTAK GİRİŞ SİSTEMİ -->
+
+<script src="auth.js"></script>
+
+
+
 
 </body>
+
 </html>
