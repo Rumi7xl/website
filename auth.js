@@ -73,6 +73,26 @@ document.addEventListener("click", () => {
   if (menu) menu.classList.remove("show");
 });
 
+// GÖRSEL SEÇİLDİĞİNDE ÖNİZLEME GÖSTER
+document.addEventListener("change", (e) => {
+  if (e.target.id === "photoFileInput") {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const preview = document.getElementById("photoPreview");
+        if (preview) {
+          preview.src = evt.target.result;
+          preview.style.display = "block";
+        }
+        const labelText = document.getElementById("uploadLabelText");
+        if (labelText) labelText.innerText = "Fotoğraf Seçildi! Değiştirmek için tıkla";
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+});
+
 // FORM İŞLEMLERİ
 document.addEventListener("submit", async (e) => {
   if (e.target.id === "loginForm") {
@@ -98,7 +118,7 @@ document.addEventListener("submit", async (e) => {
     } catch (err) { alert("Kayıt Hatalı: " + err.message); }
   }
 
-  // DOSYADAN FOTOĞRAF YÜKLEME SİSTEMİ (BASE64 SIKIŞTIRMA)
+  // FOTOĞRAFI OTOMATİK SIKIŞTIRIP YÜKLEME
   if (e.target.id === "photoSettingsForm") {
     e.preventDefault();
     const fileInput = document.getElementById("photoFileInput");
@@ -112,16 +132,45 @@ document.addEventListener("submit", async (e) => {
     const file = fileInput.files[0];
     const reader = new FileReader();
 
-    reader.onload = async function (evt) {
-      try {
-        const base64Photo = evt.target.result;
-        await updateProfile(user, { photoURL: base64Photo });
-        alert("Profil fotoğrafın başarıyla güncellendi! 🔥");
-        document.getElementById("photoModal").style.display = "none";
-        location.reload();
-      } catch (err) {
-        alert("Fotoğraf Güncelleme Hatası: " + err.message);
-      }
+    reader.onload = function (evt) {
+      const img = new Image();
+      img.src = evt.target.result;
+      img.onload = async function() {
+        // Resmi Sıkıştırma (Canvas)
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        const maxSize = 256; // 256x256 piksellik profil fotosu boyutu
+
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > maxSize) {
+            height *= maxSize / width;
+            width = maxSize;
+          }
+        } else {
+          if (height > maxSize) {
+            width *= maxSize / height;
+            height = maxSize;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const compressedBase64 = canvas.toDataURL("image/jpeg", 0.8); // JPEG %80 Kalite
+
+        try {
+          await updateProfile(user, { photoURL: compressedBase64 });
+          alert("Profil fotoğrafın başarıyla güncellendi! 🔥");
+          document.getElementById("photoModal").style.display = "none";
+          location.reload();
+        } catch (err) {
+          alert("Fotoğraf Yükleme Hatası: " + err.message);
+        }
+      };
     };
 
     reader.readAsDataURL(file);
