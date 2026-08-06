@@ -799,3 +799,101 @@ footer{
     }
 
 }
+
+
+/* ========================= */
+/* HESAP POPUP */
+/* ========================= */
+
+.account-modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.75);
+    backdrop-filter:blur(8px);
+    justify-content:center;
+    align-items:center;
+    z-index:99999;
+}
+
+
+.account-window{
+    width:380px;
+    background:#111;
+    border:1px solid #9146ff;
+    border-radius:25px;
+    padding:30px;
+    box-shadow:0 0 50px rgba(145,70,255,.5);
+    position:relative;
+}
+
+
+.close-account{
+    position:absolute;
+    right:20px;
+    top:15px;
+    background:none;
+    border:0;
+    color:white;
+    font-size:22px;
+    cursor:pointer;
+}
+
+
+.account-tabs{
+    display:flex;
+    gap:10px;
+    margin-bottom:25px;
+}
+
+
+.account-tabs button{
+    flex:1;
+    padding:12px;
+    border-radius:20px;
+    border:1px solid #333;
+    background:#181818;
+    color:white;
+}
+
+
+.account-tabs .active{
+    background:#9146ff;
+}
+
+
+.account-form{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+
+.account-form input{
+    padding:15px;
+    border-radius:15px;
+    border:1px solid #333;
+    background:#181818;
+    color:white;
+    outline:none;
+}
+
+
+.account-submit{
+    padding:14px;
+    border:0;
+    border-radius:25px;
+    background:#9146ff;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+
+@media(max-width:500px){
+
+.account-window{
+    width:90%;
+}
+
+}
