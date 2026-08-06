@@ -786,76 +786,97 @@ footer{
 }
 
 
-/* MOBIL HAMBURGER */
-.menu-btn{
-    display:none;
-    background:none;
-    color:white;
-    border:0;
-    font-size:28px;
-    cursor:pointer;
+/* ========================= */
+/* TOPLULUK SOHBET */
+/* ========================= */
+
+.community{
+    width:90%;
+    max-width:1000px;
+    margin:80px auto;
+    text-align:center;
 }
 
-.mobile-menu{
-    display:none;
+.community h1{
+    color:#9146ff;
+    font-size:45px;
+    text-shadow:0 0 20px #9146ff;
+}
+
+.community > p{
+    color:#aaa;
+    margin:15px 0 35px;
+}
+
+.chat-box{
+    background:#111;
+    border:1px solid #333;
+    border-radius:25px;
+    padding:25px;
+    min-height:450px;
+    text-align:left;
+    box-shadow:0 0 35px rgba(145,70,255,.15);
+}
+
+.message{
+    background:#181818;
+    border-left:3px solid #9146ff;
+    padding:15px;
+    border-radius:15px;
+    margin-bottom:15px;
+}
+
+.message b{
+    display:block;
+    color:#9146ff;
+    margin-bottom:8px;
+}
+
+.message span{
+    color:#ddd;
+}
+
+.chat-input{
+    display:flex;
+    gap:10px;
+    margin-top:20px;
+}
+
+.chat-input input{
+    flex:1;
+    background:#111;
+    border:1px solid #333;
+    color:white;
+    padding:15px;
+    border-radius:30px;
+    outline:none;
+}
+
+.chat-input button{
+    background:#9146ff;
+    color:white;
+    border:0;
+    padding:0 30px;
+    border-radius:30px;
+    cursor:pointer;
 }
 
 @media(max-width:700px){
 
-.navbar{
-    flex-direction:row;
-    justify-content:space-between;
-    position:relative;
-    height:70px;
-    margin:15px auto;
+.community{
+    width:94%;
 }
 
-.menu-btn{
-    display:block;
+.community h1{
+    font-size:32px;
 }
 
-.logo{
-    font-size:26px;
-}
-
-.nav-links{
-    display:none;
-}
-
-.account-box{
-    width:auto;
-    gap:5px;
-}
-
-.account-box a{
-    padding:8px 10px;
-    font-size:12px;
-}
-
-.mobile-menu{
-    position:absolute;
-    top:75px;
-    left:0;
-    width:220px;
-    background:#111;
-    border:1px solid rgba(145,70,255,.4);
-    border-radius:15px;
-    padding:15px;
-    display:none;
+.chat-input{
     flex-direction:column;
-    gap:15px;
-    z-index:9999;
 }
 
-.mobile-menu a{
-    color:white;
-    text-decoration:none;
-    padding:10px;
-    border-radius:10px;
-}
-
-.mobile-menu.active{
-    display:flex;
+.chat-input button{
+    height:45px;
 }
 
 }
