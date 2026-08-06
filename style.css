@@ -566,6 +566,8 @@ footer{
 
     border-color:#9146ff;
 
+    transform:translateY(-2px);
+
     box-shadow:
     0 0 20px rgba(145,70,255,.5);
 }
