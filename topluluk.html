@@ -28,15 +28,18 @@
 <h1>RUMİ7XL Topluluk</h1>
 <p>Burada herkes sohbet edebilir, fikirlerini paylaşabilir.</p>
 
-<div class="chat-box">
-  <div class="message"><b>👤 RUMİ7XL</b><span>Hoş geldiniz millet 👋</span></div>
-  <div class="message"><b>👤 Kullanıcı</b><span>Selam herkese 🔥</span></div>
+<div class="chat-box" id="chatBox">
+  <!-- Canlı Mesajlar Buraya Yüklenecek -->
+  <div class="message">
+    <b>👤 RUMİ7XL</b>
+    <span>Hoş geldiniz millet 👋</span>
+  </div>
 </div>
 
-<div class="chat-input">
-  <input type="text" placeholder="Mesajını yaz...">
-  <button>Gönder</button>
-</div>
+<form id="chatForm" class="chat-input">
+  <input type="text" id="chatInput" placeholder="Mesajını yaz..." autocomplete="off">
+  <button type="submit" id="sendMessageBtn">Gönder</button>
+</form>
 </section>
 
 <!-- HESAP POPUP -->
@@ -90,5 +93,141 @@ window.closeAccount = closeAccount;
 </script>
 
 <script type="module" src="auth.js"></script>
+
+<!-- CANLI SOHBET SCRIPT (FIRESTORE) -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+import { 
+  getFirestore, 
+  collection, 
+  addDoc, 
+  query, 
+  orderBy, 
+  onSnapshot, 
+  serverTimestamp,
+  limit 
+} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCiuXtHu3J9Va46a4KiETO2JrSn5um2KoQ",
+  authDomain: "rumi7xl-web.firebaseapp.com",
+  projectId: "rumi7xl-web",
+  storageBucket: "rumi7xl-web.firebasestorage.app",
+  messagingSenderId: "1077565304835",
+  appId: "1:1077565304835:web:a672a4440797b76f42de36"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const chatBox = document.getElementById("chatBox");
+const chatForm = document.getElementById("chatForm");
+const chatInput = document.getElementById("chatInput");
+const sendBtn = document.getElementById("sendMessageBtn");
+
+let currentUser = null;
+
+// Oturum Durumu Takibi
+onAuthStateChanged(auth, (user) => {
+  currentUser = user;
+  if (!user) {
+    chatInput.placeholder = "Mesaj yazmak için giriş yapmalısın...";
+  } else {
+    chatInput.placeholder = "Mesajını yaz...";
+  }
+});
+
+// Firestore'dan Canlı Mesaj Çekme
+const messagesRef = collection(db, "messages");
+const q = query(messagesRef, orderBy("createdAt", "asc"), limit(50));
+
+onSnapshot(q, (snapshot) => {
+  chatBox.innerHTML = "";
+  
+  if (snapshot.empty) {
+    chatBox.innerHTML = `
+      <div class="message">
+        <b>👤 RUMİ7XL</b>
+        <span>Henüz mesaj yok, ilk mesajı sen at! 🔥</span>
+      </div>`;
+    return;
+  }
+
+  snapshot.forEach((doc) => {
+    const data = doc.data();
+    const messageDiv = document.createElement("div");
+    messageDiv.className = "message";
+    
+    const cleanUser = escapeHtml(data.username || "Kullanıcı");
+    const cleanText = escapeHtml(data.text || "");
+
+    messageDiv.innerHTML = `
+      <b>👤 ${cleanUser}</b>
+      <span>${cleanText}</span>
+    `;
+    chatBox.appendChild(messageDiv);
+  });
+
+  chatBox.scrollTop = chatBox.scrollHeight;
+}, (err) => {
+  console.error("Firestore Dinleme Hatası:", err);
+});
+
+// Mesaj Gönderme İşlemi
+async function sendMessage() {
+  if (!currentUser) {
+    if (typeof window.showToast === "function") {
+      window.showToast("Mesaj yazmak için giriş yapmalısın!");
+    } else {
+      alert("Mesaj yazmak için lütfen giriş yapın.");
+    }
+    document.getElementById("accountModal").style.display = "flex";
+    return;
+  }
+
+  const text = chatInput.value.trim();
+  if (!text) return;
+
+  const username = currentUser.displayName || currentUser.email.split("@")[0];
+
+  try {
+    chatInput.value = "";
+    await addDoc(messagesRef, {
+      text: text,
+      username: username,
+      uid: currentUser.uid,
+      createdAt: serverTimestamp()
+    });
+  } catch (err) {
+    console.error("Mesaj gönderilemedi:", err);
+    alert("Mesaj gönderilemedi: " + err.message);
+  }
+}
+
+// 1. Form submit olduğunda (Enter basılınca)
+if (chatForm) {
+  chatForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    sendMessage();
+  });
+}
+
+// 2. Gönder butonuna tıklandığında
+if (sendBtn) {
+  sendBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    sendMessage();
+  });
+}
+
+function escapeHtml(text) {
+  const div = document.createElement("div");
+  div.innerText = text;
+  return div.innerHTML;
+}
+</script>
+
 </body>
 </html>
