@@ -132,26 +132,26 @@ Canlı yayınlar, oyun içerikleri ve eğlenceli yayınlarla topluluğumla vakit
 </div>
 
 
-<div id="loginForm" class="account-form">
+<form id="loginForm" class="account-form" autocomplete="on">
 
-<input type="email" placeholder="E-posta" autocomplete="username">
+<input type="email" name="email" placeholder="E-posta" autocomplete="username">
 
-<input type="password" placeholder="Şifre" autocomplete="current-password">
+<input type="password" name="password" placeholder="Şifre" autocomplete="current-password">
 
 <button class="account-submit">
 Giriş Yap
 </button>
 
-</div>
+</form>
 
 
 <div id="registerForm" class="account-form" style="display:none;">
 
-<input type="text" placeholder="Kullanıcı adı" autocomplete="username">
+<input type="text" name="username" placeholder="Kullanıcı adı" autocomplete="username">
 
-<input type="email" placeholder="E-posta" autocomplete="email">
+<input type="email" name="register-email" placeholder="E-posta" autocomplete="email">
 
-<input type="password" placeholder="Şifre" autocomplete="new-password">
+<input type="password" name="new-password" placeholder="Şifre" autocomplete="new-password">
 
 <button class="account-submit">
 Kayıt Ol
