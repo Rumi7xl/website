@@ -224,5 +224,49 @@ modal.style.display="none";
 
 </script>
 
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCiuXtHu3J9Va46a4KiETO2JrSn5um2KoQ",
+  authDomain: "rumi7xl-web.firebaseapp.com",
+  projectId: "rumi7xl-web",
+  storageBucket: "rumi7xl-web.firebasestorage.app",
+  messagingSenderId: "1077565304835",
+  appId: "1:1077565304835:web:a672a4440797b76f42de36"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+document.querySelector("#registerForm .account-submit").onclick = async () => {
+  const inputs = document.querySelectorAll("#registerForm input");
+  const email = inputs[1].value;
+  const password = inputs[2].value;
+
+  try {
+    await createUserWithEmailAndPassword(auth, email, password);
+    alert("Hesap oluşturuldu");
+  } catch(error) {
+    alert(error.message);
+  }
+};
+
+document.querySelector("#loginForm .account-submit").onclick = async () => {
+  const inputs = document.querySelectorAll("#loginForm input");
+  const email = inputs[0].value;
+  const password = inputs[1].value;
+
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    alert("Giriş başarılı");
+  } catch(error) {
+    alert(error.message);
+  }
+};
+</script>
+
 </body>
 </html>
