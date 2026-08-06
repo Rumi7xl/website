@@ -41,7 +41,7 @@
 </form>
 </section>
 
-<!-- HESAP POPUP -->
+<!-- HESAP POPUP (GİRİŞ / KAYIT) -->
 <div class="account-modal" id="accountModal">
 <div class="account-window">
 <button class="close-account" onclick="closeAccount()">✕</button>
@@ -54,6 +54,12 @@
 <form id="loginForm" class="account-form" autocomplete="on">
 <input type="email" name="email" placeholder="E-posta" autocomplete="username">
 <input type="password" name="password" placeholder="Şifre" autocomplete="current-password">
+
+<!-- YENİ ŞİFREMİ UNUTTUM LINKI -->
+<div style="text-align: right; width: 100%; margin-top: -5px; margin-bottom: 5px;">
+  <a href="#" id="forgotPasswordBtn" style="color: #a855f7; font-size: 0.85rem; text-decoration: none;">Şifremi Unuttum?</a>
+</div>
+
 <button type="submit" class="account-submit">Giriş Yap</button>
 </form>
 
@@ -65,6 +71,24 @@
 </form>
 
 </div>
+</div>
+
+<!-- PROFİL AYARLARI POPUP -->
+<div class="settings-modal" id="settingsModal">
+  <div class="settings-window">
+    <button class="close-account" onclick="document.getElementById('settingsModal').style.display='none'">✕</button>
+    <h2>⚙️ Profil Ayarları</h2>
+    
+    <form id="profileSettingsForm">
+      <label style="color:#aaa; font-size:0.85rem; display:block; text-align:left; margin-bottom:5px;">Profil Fotoğrafı URL (Resim Bağlantısı):</label>
+      <input type="url" name="photoUrl" placeholder="https://resim-linki.com/foto.jpg">
+      
+      <label style="color:#aaa; font-size:0.85rem; display:block; text-align:left; margin-bottom:5px; margin-top:10px;">Yeni Şifre (Değiştirmek İstemiyorsan Boş Bırak):</label>
+      <input type="password" name="newPassword" placeholder="Yeni Şifreniz">
+      
+      <button type="submit" class="settings-btn">Kaydet ve Güncelle</button>
+    </form>
+  </div>
 </div>
 
 <script>
@@ -121,7 +145,6 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 const chatBox = document.getElementById("chatBox");
-const chatForm = document.getElementById("chatForm");
 const chatInput = document.getElementById("chatInput");
 const sendBtn = document.getElementById("sendMessageBtn");
 
@@ -157,10 +180,7 @@ onSnapshot(q, (snapshot) => {
     const data = doc.data();
     const messageDiv = document.createElement("div");
     
-    // Mesaj sana mı ait kontrolü (Giriş yapılmışsa ve UID tutuyorsa)
     const isMe = currentUser && data.uid === currentUser.uid;
-    
-    // Sana aitse 'my-message' class'ı ekler
     messageDiv.className = isMe ? "message my-message" : "message";
     
     const cleanUser = escapeHtml(data.username || "Kullanıcı");
@@ -181,11 +201,6 @@ onSnapshot(q, (snapshot) => {
 // Mesaj Gönderme İşlemi
 async function sendMessage() {
   if (!currentUser) {
-    if (typeof window.showToast === "function") {
-      window.showToast("Mesaj yazmak için giriş yapmalısın!");
-    } else {
-      alert("Mesaj yazmak için lütfen giriş yapın.");
-    }
     document.getElementById("accountModal").style.display = "flex";
     return;
   }
