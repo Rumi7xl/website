@@ -765,3 +765,347 @@ footer{
 
 
 }
+
+/* ========================= */
+/* RUMİ7XL LIVE PANEL */
+/* ========================= */
+
+
+.stats-panel{
+
+    width:90%;
+    max-width:1500px;
+
+    margin:80px auto;
+
+    text-align:center;
+
+}
+
+
+
+.stats-panel > h2{
+
+    font-size:45px;
+
+    color:#9146ff;
+
+    margin-bottom:40px;
+
+    text-shadow:
+
+    0 0 15px #9146ff,
+
+    0 0 30px #9146ff;
+
+}
+
+
+
+
+
+.stats-container{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:25px;
+
+    flex-wrap:wrap;
+
+}
+
+
+
+
+
+
+
+.stats-card{
+
+
+    width:300px;
+
+    min-height:430px;
+
+
+    background:
+
+    linear-gradient(
+
+    145deg,
+
+    #151515,
+
+    #090909
+
+    );
+
+
+    border:1px solid #222;
+
+
+    border-radius:25px;
+
+
+    padding:25px;
+
+
+    transition:.3s;
+
+
+    box-shadow:
+
+    0 0 25px rgba(145,70,255,.15);
+
+
+}
+
+
+
+
+
+.stats-card:hover{
+
+
+    transform:translateY(-10px);
+
+
+    border-color:#9146ff;
+
+
+    box-shadow:
+
+    0 0 45px rgba(145,70,255,.5);
+
+
+}
+
+
+
+
+
+.stats-card h3{
+
+
+    font-size:25px;
+
+    margin-bottom:20px;
+
+
+    color:#9146ff;
+
+
+    text-shadow:
+
+    0 0 15px #9146ff;
+
+
+}
+
+
+
+
+
+.stats-number{
+
+
+    font-size:55px;
+
+
+    font-weight:bold;
+
+
+    margin-bottom:15px;
+
+
+    color:white;
+
+
+}
+
+
+
+
+
+
+
+.stats-card p{
+
+
+    color:#aaa;
+
+
+    font-size:16px;
+
+
+    margin-bottom:20px;
+
+
+}
+
+
+
+
+
+
+
+.stats-card ul{
+
+
+    list-style:none;
+
+
+    text-align:left;
+
+
+    padding:0;
+
+
+}
+
+
+
+
+
+.stats-card li{
+
+
+    background:#101010;
+
+
+    margin:8px 0;
+
+
+    padding:10px 15px;
+
+
+    border-radius:12px;
+
+
+    color:#ddd;
+
+
+    border-left:3px solid #9146ff;
+
+
+    transition:.3s;
+
+
+}
+
+
+
+
+
+.stats-card li:hover{
+
+
+    background:#181818;
+
+
+    transform:translateX(5px);
+
+
+}
+
+
+
+
+
+
+/* KICK ABONE */
+
+.stats-card:first-child h3{
+
+    color:#53fc18;
+
+    text-shadow:
+
+    0 0 15px #53fc18;
+
+}
+
+
+
+.stats-card:nth-child(2) h3{
+
+    color:#53fc18;
+
+    text-shadow:
+
+    0 0 15px #53fc18;
+
+}
+
+
+
+
+
+/* YOUTUBE */
+
+.stats-card:nth-child(3) h3{
+
+    color:#ff0000;
+
+    text-shadow:
+
+    0 0 15px #ff0000;
+
+}
+
+
+
+
+
+
+/* TIKTOK */
+
+.stats-card:nth-child(4) h3{
+
+    color:white;
+
+    text-shadow:
+
+    0 0 15px white;
+
+}
+
+
+
+
+
+@media(max-width:1200px){
+
+
+.stats-card{
+
+    width:45%;
+
+}
+
+
+}
+
+
+
+
+@media(max-width:700px){
+
+
+.stats-card{
+
+    width:95%;
+
+}
+
+
+.stats-panel h2{
+
+    font-size:32px;
+
+}
+
+
+}
