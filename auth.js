@@ -43,19 +43,16 @@ onAuthStateChanged(auth, (user) => {
       </div>
     `;
 
-    // Dropdown Tıklama Dinleyicileri
     document.getElementById("userProfileBtn").onclick = (e) => {
       e.stopPropagation();
       document.getElementById("dropdownMenu").classList.toggle("show");
     };
 
-    // Fotoğraf Modal Aç
     document.getElementById("openPhotoModalBtn").onclick = (e) => {
       e.preventDefault();
       document.getElementById("photoModal").style.display = "flex";
     };
 
-    // Şifre Modal Aç
     document.getElementById("openPassModalBtn").onclick = (e) => {
       e.preventDefault();
       document.getElementById("passwordModal").style.display = "flex";
@@ -71,7 +68,6 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-// Sayfa geneline tıklandığında açılır menüyü kapat
 document.addEventListener("click", () => {
   const menu = document.getElementById("dropdownMenu");
   if (menu) menu.classList.remove("show");
@@ -79,7 +75,6 @@ document.addEventListener("click", () => {
 
 // FORM İŞLEMLERİ
 document.addEventListener("submit", async (e) => {
-  // Giriş
   if (e.target.id === "loginForm") {
     e.preventDefault();
     const email = e.target.email.value;
@@ -90,7 +85,6 @@ document.addEventListener("submit", async (e) => {
     } catch (err) { alert("Giriş Hatalı: " + err.message); }
   }
 
-  // Kayıt
   if (e.target.id === "registerForm") {
     e.preventDefault();
     const username = e.target.username.value;
@@ -104,27 +98,35 @@ document.addEventListener("submit", async (e) => {
     } catch (err) { alert("Kayıt Hatalı: " + err.message); }
   }
 
-  // Fotoğraf Güncelleme
+  // DOSYADAN FOTOĞRAF YÜKLEME SİSTEMİ (BASE64 SIKIŞTIRMA)
   if (e.target.id === "photoSettingsForm") {
     e.preventDefault();
-    const photoUrl = e.target.photoUrl.value.trim();
+    const fileInput = document.getElementById("photoFileInput");
     const user = auth.currentUser;
 
-    if (!user) return;
+    if (!user || !fileInput.files[0]) {
+      alert("Lütfen bir resim dosyası seç kanka!");
+      return;
+    }
 
-    try {
-      if (photoUrl) {
-        await updateProfile(user, { photoURL: photoUrl });
-        alert("Profil fotoğrafın güncellendi! 🔥");
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+
+    reader.onload = async function (evt) {
+      try {
+        const base64Photo = evt.target.result;
+        await updateProfile(user, { photoURL: base64Photo });
+        alert("Profil fotoğrafın başarıyla güncellendi! 🔥");
         document.getElementById("photoModal").style.display = "none";
         location.reload();
+      } catch (err) {
+        alert("Fotoğraf Güncelleme Hatası: " + err.message);
       }
-    } catch (err) {
-      alert("Fotoğraf Güncelleme Hatası: " + err.message);
-    }
+    };
+
+    reader.readAsDataURL(file);
   }
 
-  // Şifre Güncelleme
   if (e.target.id === "passwordSettingsForm") {
     e.preventDefault();
     const newPass = e.target.changePassword.value.trim();
@@ -144,7 +146,6 @@ document.addEventListener("submit", async (e) => {
   }
 });
 
-// Şifremi Unuttum
 document.addEventListener("click", (e) => {
   if (e.target.id === "forgotPasswordBtn") {
     e.preventDefault();
