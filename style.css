@@ -8,6 +8,7 @@ body{
     color:white;
     font-family:Arial, Helvetica, sans-serif;
 }
+
 /* HERO */
 .hero{
     width:100%;
@@ -29,8 +30,7 @@ body{
     height:420px;
     object-fit:cover;
     border-radius:35px;
-    box-shadow:
-    0 0 80px rgba(145,70,255,.5);
+    box-shadow: 0 0 80px rgba(145,70,255,.5);
 }
 .hero h1{
     margin-top:35px;
@@ -59,6 +59,7 @@ body{
     font-size:60px;
     color:#9146ff;
 }
+
 /* KARTLAR */
 .platforms{
     width:90%;
@@ -72,12 +73,7 @@ body{
 .box{
     width:280px;
     height:430px;
-    background:
-    linear-gradient(
-    145deg,
-    #151515,
-    #090909
-    );
+    background: linear-gradient(145deg, #151515, #090909);
     border:1px solid #222;
     border-radius:25px;
     padding:25px;
@@ -91,9 +87,9 @@ body{
 .box:hover{
     transform:translateY(-10px);
     border-color:#9146ff;
-    box-shadow:
-    0 0 40px rgba(145,70,255,.4);
+    box-shadow: 0 0 40px rgba(145,70,255,.4);
 }
+
 /* LOGOLAR */
 .platform-logo{
     width:90px;
@@ -112,6 +108,7 @@ body{
     height:120px;
     object-fit:contain;
 }
+
 /* KICK */
 .kick{
     border-color:#53fc18;
@@ -120,6 +117,7 @@ body{
     width:100px;
     height:100px;
 }
+
 /* DİĞER LOGOLAR */
 .youtube{
     border-color:#ff0000;
@@ -130,54 +128,48 @@ body{
 .instagram{
     border-color:#e1306c;
 }
-/* YOUTUBE LOGO */
+
+/* LOGO BOYUTLARI */
 .youtube img{
     width:125px;
     height:125px;
     object-fit:contain;
 }
-/* TIKTOK LOGO */
 .tiktok img{
     width:65px;
     height:65px;
     object-fit:contain;
 }
-/* INSTAGRAM LOGO */
 .instagram img{
     width:80px;
     height:80px;
     object-fit:contain;
 }
+
 .box h2{
     font-size:30px;
     margin-bottom:12px;
     letter-spacing:1px;
 }
+
 /* BAŞLIK RENKLERİ */
 .kick-card h2{
     color:#53fc18;
-    text-shadow:
-    0 0 10px #53fc18,
-    0 0 20px #53fc18;
+    text-shadow: 0 0 10px #53fc18, 0 0 20px #53fc18;
 }
 .youtube-card h2{
     color:#ff0000;
-    text-shadow:
-    0 0 10px #ff0000,
-    0 0 20px #ff0000;
+    text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
 }
 .tiktok-card h2{
     color:white;
-    text-shadow:
-    0 0 10px white,
-    0 0 20px white;
+    text-shadow: 0 0 10px white, 0 0 20px white;
 }
 .instagram-card h2{
     color:#e1306c;
-    text-shadow:
-    0 0 10px #e1306c,
-    0 0 20px #e1306c;
+    text-shadow: 0 0 10px #e1306c, 0 0 20px #e1306c;
 }
+
 /* AÇIKLAMALAR */
 .box p{
     color:#aaa;
@@ -191,6 +183,7 @@ body{
     text-align:center;
     margin-bottom:20px;
 }
+
 /* BUTONLAR */
 .box a{
     padding:8px 25px;
@@ -202,7 +195,8 @@ body{
     border-radius:25px;
     transition:.3s;
 }
-/* KICK */
+
+/* PLATFORM HOVER BUTONLARI */
 .kick-card a{
     border-color:#53fc18;
     color:#53fc18;
@@ -210,10 +204,8 @@ body{
 .kick-card a:hover{
     background:#53fc18;
     color:black;
-    box-shadow:
-    0 0 25px #53fc18;
+    box-shadow: 0 0 25px #53fc18;
 }
-/* YOUTUBE */
 .youtube-card a{
     border-color:#ff0000;
     color:#ff0000;
@@ -221,10 +213,8 @@ body{
 .youtube-card a:hover{
     background:#ff0000;
     color:white;
-    box-shadow:
-    0 0 25px #ff0000;
+    box-shadow: 0 0 25px #ff0000;
 }
-/* TIKTOK */
 .tiktok-card a{
     border-color:white;
     color:white;
@@ -232,10 +222,8 @@ body{
 .tiktok-card a:hover{
     background:white;
     color:black;
-    box-shadow:
-    0 0 25px white;
+    box-shadow: 0 0 25px white;
 }
-/* INSTAGRAM */
 .instagram-card a{
     border-color:#e1306c;
     color:#e1306c;
@@ -243,9 +231,9 @@ body{
 .instagram-card a:hover{
     background:#e1306c;
     color:white;
-    box-shadow:
-    0 0 25px #e1306c;
+    box-shadow: 0 0 25px #e1306c;
 }
+
 /* HAKKIMDA */
 .about{
     width:90%;
@@ -253,16 +241,10 @@ body{
     margin:80px auto;
     padding:40px;
     text-align:center;
-    background:
-    linear-gradient(
-    145deg,
-    #151515,
-    #090909
-    );
+    background: linear-gradient(145deg, #151515, #090909);
     border:1px solid #222;
     border-radius:25px;
-    box-shadow:
-    0 0 40px rgba(145,70,255,.15);
+    box-shadow: 0 0 40px rgba(145,70,255,.15);
 }
 .about h2{
     font-size:40px;
@@ -275,27 +257,13 @@ body{
     line-height:1.8;
     margin-bottom:15px;
 }
+
 footer{
     text-align:center;
     padding:40px;
     color:#777;
 }
-@media(max-width:800px){
-.banner{
-    width:100%;
-    height:250px;
-}
-.hero h1{
-    font-size:55px;
-}
-.platforms{
-    flex-direction:column;
-    align-items:center;
-}
-.box{
-    width:90%;
-}
-}
+
 /* ========================= */
 /* RUMİ7XL LIVE PANEL */
 /* ========================= */
@@ -309,9 +277,7 @@ footer{
     font-size:45px;
     color:#9146ff;
     margin-bottom:40px;
-    text-shadow:
-    0 0 15px #9146ff,
-    0 0 30px #9146ff;
+    text-shadow: 0 0 15px #9146ff, 0 0 30px #9146ff;
 }
 .stats-container{
     display:flex;
@@ -322,31 +288,23 @@ footer{
 .stats-card{
     width:300px;
     min-height:430px;
-    background:
-    linear-gradient(
-    145deg,
-    #151515,
-    #090909
-    );
+    background: linear-gradient(145deg, #151515, #090909);
     border:1px solid #222;
     border-radius:25px;
     padding:25px;
     transition:.3s;
-    box-shadow:
-    0 0 25px rgba(145,70,255,.15);
+    box-shadow: 0 0 25px rgba(145,70,255,.15);
 }
 .stats-card:hover{
     transform:translateY(-10px);
     border-color:#9146ff;
-    box-shadow:
-    0 0 45px rgba(145,70,255,.5);
+    box-shadow: 0 0 45px rgba(145,70,255,.5);
 }
 .stats-card h3{
     font-size:25px;
     margin-bottom:20px;
     color:#9146ff;
-    text-shadow:
-    0 0 15px #9146ff;
+    text-shadow: 0 0 15px #9146ff;
 }
 .stats-number{
     font-size:55px;
@@ -377,45 +335,7 @@ footer{
     background:#181818;
     transform:translateX(5px);
 }
-/* KICK ABONE */
-.stats-card:first-child h3{
-    color:#53fc18;
-    text-shadow:
-    0 0 15px #53fc18;
-}
-.stats-card:nth-child(2) h3{
-    color:#53fc18;
-    text-shadow:
-    0 0 15px #53fc18;
-}
-/* YOUTUBE */
-.stats-card:nth-child(3) h3{
-    color:#ff0000;
-    text-shadow:
-    0 0 15px #ff0000;
-}
-/* TIKTOK */
-.stats-card:nth-child(4) h3{
-    color:white;
-    text-shadow:
-    0 0 15px white;
-}
-@media(max-width:1200px){
-.stats-card{
-    width:45%;
-}
-}
-@media(max-width:700px){
-.stats-card{
-    width:95%;
-}
-.stats-panel h2{
-    font-size:32px;
-}
-}
-/* ========================= */
-/* PREMIUM RUMI7XL STATS */
-/* ========================= */
+
 .progress{
     width:100%;
     height:16px;
@@ -437,11 +357,9 @@ footer{
     to{width:64%;}
 }
 
-
 /* ========================= */
 /* NAVBAR */
 /* ========================= */
-
 .navbar{
     position:relative;
     margin:20px auto 50px;
@@ -451,179 +369,132 @@ footer{
     width:92%;
     max-width:1500px;
     height:70px;
-
     display:flex;
     align-items:center;
     justify-content:space-between;
-
     padding:0 25px;
-
     background:rgba(15,15,15,.75);
     backdrop-filter:blur(18px);
-
     border:1px solid rgba(145,70,255,.25);
     border-radius:18px;
-
-    box-shadow:
-    0 0 30px rgba(0,0,0,.4);
-
+    box-shadow: 0 0 30px rgba(0,0,0,.4);
     z-index:9999;
 }
-
-
 .logo{
     color:#9146ff;
     text-decoration:none;
-
     font-size:30px;
     font-weight:800;
     letter-spacing:2px;
-
-    text-shadow:
-    0 0 15px #9146ff;
+    text-shadow: 0 0 15px #9146ff;
 }
-
-
 .nav-links{
     display:flex;
     align-items:center;
     gap:30px;
 }
-
-
 .nav-links a{
-
     color:#ddd;
     text-decoration:none;
-
     font-size:16px;
     font-weight:600;
-
     transition:.3s;
-
     position:relative;
 }
-
-
 .nav-links a:hover{
     color:white;
 }
-
-
 .nav-links a::after{
-
     content:"";
-
     position:absolute;
-
     bottom:-8px;
     left:0;
-
     width:0;
     height:2px;
-
     background:#9146ff;
-
     transition:.3s;
 }
-
-
 .nav-links a:hover::after{
     width:100%;
 }
 
-
 .account-box{
-
     display:flex;
+    align-items:center;
     gap:12px;
 }
-
-
 .account-box a{
-
     text-decoration:none;
-
     padding:11px 20px;
-
     border-radius:30px;
-
     font-weight:700;
-
     transition:.3s;
 }
-
-
 .login-btn{
-
     color:white;
-
     border:1px solid #444;
 }
-
-
 .login-btn:hover{
-
     border-color:#9146ff;
-
-    box-shadow:
-    0 0 20px rgba(145,70,255,.5);
+    box-shadow: 0 0 20px rgba(145,70,255,.5);
 }
-
-
 .register-btn{
-
     background:#9146ff;
-
     color:white;
 }
-
-
 .register-btn:hover{
-
     transform:translateY(-2px);
-
-    box-shadow:
-    0 0 25px #9146ff;
+    box-shadow: 0 0 25px #9146ff;
 }
 
-
-
-@media(max-width:1000px){
-
-    .nav-links{
-        display:none;
-    }
-
-    .navbar{
-        width:95%;
-    }
-
+.user-name{
+    color:#9146ff;
+    font-size:16px;
 }
 
+/* ========================= */
+/* BİLDİRİM KUTUSU (TOAST) */
+/* ========================= */
+#siteToast {
+    position: fixed;
+    top: 25px;
+    right: 25px;
+    background: #9146ff;
+    color: white;
+    padding: 14px 25px;
+    border-radius: 20px;
+    font-size: 15px;
+    font-weight: bold;
+    box-shadow: 0 0 25px rgba(145, 70, 255, 0.6);
+    opacity: 0;
+    transform: translateY(-30px);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 999999;
+    pointer-events: none;
+}
+#siteToast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
 
 /* ========================= */
 /* TOPLULUK SOHBET */
 /* ========================= */
-
 .community{
     width:90%;
     max-width:1000px;
     margin:80px auto;
     text-align:center;
 }
-
 .community h1{
     color:#9146ff;
     font-size:45px;
     text-shadow:0 0 20px #9146ff;
 }
-
 .community > p{
     color:#aaa;
     margin:15px 0 35px;
 }
-
 .chat-box{
     background:#111;
     border:1px solid #333;
@@ -633,7 +504,6 @@ footer{
     text-align:left;
     box-shadow:0 0 35px rgba(145,70,255,.15);
 }
-
 .message{
     background:#181818;
     border-left:3px solid #9146ff;
@@ -641,23 +511,19 @@ footer{
     border-radius:15px;
     margin-bottom:15px;
 }
-
 .message b{
     display:block;
     color:#9146ff;
     margin-bottom:8px;
 }
-
 .message span{
     color:#ddd;
 }
-
 .chat-input{
     display:flex;
     gap:10px;
     margin-top:20px;
 }
-
 .chat-input input{
     flex:1;
     background:#111;
@@ -667,7 +533,6 @@ footer{
     border-radius:30px;
     outline:none;
 }
-
 .chat-input button{
     background:#9146ff;
     color:white;
@@ -677,49 +542,24 @@ footer{
     cursor:pointer;
 }
 
-@media(max-width:700px){
-
-.community{
-    width:94%;
-}
-
-.community h1{
-    font-size:32px;
-}
-
-.chat-input{
-    flex-direction:column;
-}
-
-.chat-input button{
-    height:45px;
-}
-
-}
-
-
 /* ========================= */
 /* ÖNERİLER YORUM SİSTEMİ */
 /* ========================= */
-
 .suggestions{
     width:90%;
     max-width:1000px;
     margin:80px auto;
     text-align:center;
 }
-
 .suggestions h1{
     color:#9146ff;
     font-size:45px;
     text-shadow:0 0 20px #9146ff;
 }
-
 .suggestions > p{
     color:#aaa;
     margin:15px 0 35px;
 }
-
 .suggest-box{
     background:#111;
     border:1px solid #333;
@@ -730,7 +570,6 @@ footer{
     flex-direction:column;
     gap:15px;
 }
-
 .suggest-box textarea{
     width:100%;
     height:130px;
@@ -743,7 +582,6 @@ footer{
     outline:none;
     font-size:16px;
 }
-
 .suggest-box button{
     width:150px;
     margin:auto;
@@ -755,14 +593,12 @@ footer{
     font-weight:bold;
     cursor:pointer;
 }
-
 .suggestions-list{
     margin-top:35px;
     display:flex;
     flex-direction:column;
     gap:20px;
 }
-
 .suggest-card{
     text-align:left;
     background:#111;
@@ -770,110 +606,134 @@ footer{
     border-radius:20px;
     padding:20px;
 }
-
 .suggest-card b{
     color:#9146ff;
 }
-
 .suggest-card p{
     color:#ddd;
     margin:15px 0;
 }
-
 .actions{
     color:#aaa;
 }
 
-@media(max-width:700px){
+/* ========================= */
+/* ACCOUNT MODAL */
+/* ========================= */
+.account-modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.75);
+    backdrop-filter:blur(8px);
+    justify-content:center;
+    align-items:center;
+    z-index:99999;
+}
+.account-window{
+    width:380px;
+    background:#111;
+    border:1px solid #9146ff;
+    border-radius:25px;
+    padding:30px;
+    box-shadow:0 0 50px rgba(145,70,255,.5);
+    position:relative;
+}
+.close-account{
+    position:absolute;
+    right:20px;
+    top:15px;
+    background:none;
+    border:0;
+    color:white;
+    font-size:22px;
+    cursor:pointer;
+}
+.account-tabs{
+    display:flex;
+    gap:10px;
+    margin-bottom:25px;
+}
+.account-tabs button{
+    flex:1;
+    padding:12px;
+    border-radius:20px;
+    border:1px solid #333;
+    background:#181818;
+    color:white;
+    cursor:pointer;
+}
+.account-tabs .active{
+    background:#9146ff;
+}
+.account-form{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+.account-form input{
+    padding:15px;
+    border-radius:15px;
+    border:1px solid #333;
+    background:#181818;
+    color:white;
+    outline:none;
+}
+.account-submit{
+    padding:14px;
+    border:0;
+    border-radius:25px;
+    background:#9146ff;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
 
-    .suggestions{
+/* RESPONSIVE */
+@media(max-width:1000px){
+    .nav-links{
+        display:none;
+    }
+    .navbar{
+        width:95%;
+    }
+}
+@media(max-width:800px){
+    .banner{
+        width:100%;
+        height:250px;
+    }
+    .hero h1{
+        font-size:55px;
+    }
+    .platforms{
+        flex-direction:column;
+        align-items:center;
+    }
+    .box{
+        width:90%;
+    }
+}
+@media(max-width:700px){
+    .community, .suggestions{
         width:94%;
     }
-
-    .suggestions h1{
+    .community h1, .suggestions h1{
         font-size:32px;
     }
-
+    .chat-input{
+        flex-direction:column;
+    }
+    .chat-input button{
+        height:45px;
+    }
     .suggest-box{
         padding:15px;
     }
-
-}
-
-
-.account-modal{
-display:none;
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.75);
-backdrop-filter:blur(8px);
-justify-content:center;
-align-items:center;
-z-index:99999;
-}
-
-.account-window{
-width:380px;
-background:#111;
-border:1px solid #9146ff;
-border-radius:25px;
-padding:30px;
-box-shadow:0 0 50px rgba(145,70,255,.5);
-position:relative;
-}
-
-.close-account{
-position:absolute;
-right:20px;
-top:15px;
-background:none;
-border:0;
-color:white;
-font-size:22px;
-cursor:pointer;
-}
-
-.account-tabs{
-display:flex;
-gap:10px;
-margin-bottom:25px;
-}
-
-.account-tabs button{
-flex:1;
-padding:12px;
-border-radius:20px;
-border:1px solid #333;
-background:#181818;
-color:white;
-cursor:pointer;
-}
-
-.account-tabs .active{
-background:#9146ff;
-}
-
-.account-form{
-display:flex;
-flex-direction:column;
-gap:15px;
-}
-
-.account-form input{
-padding:15px;
-border-radius:15px;
-border:1px solid #333;
-background:#181818;
-color:white;
-outline:none;
-}
-
-.account-submit{
-padding:14px;
-border:0;
-border-radius:25px;
-background:#9146ff;
-color:white;
-font-weight:bold;
-cursor:pointer;
+    .stats-card{
+        width:95%;
+    }
+    .stats-panel h2{
+        font-size:32px;
+    }
 }
