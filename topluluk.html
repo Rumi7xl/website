@@ -6,6 +6,7 @@
   <title>RUMİ7XL - Topluluk</title>
   <link rel="stylesheet" href="style.css">
   <style>
+    /* SOHBET KUTUSU VE CHAT MANTIĞI */
     .chat-container {
       max-width: 800px;
       margin: 30px auto;
@@ -18,30 +19,106 @@
       box-shadow: 0 0 30px rgba(145, 70, 255, 0.15);
       overflow: hidden;
     }
+    
     .chat-messages {
       flex: 1;
       padding: 20px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 12px;
     }
+
+    /* ÖZEL ŞIK SCROLLBAR (BEYAZ YAPIYI YOK ETMEK İÇİN) */
+    .chat-messages::-webkit-scrollbar {
+      width: 6px;
+    }
+    .chat-messages::-webkit-scrollbar-track {
+      background: #0d0d0d;
+    }
+    .chat-messages::-webkit-scrollbar-thumb {
+      background: #222;
+      border-radius: 10px;
+    }
+    .chat-messages::-webkit-scrollbar-thumb:hover {
+      background: #9146ff;
+    }
+
+    /* GENEL MESAJ KUTUSU STİLİ */
     .chat-msg {
       display: flex;
-      gap: 12px;
-      align-items: flex-start;
-      background: rgba(255,255,255,0.02);
-      border: 1px solid rgba(255,255,255,0.05);
-      padding: 12px 16px;
-      border-radius: 16px;
+      gap: 10px;
+      align-items: flex-end;
+      max-width: 75%;
     }
+
+    /* BAŞKASININ MESAJI (SOLDA) */
+    .chat-msg.other-msg {
+      align-self: flex-start;
+      flex-direction: row;
+    }
+    .chat-msg.other-msg .msg-bubble {
+      background: #181818;
+      border: 1px solid #282828;
+      border-bottom-left-radius: 4px;
+      color: #ddd;
+    }
+
+    /* SENİN MESAJIN (SAĞDA) */
+    .chat-msg.my-msg {
+      align-self: flex-end;
+      flex-direction: row-reverse;
+    }
+    .chat-msg.my-msg .msg-bubble {
+      background: linear-gradient(135deg, #7c2ae8, #9146ff);
+      border-bottom-right-radius: 4px;
+      color: white;
+      box-shadow: 0 0 15px rgba(145, 70, 255, 0.3);
+    }
+    .chat-msg.my-msg .msg-header {
+      justify-content: flex-end;
+    }
+    .chat-msg.my-msg .msg-username {
+      color: #e9d5ff;
+    }
+    .chat-msg.my-msg .msg-time {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* MESAJ BALONCUĞU */
+    .msg-bubble {
+      padding: 10px 14px;
+      border-radius: 18px;
+      font-size: 14px;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    .msg-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .msg-username {
+      font-weight: bold;
+      font-size: 13px;
+    }
+    .msg-time {
+      font-size: 10px;
+      color: #777;
+    }
+
     .chat-msg img {
-      width: 40px;
-      height: 40px;
+      width: 35px;
+      height: 35px;
       border-radius: 50%;
       border: 2px solid #9146ff;
       object-fit: cover;
+      flex-shrink: 0;
     }
+
+    /* INPUT ALANI */
     .chat-input-area {
       padding: 15px 20px;
       background: #141414;
