@@ -169,7 +169,7 @@ modal.style.display="none";
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
-import {getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+import {getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
 
 const app=initializeApp({
 apiKey:"AIzaSyCiuXtHu3J9Va46a4KiETO2Jr5um2KoQ",
@@ -193,6 +193,27 @@ let i=document.querySelectorAll("#registerForm input");
 await createUserWithEmailAndPassword(auth,i[1].value,i[2].value);
 location.reload();
 };
+
+onAuthStateChanged(auth,(user)=>{
+
+const box=document.querySelector(".account-box");
+
+if(user && box){
+
+box.innerHTML=`
+<a>👤 ${user.email.split("@")[0]}</a>
+<a href="#" id="logoutBtn">🚪 Çıkış Yap</a>
+`;
+
+document.getElementById("logoutBtn").onclick=(e)=>{
+e.preventDefault();
+signOut(auth).then(()=>location.reload());
+};
+
+}
+
+});
+
 </script>
 
 </body>
