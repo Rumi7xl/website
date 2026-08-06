@@ -13,6 +13,9 @@
 <meta name="description" content="RUMİ7XL resmi web sitesi. Kick canlı yayınları, YouTube videoları, TikTok içerikleri ve Instagram hesabı.">
 
 
+<link rel="icon" type="image/png" href="favicon.png?v=2">
+
+
 <link rel="stylesheet" href="style.css">
 
 
@@ -197,7 +200,6 @@ TAKİP ET >
 <div class="stats-container">
 
 
-
 <div class="stats-card">
 
 
@@ -213,11 +215,6 @@ TAKİP ET >
 
 
 </div>
-
-
-
-
-
 <div class="stats-card">
 
 
@@ -239,8 +236,13 @@ TAKİP ET >
 </ul>
 
 
-</div>;
- <div class="stats-card">
+</div>
+
+
+
+
+
+<div class="stats-card">
 
 
 <h3>▶️ YOUTUBE</h3>
@@ -337,16 +339,11 @@ fetch("https://panel-ao8e.onrender.com/api/stats")
 
 
 
-/* KICK ABONE */
-
 document.getElementById("kickSubs").innerHTML =
 data.kick.subscribers.toLocaleString("tr-TR");
 
 
 
-
-
-/* KICK TAKİPÇİ */
 
 document.getElementById("kickFollowers").innerHTML =
 data.kick.followers.toLocaleString("tr-TR");
@@ -354,19 +351,11 @@ data.kick.followers.toLocaleString("tr-TR");
 
 
 
-
-
-/* YOUTUBE */
-
 document.getElementById("youtubeSubs").innerHTML =
 data.youtube.subscribers.toLocaleString("tr-TR");
 
 
 
-
-
-
-/* TIKTOK */
 
 document.getElementById("tiktokFollowers").innerHTML =
 data.tiktok.followers.toLocaleString("tr-TR");
@@ -374,9 +363,6 @@ data.tiktok.followers.toLocaleString("tr-TR");
 
 
 
-
-
-/* SON TAKİPÇİLER */
 
 let followers = "";
 
@@ -392,9 +378,7 @@ followers += `
 
 `;
 
-
 });
-
 
 
 document.getElementById("followersList").innerHTML = followers;
@@ -402,7 +386,6 @@ document.getElementById("followersList").innerHTML = followers;
 
 
 })
-
 
 
 .catch(error => {
@@ -416,6 +399,7 @@ console.log("API bağlantı hatası:", error);
 
 
 </script>
+
 
 
 
