@@ -127,11 +127,11 @@ Yeni korku oyunu serisi yap
 <button id="registerTab" onclick="showRegister()">Kayıt Ol</button>
 </div>
 
-<div id="loginForm" class="account-form">
+<form id="loginForm" class="account-form" autocomplete="on">
 <input type="email" name="email" placeholder="E-posta" autocomplete="email">
 <input type="password" name="password" placeholder="Şifre" autocomplete="current-password">
 <button type="button" class="account-submit">Giriş Yap</button>
-</div>
+</form>
 
 <div id="registerForm" class="account-form" style="display:none;">
 <input type="text" name="username" placeholder="Kullanıcı adı" autocomplete="username">
@@ -204,6 +204,7 @@ let i=document.querySelectorAll("#loginForm input");
 try{
 await signInWithEmailAndPassword(auth,i[0].value,i[1].value);
 alert("Giriş başarılı");
+closeAccount();
 location.reload();
 }catch(e){
 alert(e.message);
