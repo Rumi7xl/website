@@ -76,7 +76,7 @@ if (chatInput) {
   };
 }
 
-// CANLI MESAJLARI DİNLEME
+// CANLI MESAJLARI DİNLEME (SAĞ / SOL MANTIĞI)
 const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
 
 onSnapshot(q, (snapshot) => {
@@ -91,18 +91,21 @@ onSnapshot(q, (snapshot) => {
   snapshot.forEach((docSnap) => {
     const data = docSnap.data();
     const timeStr = getTimeStr(data.createdAt);
+    
+    // Mesaj benim mi başkasının mı?
+    const isMyMsg = currentUserObj && currentUserObj.uid === data.uid;
 
     const msgDiv = document.createElement("div");
-    msgDiv.className = "chat-msg";
+    msgDiv.className = `chat-msg ${isMyMsg ? 'my-msg' : 'other-msg'}`;
 
     msgDiv.innerHTML = `
       <img src="${data.photoURL}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(data.username)}&background=9146ff&color=fff'">
-      <div style="flex:1;">
-        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
-          <span style="font-weight:bold; color:white; font-size:14px;">${data.username}</span>
-          <span style="color:#666; font-size:11px;">${timeStr}</span>
+      <div class="msg-bubble">
+        <div class="msg-header">
+          <span class="msg-username">${data.username}</span>
+          <span class="msg-time">${timeStr}</span>
         </div>
-        <p style="color:#ddd; font-size:14px; margin:0; word-break:break-word;">${escapeHtml(data.text)}</p>
+        <div>${escapeHtml(data.text)}</div>
       </div>
     `;
 
