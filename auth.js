@@ -38,7 +38,7 @@ onAuthStateChanged(auth, async (user) => {
     const name = user.displayName || user.email.split("@")[0];
     let photo = "https://api.dicebear.com/7.x/bottts/svg?seed=" + encodeURIComponent(name);
 
-    // Fotoğrafı Firestore veritabanından çek (Auth limitine takılmaz)
+    // Fotoğrafı Firestore veritabanından çek
     try {
       const userDoc = await getDoc(doc(db, "users", user.uid));
       if (userDoc.exists() && userDoc.data().photoURL) {
@@ -81,8 +81,8 @@ onAuthStateChanged(auth, async (user) => {
 
   } else {
     accountBox.innerHTML = `
-      <a href="#" class="login-btn" onclick="document.getElementById('accountModal').style.display='flex'; showLogin();">👤 Giriş Yap</a>
-      <a href="#" class="register-btn" onclick="document.getElementById('accountModal').style.display='flex'; showRegister();">✨ Kayıt Ol</a>
+      <a href="#" class="login-btn" onclick="window.openAccountModal ? window.openAccountModal('login') : (document.getElementById('accountModal').style.display='flex'); return false;">👤 Giriş Yap</a>
+      <a href="#" class="register-btn" onclick="window.openAccountModal ? window.openAccountModal('register') : (document.getElementById('accountModal').style.display='flex'); return false;">✨ Kayıt Ol</a>
     `;
   }
 });
@@ -137,7 +137,7 @@ document.addEventListener("submit", async (e) => {
     } catch (err) { alert("Kayıt Hatalı: " + err.message); }
   }
 
-  // FIRESTORE VERİTABANINA PROFİL FOTOĞRAFI YÜKLEME (SORUNSUZ YÖNTEM)
+  // PROFİL FOTOĞRAFI YÜKLEME (FIRESTORE)
   if (e.target.id === "photoSettingsForm") {
     e.preventDefault();
     const fileInput = document.getElementById("photoFileInput");
@@ -173,7 +173,6 @@ document.addEventListener("submit", async (e) => {
         const compressedBase64 = canvas.toDataURL("image/jpeg", 0.7);
 
         try {
-          // Resmi Auth yerine doğrudan Firestore Veritabanına yazıyoruz!
           await setDoc(doc(db, "users", user.uid), {
             photoURL: compressedBase64,
             username: user.displayName || user.email.split("@")[0],
