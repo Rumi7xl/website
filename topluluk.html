@@ -29,16 +29,15 @@
 <p>Burada herkes sohbet edebilir, fikirlerini paylaşabilir.</p>
 
 <div class="chat-box" id="chatBox">
-  <!-- Canlı Mesajlar Buraya Yüklenecek -->
   <div class="message">
-    <b>👤 RUMİ7XL</b>
-    <span>Hoş geldiniz millet 👋</span>
+    <b>👤 RUMİ7XL System</b>
+    <span>Sohbet odası yüklendi! İlk mesajı sen at 👋</span>
   </div>
 </div>
 
-<form id="chatForm" class="chat-input">
+<form id="chatForm" class="chat-input" onsubmit="return false;">
   <input type="text" id="chatInput" placeholder="Mesajını yaz..." autocomplete="off">
-  <button type="submit" id="sendMessageBtn">Gönder</button>
+  <button type="button" id="sendMessageBtn">Gönder</button>
 </form>
 </section>
 
@@ -105,7 +104,6 @@ import {
   query, 
   orderBy, 
   onSnapshot, 
-  serverTimestamp,
   limit 
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
@@ -149,7 +147,7 @@ onSnapshot(q, (snapshot) => {
   if (snapshot.empty) {
     chatBox.innerHTML = `
       <div class="message">
-        <b>👤 RUMİ7XL</b>
+        <b>👤 RUMİ7XL System</b>
         <span>Henüz mesaj yok, ilk mesajı sen at! 🔥</span>
       </div>`;
     return;
@@ -198,7 +196,7 @@ async function sendMessage() {
       text: text,
       username: username,
       uid: currentUser.uid,
-      createdAt: serverTimestamp()
+      createdAt: Date.now()
     });
   } catch (err) {
     console.error("Mesaj gönderilemedi:", err);
@@ -206,19 +204,18 @@ async function sendMessage() {
   }
 }
 
-// 1. Form submit olduğunda (Enter basılınca)
-if (chatForm) {
-  chatForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    sendMessage();
-  });
+// Butona Tıklama
+if (sendBtn) {
+  sendBtn.onclick = sendMessage;
 }
 
-// 2. Gönder butonuna tıklandığında
-if (sendBtn) {
-  sendBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    sendMessage();
+// Enter Tuşuna Basma
+if (chatInput) {
+  chatInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      sendMessage();
+    }
   });
 }
 
