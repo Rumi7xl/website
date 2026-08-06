@@ -77,16 +77,16 @@
 </div>
 </div>
 
-<!-- PROFİL FOTOĞRAFI POPUP -->
+<!-- PROFİL FOTOĞRAFI POPUP (GALERİ SEÇİMİ) -->
 <div class="settings-modal" id="photoModal">
   <div class="settings-window">
     <button class="close-account" onclick="document.getElementById('photoModal').style.display='none'">✕</button>
     <h2>🖼️ Profil Fotoğrafı</h2>
     
-    <form id="photoSettingsForm" autocomplete="off">
-      <label style="color:#aaa; font-size:0.85rem; display:block; text-align:left; margin-bottom:5px;">Fotoğraf URL (Resim Bağlantısı):</label>
-      <input type="url" name="photoUrl" placeholder="https://resim-linki.com/foto.jpg" required autocomplete="off">
-      <button type="submit" class="settings-btn">Fotoğrafı Kaydet</button>
+    <form id="photoSettingsForm">
+      <label style="color:#aaa; font-size:0.85rem; display:block; text-align:left; margin-bottom:8px;">Galeriden / Cihazdan Fotoğraf Seç:</label>
+      <input type="file" id="photoFileInput" accept="image/*" required style="background: #18181b; padding: 8px; border-radius: 8px; width: 100%; color: #fff; cursor: pointer;">
+      <button type="submit" class="settings-btn" style="margin-top: 15px;">Fotoğrafı Yükle ve Kaydet</button>
     </form>
   </div>
 </div>
@@ -164,7 +164,6 @@ const sendBtn = document.getElementById("sendMessageBtn");
 
 let currentUser = null;
 
-// Oturum Durumu Takibi
 onAuthStateChanged(auth, (user) => {
   currentUser = user;
   if (!user) {
@@ -174,7 +173,6 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-// Firestore'dan Canlı Mesaj Çekme
 const messagesRef = collection(db, "messages");
 const q = query(messagesRef, orderBy("createdAt", "asc"), limit(50));
 
@@ -219,7 +217,6 @@ onSnapshot(q, (snapshot) => {
   console.error("Firestore Dinleme Hatası:", err);
 });
 
-// Mesaj Gönderme İşlemi
 async function sendMessage() {
   if (!currentUser) {
     document.getElementById("accountModal").style.display = "flex";
@@ -247,12 +244,10 @@ async function sendMessage() {
   }
 }
 
-// Butona Tıklama
 if (sendBtn) {
   sendBtn.onclick = sendMessage;
 }
 
-// Enter Tuşuna Basma
 if (chatInput) {
   chatInput.addEventListener("keypress", (e) => {
     if (e.key === "Enter") {
