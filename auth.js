@@ -9,6 +9,12 @@ import {
   sendPasswordResetEmail,
   updatePassword
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc
+} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCiuXtHu3J9Va46a4KiETO2JrSn5um2KoQ",
@@ -21,15 +27,28 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
 // OTURUM DURUMUNA GÖRE SAĞ ÜSTÜ DÜZENLE
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
   const accountBox = document.querySelector(".account-box");
   if (!accountBox) return;
 
   if (user) {
     const name = user.displayName || user.email.split("@")[0];
-    const photo = user.photoURL || "https://api.dicebear.com/7.x/bottts/svg?seed=" + encodeURIComponent(name);
+    let photo = "https://api.dicebear.com/7.x/bottts/svg?seed=" + encodeURIComponent(name);
+
+    // Fotoğrafı Firestore veritabanından çek (Auth limitine takılmaz)
+    try {
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      if (userDoc.exists() && userDoc.data().photoURL) {
+        photo = userDoc.data().photoURL;
+      } else if (user.photoURL) {
+        photo = user.photoURL;
+      }
+    } catch (e) {
+      console.log("Profil fotosu veritabanından alınamadı:", e);
+    }
 
     accountBox.innerHTML = `
       <div class="user-profile-menu" id="userProfileBtn">
@@ -118,7 +137,7 @@ document.addEventListener("submit", async (e) => {
     } catch (err) { alert("Kayıt Hatalı: " + err.message); }
   }
 
-  // ULTRA SIKIŞTIRMA İLE RESİM YÜKLEME (FIREBASE LIMITINI AŞMAZ)
+  // FIRESTORE VERİTABANINA PROFİL FOTOĞRAFI YÜKLEME (SORUNSUZ YÖNTEM)
   if (e.target.id === "photoSettingsForm") {
     e.preventDefault();
     const fileInput = document.getElementById("photoFileInput");
@@ -130,8 +149,10 @@ document.addEventListener("submit", async (e) => {
     }
 
     const file = fileInput.files[0];
-    const reader = new FileReader();
+    const submitBtn = e.target.querySelector("button[type='submit']");
+    if (submitBtn) submitBtn.innerText = "Yükleniyor...";
 
+    const reader = new FileReader();
     reader.onload = function (evt) {
       const img = new Image();
       img.src = evt.target.result;
@@ -139,28 +160,32 @@ document.addEventListener("submit", async (e) => {
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
         
-        // Profil avatarı için kare boyut (128x128)
-        const size = 128;
+        const size = 150;
         canvas.width = size;
         canvas.height = size;
 
-        // Resmi ortalayarak kırpma hesabı
         let minDim = Math.min(img.width, img.height);
         let sx = (img.width - minDim) / 2;
         let sy = (img.height - minDim) / 2;
 
         ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, size, size);
 
-        // Kaliteyi JPEG %60 yaparak karakter uzunluğunu ~1200 karaktere düşürüyoruz (Firebase sınırı ~2048)
-        const compressedBase64 = canvas.toDataURL("image/jpeg", 0.6);
+        const compressedBase64 = canvas.toDataURL("image/jpeg", 0.7);
 
         try {
-          await updateProfile(user, { photoURL: compressedBase64 });
+          // Resmi Auth yerine doğrudan Firestore Veritabanına yazıyoruz!
+          await setDoc(doc(db, "users", user.uid), {
+            photoURL: compressedBase64,
+            username: user.displayName || user.email.split("@")[0],
+            updatedAt: Date.now()
+          }, { merge: true });
+
           alert("Profil fotoğrafın başarıyla güncellendi! 🔥");
           document.getElementById("photoModal").style.display = "none";
           location.reload();
         } catch (err) {
           alert("Fotoğraf Güncelleme Hatası: " + err.message);
+          if (submitBtn) submitBtn.innerText = "Fotoğrafı Yükle ve Kaydet";
         }
       };
     };
