@@ -1,107 +1,50 @@
 <!DOCTYPE html>
 <html lang="tr">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>RUMİ7XL | Duyurular</title>
-
 <link rel="icon" type="image/png" href="favicon.png?v=2">
-
 <link rel="stylesheet" href="style.css">
-
 </head>
-
-
 <body>
 
-
 <header class="navbar">
-
-<a href="/" class="logo">
-RUMİ7XL
-</a>
-
-
+<a href="/" class="logo">RUMİ7XL</a>
 <nav class="nav-links">
-
 <a href="/">Ana Sayfa</a>
 <a href="topluluk.html">Topluluk</a>
 <a href="oneriler.html">Öneriler</a>
 <a href="icerikler.html">İçerikler</a>
 <a href="duyurular.html">Duyurular</a>
-
 </nav>
 
-
 <div class="account-box">
-
 <a href="#" class="login-btn">👤 Giriş Yap</a>
 <a href="#" class="register-btn">✨ Kayıt Ol</a>
-
 </div>
-
 </header>
 
-
-
 <section class="announcements">
-
-
 <h1>RUMİ7XL Duyurular</h1>
-
-<p>
-Yeni haberler, güncellemeler ve önemli açıklamalar burada paylaşılır.
-</p>
-
-
+<p>Yeni haberler, güncellemeler ve önemli açıklamalar burada paylaşılır.</p>
 
 <div class="announcement-card">
-
 <h2>🔥 Hoş Geldiniz</h2>
-
-<p>
-RUMİ7XL resmi web sitesi açıldı.
-Yeni içerikler ve yayın duyuruları burada paylaşılacak.
-</p>
-
-<span>
-📅 2026
-</span>
-
+<p>RUMİ7XL resmi web sitesi açıldı. Yeni içerikler ve yayın duyuruları burada paylaşılacak.</p>
+<span>📅 2026</span>
 </div>
-
-
 
 <div class="announcement-card">
-
 <h2>🎮 Yeni İçerikler</h2>
-
-<p>
-Yeni yayınlar ve oyun içerikleri yakında burada olacak.
-</p>
-
-<span>
-📅 Güncel
-</span>
-
+<p>Yeni yayınlar ve oyun içerikleri yakında burada olacak.</p>
+<span>📅 Güncel</span>
 </div>
-
-
-
 </section>
 
-
-
-
 <!-- HESAP POPUP -->
-
 <div class="account-modal" id="accountModal">
-
 <div class="account-window">
-
 <button class="close-account" onclick="closeAccount()">✕</button>
 
 <div class="account-tabs">
@@ -109,38 +52,22 @@ Yeni yayınlar ve oyun içerikleri yakında burada olacak.
 <button id="registerTab" onclick="showRegister()">Kayıt Ol</button>
 </div>
 
-<div id="loginForm" class="account-form">
+<form id="loginForm" class="account-form" autocomplete="on">
 <input type="email" name="email" placeholder="E-posta" autocomplete="username">
 <input type="password" name="password" placeholder="Şifre" autocomplete="current-password">
-<button type="button" class="account-submit">Giriş Yap</button>
-</div>
+<button type="submit" class="account-submit">Giriş Yap</button>
+</form>
 
-<div id="registerForm" class="account-form" style="display:none;">
+<form id="registerForm" class="account-form" style="display:none;" autocomplete="on">
 <input type="text" name="username" placeholder="Kullanıcı adı" autocomplete="username">
 <input type="email" name="register-email" placeholder="E-posta" autocomplete="email">
 <input type="password" name="new-password" placeholder="Şifre" autocomplete="new-password">
-<button type="button" class="account-submit">Kayıt Ol</button>
+<button type="submit" class="account-submit">Kayıt Ol</button>
+</form>
 </div>
-
 </div>
-</div>
-
 
 <script>
-const modal=document.getElementById("accountModal");
-
-document.querySelector(".login-btn").onclick=(e)=>{
-e.preventDefault();
-showLogin();
-modal.style.display="flex";
-};
-
-document.querySelector(".register-btn").onclick=(e)=>{
-e.preventDefault();
-showRegister();
-modal.style.display="flex";
-};
-
 function showLogin(){
 document.getElementById("loginForm").style.display="flex";
 document.getElementById("registerForm").style.display="none";
@@ -156,115 +83,14 @@ document.getElementById("loginTab").classList.remove("active");
 }
 
 function closeAccount(){
-modal.style.display="none";
+document.getElementById("accountModal").style.display="none";
 }
+
+window.showLogin = showLogin;
+window.showRegister = showRegister;
+window.closeAccount = closeAccount;
 </script>
 
-
-<script type="module">
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
-import {
-getAuth,
-createUserWithEmailAndPassword,
-signInWithEmailAndPassword,
-onAuthStateChanged,
-signOut
-} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
-
-
-const firebaseConfig = {
-apiKey: "AIzaSyCiuXtHu3J9Va46a4KiETO2JrSn5um2KoQ",
-authDomain: "rumi7xl-web.firebaseapp.com",
-projectId: "rumi7xl-web",
-storageBucket: "rumi7xl-web.firebasestorage.app",
-messagingSenderId: "1077565304835",
-appId: "1:1077565304835:web:a672a4440797b76f42de36"
-};
-
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-
-document.querySelector("#loginForm .account-submit").onclick = async()=>{
-
-const inputs=document.querySelectorAll("#loginForm input");
-
-try{
-
-await signInWithEmailAndPassword(
-auth,
-inputs[0].value,
-inputs[1].value
-);
-
-alert("Giriş başarılı");
-closeAccount();
-
-}catch(e){
-
-alert(e.message);
-
-}
-
-};
-
-
-document.querySelector("#registerForm .account-submit").onclick = async()=>{
-
-const inputs=document.querySelectorAll("#registerForm input");
-
-try{
-
-await createUserWithEmailAndPassword(
-auth,
-inputs[1].value,
-inputs[2].value
-);
-
-alert("Hesap oluşturuldu");
-closeAccount();
-
-}catch(e){
-
-alert(e.message);
-
-}
-
-};
-
-
-onAuthStateChanged(auth,(user)=>{
-
-const box=document.querySelector(".account-box");
-
-if(user && box){
-
-box.innerHTML=`
-<a>👤 ${user.email.split("@")[0]}</a>
-<a href="#" id="logoutBtn">🚪 Çıkış Yap</a>
-`;
-
-document.getElementById("logoutBtn").onclick=(e)=>{
-
-e.preventDefault();
-
-signOut(auth).then(()=>{
-
-location.reload();
-
-});
-
-};
-
-}
-
-});
-
-</script>
-
-
+<script type="module" src="auth.js"></script>
 </body>
-
 </html>
