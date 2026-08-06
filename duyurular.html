@@ -96,52 +96,63 @@ Yeni yayınlar ve oyun içerikleri yakında burada olacak.
 
 
 
+<!-- HESAP POPUP -->
+
 <div class="account-modal" id="accountModal">
+
 <div class="account-window">
+
 <button class="close-account" onclick="closeAccount()">✕</button>
+
 <div class="account-tabs">
-<button class="active" onclick="showLogin()" id="loginTab">Giriş Yap</button>
-<button onclick="showRegister()" id="registerTab">Kayıt Ol</button>
+<button id="loginTab" class="active" onclick="showLogin()">Giriş Yap</button>
+<button id="registerTab" onclick="showRegister()">Kayıt Ol</button>
 </div>
 
 <div id="loginForm" class="account-form">
-<input type="email" placeholder="E-posta" autocomplete="username">
-<input type="password" placeholder="Şifre" autocomplete="current-password">
+<input type="email" name="email" placeholder="E-posta" autocomplete="username">
+<input type="password" name="password" placeholder="Şifre" autocomplete="current-password">
 <button type="button" class="account-submit">Giriş Yap</button>
 </div>
 
 <div id="registerForm" class="account-form" style="display:none;">
-<input type="text" placeholder="Kullanıcı adı" autocomplete="username">
-<input type="email" placeholder="E-posta" autocomplete="email">
-<input type="password" placeholder="Şifre" autocomplete="new-password">
+<input type="text" name="username" placeholder="Kullanıcı adı" autocomplete="username">
+<input type="email" name="register-email" placeholder="E-posta" autocomplete="email">
+<input type="password" name="new-password" placeholder="Şifre" autocomplete="new-password">
 <button type="button" class="account-submit">Kayıt Ol</button>
 </div>
+
 </div>
 </div>
+
 
 <script>
 const modal=document.getElementById("accountModal");
 
-document.querySelector(".login-btn").onclick=e=>{
+document.querySelector(".login-btn").onclick=(e)=>{
 e.preventDefault();
 showLogin();
 modal.style.display="flex";
 };
 
-document.querySelector(".register-btn").onclick=e=>{
+document.querySelector(".register-btn").onclick=(e)=>{
 e.preventDefault();
 showRegister();
 modal.style.display="flex";
 };
 
 function showLogin(){
-loginForm.style.display="flex";
-registerForm.style.display="none";
+document.getElementById("loginForm").style.display="flex";
+document.getElementById("registerForm").style.display="none";
+document.getElementById("loginTab").classList.add("active");
+document.getElementById("registerTab").classList.remove("active");
 }
 
 function showRegister(){
-loginForm.style.display="none";
-registerForm.style.display="flex";
+document.getElementById("loginForm").style.display="none";
+document.getElementById("registerForm").style.display="flex";
+document.getElementById("registerTab").classList.add("active");
+document.getElementById("loginTab").classList.remove("active");
 }
 
 function closeAccount(){
@@ -149,19 +160,18 @@ modal.style.display="none";
 }
 </script>
 
+
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
 import {
 getAuth,
-signInWithEmailAndPassword,
 createUserWithEmailAndPassword,
-onAuthStateChanged,
-signOut
+signInWithEmailAndPassword
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
 
-const firebaseConfig = {
-apiKey:"AIzaSyCiuXtHu3J9Va46a4KiETO2Jr5um2KoQ",
+const firebaseConfig={
+apiKey:"AIzaSyCiuXtHu3J9Va46a4KiETO2JrSn5um2KoQ",
 authDomain:"rumi7xl-web.firebaseapp.com",
 projectId:"rumi7xl-web",
 storageBucket:"rumi7xl-web.firebasestorage.app",
@@ -169,10 +179,11 @@ messagingSenderId:"1077565304835",
 appId:"1:1077565304835:web:a672a4440797b76f42de36"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
 
-document.querySelector("#loginForm .account-submit").onclick = async ()=>{
+document.querySelector("#loginForm .account-submit").onclick=async()=>{
+
 const i=document.querySelectorAll("#loginForm input");
 
 try{
@@ -183,9 +194,12 @@ location.reload();
 }catch(e){
 alert(e.message);
 }
+
 };
 
-document.querySelector("#registerForm .account-submit").onclick = async ()=>{
+
+document.querySelector("#registerForm .account-submit").onclick=async()=>{
+
 const i=document.querySelectorAll("#registerForm input");
 
 try{
@@ -195,25 +209,11 @@ closeAccount();
 }catch(e){
 alert(e.message);
 }
+
 };
-
-onAuthStateChanged(auth,(user)=>{
-const box=document.querySelector(".account-box");
-
-if(user && box){
-box.innerHTML=`
-<a>👤 ${user.email.split("@")[0]}</a>
-<a href="#" id="logoutBtn">🚪 Çıkış Yap</a>
-`;
-
-document.getElementById("logoutBtn").onclick=(e)=>{
-e.preventDefault();
-signOut(auth).then(()=>location.reload());
-};
-}
-});
 
 </script>
+
 
 </body>
 
