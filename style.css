@@ -3,1119 +3,419 @@
     padding:0;
     box-sizing:border-box;
 }
-
-
 body{
     background:#080808;
     color:white;
     font-family:Arial, Helvetica, sans-serif;
 }
-
-
-
 /* HERO */
-
 .hero{
-
     width:100%;
     min-height:100vh;
-
     display:flex;
     justify-content:center;
     align-items:center;
-
     text-align:center;
-
 }
-
-
 .hero-content{
-
     width:100%;
-
     display:flex;
     flex-direction:column;
-
     align-items:center;
-
 }
-
-
-
 .banner{
-
     width:92%;
-
     max-width:1500px;
-
     height:420px;
-
     object-fit:cover;
-
     border-radius:35px;
-
-
     box-shadow:
-
     0 0 80px rgba(145,70,255,.5);
-
 }
-
-
-
-
 .hero h1{
-
     margin-top:35px;
-
     font-size:90px;
-
     color:#9146ff;
-
     letter-spacing:10px;
-
 }
-
-
-
 .hero h2{
-
     font-size:42px;
-
     margin-top:15px;
-
 }
-
-
-
 .hero p{
-
     margin-top:20px;
-
     color:#aaa;
-
     font-size:25px;
-
 }
-
-
-
 .live-box{
-
     margin-top:25px;
-
     padding:12px 30px;
-
     background:#111;
-
     border:1px solid #9146ff;
-
     border-radius:30px;
-
 }
-
-
-
 .arrow{
-
     margin-top:45px;
-
     font-size:60px;
-
     color:#9146ff;
-
 }
-
-
-
-
-
-
-
 /* KARTLAR */
-
-
 .platforms{
-
     width:90%;
-
     max-width:1400px;
-
     margin:60px auto;
-
     display:flex;
-
     justify-content:center;
-
     gap:30px;
-
     flex-wrap:wrap;
-
 }
-
-
-
-
-
-
 .box{
-
     width:280px;
-
     height:430px;
-
-
     background:
-
     linear-gradient(
-
     145deg,
-
     #151515,
-
     #090909
-
     );
-
-
     border:1px solid #222;
-
-
     border-radius:25px;
-
-
     padding:25px;
-
-
     display:flex;
-
     flex-direction:column;
-
-
     align-items:center;
-
-
     text-align:center;
-
-
     transition:.3s;
-
-
     overflow:hidden;
-
 }
-
-
-
-
-
 .box:hover{
-
     transform:translateY(-10px);
-
     border-color:#9146ff;
-
-
     box-shadow:
-
     0 0 40px rgba(145,70,255,.4);
-
 }
-
-
-
-
-
-
-
 /* LOGOLAR */
-
-
 .platform-logo{
-
     width:90px;
-
     height:90px;
-
-
     border-radius:50%;
-
-
     display:flex;
-
-
     align-items:center;
-
-
     justify-content:center;
-
-
     background:#050505;
-
-
     border:2px solid #333;
-
-
     margin-bottom:20px;
-
-
     overflow:hidden;
-
 }
-
-
-
-
 .platform-logo img{
-
     width:120px;
-
     height:120px;
-
-
     object-fit:contain;
-
 }
-
-
-
-
-
-
-
 /* KICK */
-
-
 .kick{
-
     border-color:#53fc18;
-
 }
-
-
-
 .kick img{
-
     width:100px;
-
     height:100px;
-
 }
-
 /* DİĞER LOGOLAR */
-
-
 .youtube{
-
     border-color:#ff0000;
-
 }
-
-
 .tiktok{
-
     border-color:white;
-
 }
-
-
 .instagram{
-
     border-color:#e1306c;
-
 }
-
-
-
-
-
 /* YOUTUBE LOGO */
-
 .youtube img{
-
     width:125px;
-
     height:125px;
-
     object-fit:contain;
-
 }
-
-
-
-
-
 /* TIKTOK LOGO */
-
 .tiktok img{
-
     width:65px;
-
     height:65px;
-
     object-fit:contain;
-
 }
-
-
-
-
-
 /* INSTAGRAM LOGO */
-
 .instagram img{
-
     width:80px;
-
     height:80px;
-
     object-fit:contain;
-
 }
-
-
-
-
-
-
-
 .box h2{
-
     font-size:30px;
-
     margin-bottom:12px;
-
     letter-spacing:1px;
-
 }
-
-
-
-
-
-
-
 /* BAŞLIK RENKLERİ */
-
-
 .kick-card h2{
-
     color:#53fc18;
-
     text-shadow:
-
     0 0 10px #53fc18,
-
     0 0 20px #53fc18;
-
 }
-
-
-
 .youtube-card h2{
-
     color:#ff0000;
-
     text-shadow:
-
     0 0 10px #ff0000,
-
     0 0 20px #ff0000;
-
 }
-
-
-
 .tiktok-card h2{
-
     color:white;
-
     text-shadow:
-
     0 0 10px white,
-
     0 0 20px white;
-
 }
-
-
-
 .instagram-card h2{
-
     color:#e1306c;
-
     text-shadow:
-
     0 0 10px #e1306c,
-
     0 0 20px #e1306c;
-
 }
-
-
-
-
-
-
-
 /* AÇIKLAMALAR */
-
-
 .box p{
-
     color:#aaa;
-
     font-size:13px;
-
     line-height:1.6;
-
     width:90%;
-
     min-height:55px;
-
     display:flex;
-
     align-items:center;
-
     justify-content:center;
-
     text-align:center;
-
     margin-bottom:20px;
-
 }
-
-
-
-
-
-
-
 /* BUTONLAR */
-
-
 .box a{
-
     padding:8px 25px;
-
     font-size:13px;
-
     background:none;
-
     border:1px solid #9146ff;
-
     color:white;
-
     text-decoration:none;
-
     border-radius:25px;
-
     transition:.3s;
-
 }
-
-
-
-
-
-
-
 /* KICK */
-
 .kick-card a{
-
     border-color:#53fc18;
-
     color:#53fc18;
-
 }
-
-
-
 .kick-card a:hover{
-
     background:#53fc18;
-
     color:black;
-
     box-shadow:
-
     0 0 25px #53fc18;
-
 }
-
-
-
-
-
-
-
 /* YOUTUBE */
-
 .youtube-card a{
-
     border-color:#ff0000;
-
     color:#ff0000;
-
 }
-
-
-
 .youtube-card a:hover{
-
     background:#ff0000;
-
     color:white;
-
     box-shadow:
-
     0 0 25px #ff0000;
-
 }
-
-
-
-
-
-
-
 /* TIKTOK */
-
 .tiktok-card a{
-
     border-color:white;
-
     color:white;
-
 }
-
-
-
 .tiktok-card a:hover{
-
     background:white;
-
     color:black;
-
     box-shadow:
-
     0 0 25px white;
-
 }
-
-
-
-
-
-
-
 /* INSTAGRAM */
-
 .instagram-card a{
-
     border-color:#e1306c;
-
     color:#e1306c;
-
 }
-
-
-
 .instagram-card a:hover{
-
     background:#e1306c;
-
     color:white;
-
     box-shadow:
-
     0 0 25px #e1306c;
-
 }
-
-
-
-
-
-
-
 /* HAKKIMDA */
-
-
 .about{
-
     width:90%;
-
     max-width:900px;
-
     margin:80px auto;
-
     padding:40px;
-
     text-align:center;
-
     background:
-
     linear-gradient(
-
     145deg,
-
     #151515,
-
     #090909
-
     );
-
     border:1px solid #222;
-
     border-radius:25px;
-
     box-shadow:
-
     0 0 40px rgba(145,70,255,.15);
-
 }
-
-
-
 .about h2{
-
     font-size:40px;
-
     color:#9146ff;
-
     margin-bottom:20px;
-
 }
-
-
-
 .about p{
-
     color:#aaa;
-
     font-size:18px;
-
     line-height:1.8;
-
     margin-bottom:15px;
-
 }
-
-
-
-
-
-
-
 footer{
-
     text-align:center;
-
     padding:40px;
-
     color:#777;
-
 }
-
-
-
-
-
-
-
 @media(max-width:800px){
-
-
 .banner{
-
     width:100%;
-
     height:250px;
-
 }
-
-
-
 .hero h1{
-
     font-size:55px;
-
 }
-
-
-
 .platforms{
-
     flex-direction:column;
-
     align-items:center;
-
 }
-
-
-
 .box{
-
     width:90%;
-
 }
-
-
-
 }
-
 /* ========================= */
 /* RUMİ7XL LIVE PANEL */
 /* ========================= */
-
-
 .stats-panel{
-
     width:90%;
     max-width:1500px;
-
     margin:80px auto;
-
     text-align:center;
-
 }
-
-
-
 .stats-panel > h2{
-
     font-size:45px;
-
     color:#9146ff;
-
     margin-bottom:40px;
-
     text-shadow:
-
     0 0 15px #9146ff,
-
     0 0 30px #9146ff;
-
 }
-
-
-
-
-
 .stats-container{
-
     display:flex;
-
     justify-content:center;
-
     gap:25px;
-
     flex-wrap:wrap;
-
 }
-
-
-
-
-
-
-
 .stats-card{
-
-
     width:300px;
-
     min-height:430px;
-
-
     background:
-
     linear-gradient(
-
     145deg,
-
     #151515,
-
     #090909
-
     );
-
-
     border:1px solid #222;
-
-
     border-radius:25px;
-
-
     padding:25px;
-
-
     transition:.3s;
-
-
     box-shadow:
-
     0 0 25px rgba(145,70,255,.15);
-
-
 }
-
-
-
-
-
 .stats-card:hover{
-
-
     transform:translateY(-10px);
-
-
     border-color:#9146ff;
-
-
     box-shadow:
-
     0 0 45px rgba(145,70,255,.5);
-
-
 }
-
-
-
-
-
 .stats-card h3{
-
-
     font-size:25px;
-
     margin-bottom:20px;
-
-
     color:#9146ff;
-
-
     text-shadow:
-
     0 0 15px #9146ff;
-
-
 }
-
-
-
-
-
 .stats-number{
-
-
     font-size:55px;
-
-
     font-weight:bold;
-
-
     margin-bottom:15px;
-
-
     color:white;
-
-
 }
-
-
-
-
-
-
-
 .stats-card p{
-
-
     color:#aaa;
-
-
     font-size:16px;
-
-
     margin-bottom:20px;
-
-
 }
-
-
-
-
-
-
-
 .stats-card ul{
-
-
     list-style:none;
-
-
     text-align:left;
-
-
     padding:0;
-
-
 }
-
-
-
-
-
 .stats-card li{
-
-
     background:#101010;
-
-
     margin:8px 0;
-
-
     padding:10px 15px;
-
-
     border-radius:12px;
-
-
     color:#ddd;
-
-
     border-left:3px solid #9146ff;
-
-
     transition:.3s;
-
-
 }
-
-
-
-
-
 .stats-card li:hover{
-
-
     background:#181818;
-
-
     transform:translateX(5px);
-
-
 }
-
-
-
-
-
-
 /* KICK ABONE */
-
 .stats-card:first-child h3{
-
     color:#53fc18;
-
     text-shadow:
-
     0 0 15px #53fc18;
-
 }
-
-
-
 .stats-card:nth-child(2) h3{
-
     color:#53fc18;
-
     text-shadow:
-
     0 0 15px #53fc18;
-
 }
-
-
-
-
-
 /* YOUTUBE */
-
 .stats-card:nth-child(3) h3{
-
     color:#ff0000;
-
     text-shadow:
-
     0 0 15px #ff0000;
-
 }
-
-
-
-
-
-
 /* TIKTOK */
-
 .stats-card:nth-child(4) h3{
-
     color:white;
-
     text-shadow:
-
     0 0 15px white;
-
 }
-
-
-
-
-
 @media(max-width:1200px){
-
-
 .stats-card{
-
     width:45%;
-
 }
-
-
 }
-
-
-
-
 @media(max-width:700px){
-
-
 .stats-card{
-
     width:95%;
-
 }
-
-
 .stats-panel h2{
-
     font-size:32px;
-
 }
-
-
 }
-
-
-
 /* ========================= */
 /* PREMIUM RUMI7XL STATS */
 /* ========================= */
-
 .progress{
     width:100%;
     height:16px;
@@ -1124,7 +424,6 @@ footer{
     overflow:hidden;
     margin:20px 0;
 }
-
 .progress-fill{
     height:100%;
     width:64%;
@@ -1133,16 +432,13 @@ footer{
     box-shadow:0 0 20px rgba(83,252,24,.6);
     animation:progressLoad 2s ease;
 }
-
 @keyframes progressLoad{
     from{width:0;}
     to{width:64%;}
 }
-
 /* ========================= */
 /* TOP BAR */
 /* ========================= */
-
 .topbar{
     position:fixed;
     top:25px;
@@ -1155,7 +451,6 @@ footer{
     z-index:999;
     pointer-events:none;
 }
-
 .logo{
     font-size:28px;
     font-weight:bold;
@@ -1163,13 +458,11 @@ footer{
     text-shadow:0 0 15px #9146ff;
     pointer-events:auto;
 }
-
 .auth-buttons{
     display:flex;
     gap:15px;
     pointer-events:auto;
 }
-
 .auth-buttons button{
     padding:12px 28px;
     background:transparent;
@@ -1180,36 +473,28 @@ footer{
     font-size:15px;
     transition:.3s;
 }
-
 .auth-buttons button:hover{
     background:#9146ff;
     box-shadow:0 0 20px #9146ff;
 }
-
 #registerBtn{
     border-color:#53fc18;
     color:#53fc18;
 }
-
 #registerBtn:hover{
     background:#53fc18;
     color:#000;
     box-shadow:0 0 20px #53fc18;
 }
-
 @media(max-width:800px){
-
     .topbar{
         padding:0 20px;
     }
-
     .logo{
         font-size:20px;
     }
-
     .auth-buttons button{
         padding:10px 18px;
         font-size:13px;
     }
-
 }
