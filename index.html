@@ -8,7 +8,7 @@
 <meta content="RUMİ7XL resmi web sitesi. Kick canlı yayınları, YouTube videoları, TikTok içerikleri ve Instagram hesabı." name="description"/>
 <link href="favicon.png?v=2" rel="icon" type="image/png"/>
 <link href="style.css" rel="stylesheet"/>
-<link href="style_hesap_popup.css" rel="stylesheet"/>
+
 </head>
 <body>
 
@@ -25,8 +25,8 @@
 </nav>
 
 <div class="account-box">
-    <a href="#" class="login-btn">👤 Giriş Yap</a>
-    <a href="#" class="register-btn">✨ Kayıt Ol</a>
+    <a href="giris.html" class="login-btn">👤 Giriş Yap</a>
+    <a href="kayit.html" class="register-btn">✨ Kayıt Ol</a>
 </div>
 
 
@@ -115,65 +115,7 @@ Canlı yayınlar, oyun içerikleri ve eğlenceli yayınlarla topluluğumla vakit
 
 </footer>
 
-<!-- HESAP POPUP -->
-<div class="account-modal" id="accountModal">
 
-<div class="account-window">
-
-<button class="close-account">✕</button>
-
-<div class="account-tabs">
-<button class="active">Giriş Yap</button>
-<button>Kayıt Ol</button>
-</div>
-
-
-<div class="account-form">
-
-<input type="text" placeholder="Kullanıcı adı">
-
-<input type="email" placeholder="E-posta">
-
-<input type="password" placeholder="Şifre">
-
-<button class="account-submit">
-Devam Et
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-
-<script>
-const modal = document.getElementById("accountModal");
-
-if(!modal){
-    console.log("Popup bulunamadı");
-}
-
-document.querySelector(".login-btn").onclick = function(e){
-    e.preventDefault();
-    modal.style.display="flex";
-};
-
-document.querySelector(".register-btn").onclick = function(e){
-    e.preventDefault();
-    modal.style.display="flex";
-};
-
-document.querySelector(".close-account").onclick = function(){
-    modal.style.display="none";
-};
-
-window.onclick=function(e){
-    if(e.target==modal){
-        modal.style.display="none";
-    }
-};
-</script>
 
 </body>
 </html>
