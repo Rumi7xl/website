@@ -110,8 +110,10 @@ document.addEventListener("DOMContentLoaded", () => {
   if (loginForm) {
     const handleLogin = async (e) => {
       e.preventDefault();
-      const emailInput = loginForm.querySelector("input[type='email']") || loginForm.querySelectorAll("input")[0];
-      const passInput = loginForm.querySelector("input[type='password']") || loginForm.querySelectorAll("input")[1];
+      const allInputs = Array.from(loginForm.querySelectorAll("input"));
+      
+      const emailInput = allInputs.find(i => i.type === "email" || i.placeholder.toLowerCase().includes("e-posta")) || allInputs[0];
+      const passInput = allInputs.find(i => i.type === "password" || i.placeholder.toLowerCase().includes("şifre")) || allInputs[1];
 
       const email = emailInput?.value.trim();
       const password = passInput?.value;
@@ -140,9 +142,12 @@ document.addEventListener("DOMContentLoaded", () => {
   if (registerForm) {
     const handleRegister = async (e) => {
       e.preventDefault();
-      const userInput = registerForm.querySelector("input[name='username']") || registerForm.querySelectorAll("input")[0];
-      const emailInput = registerForm.querySelector("input[type='email']") || registerForm.querySelectorAll("input")[1];
-      const passInput = registerForm.querySelector("input[type='password']") || registerForm.querySelectorAll("input")[2];
+      const allInputs = Array.from(registerForm.querySelectorAll("input"));
+
+      // Akıllı İnput Bulucu (Sıraya göre değil, kutunun amacına göre bulur)
+      const userInput = allInputs.find(i => i.placeholder.toLowerCase().includes("kullanıcı") || i.name === "username") || allInputs[0];
+      const emailInput = allInputs.find(i => i.type === "email" || i.placeholder.toLowerCase().includes("e-posta")) || allInputs[1];
+      const passInput = allInputs.find(i => i.type === "password" || i.placeholder.toLowerCase().includes("şifre")) || allInputs[2];
 
       const username = userInput?.value.trim();
       const email = emailInput?.value.trim();
@@ -184,7 +189,7 @@ onAuthStateChanged(auth, (user) => {
   const accountBoxes = document.querySelectorAll(".account-box");
   accountBoxes.forEach((accountBox) => {
     if (user) {
-      // Profil ismi VARSA onu bas, YOKSA mailin başını bas
+      // SADECE ve SADECE displayName varsa onu basar, yoksa mailin başını basar
       const usernameToShow = user.displayName || user.email.split("@")[0];
       updateHeaderUser(usernameToShow);
     } else {
