@@ -31,8 +31,12 @@ const sendBtn = document.getElementById("sendSuggestBtn");
 const suggestionsList = document.getElementById("suggestionsList");
 
 let currentUserObj = null;
+let targetEditId = null;
+let targetDeleteId = null;
 
-// Oturum durumunu takip et
+// YouTube SVG Like İkonu
+const LIKE_SVG = `<svg viewBox="0 0 24 24"><path d="M18.77,11h-4.23l1.52-4.94C16.38,5.03,15.54,4,14.38,4c-0.58,0-1.14,0.24-1.52,0.65L7,11H3v10h4h11c1.24,0,2.28-0.84,2.52-2.02l1.37-6.83C22.21,10.59,20.73,11,18.77,11z M7,20H4v-8h3V20z M20.91,12.01l-1.37,6.83C19.42,19.41,18.8,20,18,20H8v-8.41l5.56-5.93C13.75,5.45,14.06,5.33,14.38,5.33c0.39,0,0.73,0.28,0.82,0.67l-1.74,5.66L13.04,13h1.72h4.01c0.75,0,1.4,0.44,1.67,1.08C20.62,14.52,20.91,12.01,20.91,12.01z"/></svg>`;
+
 onAuthStateChanged(auth, (user) => {
   currentUserObj = user;
 });
@@ -48,10 +52,7 @@ if (sendBtn) {
       return;
     }
 
-    if (!text) {
-      alert("Lütfen bir şeyler yaz kanka, boş öneri gönderilemez!");
-      return;
-    }
+    if (!text) return;
 
     sendBtn.disabled = true;
     sendBtn.innerText = "Gönderiliyor...";
@@ -71,7 +72,7 @@ if (sendBtn) {
         username: currentUserObj.displayName || currentUserObj.email.split("@")[0],
         photoURL: photo,
         text: text,
-        likedBy: [], // Beğenen kullanıcıların UID'leri
+        likedBy: [],
         createdAt: Date.now()
       });
 
@@ -109,32 +110,35 @@ try {
 
       const card = document.createElement("div");
       card.className = "suggest-card";
-      card.style.cssText = "background: #111; border: 1px solid #222; border-radius: 18px; padding: 20px; display: flex; gap: 15px; align-items: flex-start; position: relative;";
 
       card.innerHTML = `
-        <img src="${data.photoURL}" style="width: 45px; height: 45px; border-radius: 50%; border: 2px solid #9146ff; object-fit: cover;" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(data.username)}&background=9146ff&color=fff'">
+        <img src="${data.photoURL}" style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #9146ff; object-fit: cover;" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(data.username)}&background=9146ff&color=fff'">
         <div style="flex: 1;">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <span style="font-weight: bold; color: white; font-size: 15px;">${data.username}</span>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-weight: bold; color: white; font-size: 14px;">${data.username}</span>
               <span style="color: #666; font-size: 12px;">${timeAgo}</span>
             </div>
             
             ${isOwner ? `
-              <div style="display: flex; gap: 8px;">
-                <button class="edit-btn" data-id="${id}" data-text="${escapeHtml(data.text)}" style="background: none; border: none; color: #aaa; cursor: pointer; font-size: 14px; transition: 0.2s;" title="Düzenle">✏️</button>
-                <button class="delete-btn" data-id="${id}" style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 14px; transition: 0.2s;" title="Sil">🗑️</button>
+              <div style="position: relative;">
+                <button class="options-btn" data-id="${id}">⋮</button>
+                <div class="options-dropdown" id="dropdown-${id}">
+                  <button class="edit-item" data-id="${id}" data-text="${escapeHtml(data.text)}">✏️ Düzenle</button>
+                  <button class="del-item" data-id="${id}">🗑️ Sil</button>
+                </div>
               </div>
             ` : ''}
           </div>
 
-          <p id="text-${id}" style="color: #ddd; font-size: 15px; line-height: 1.5; margin-bottom: 12px; word-break: break-word;">
+          <p style="color: #ddd; font-size: 15px; line-height: 1.5; margin-bottom: 12px; word-break: break-word;">
             ${escapeHtml(data.text)}
           </p>
 
-          <div style="display: flex; gap: 20px; color: #aaa; font-size: 13px;">
-            <button class="like-btn" data-id="${id}" style="background: none; border: none; color: ${isLiked ? '#9146ff' : '#aaa'}; cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold; transition: 0.2s;">
-              ${isLiked ? '👍' : '👍🏻'} <span>${likedByArr.length}</span>
+          <div style="display: flex; gap: 15px; align-items: center;">
+            <button class="yt-like-btn ${isLiked ? 'liked' : ''}" data-id="${id}">
+              ${LIKE_SVG}
+              <span>${likedByArr.length > 0 ? likedByArr.length : ''}</span>
             </button>
           </div>
         </div>
@@ -143,8 +147,8 @@ try {
       suggestionsList.appendChild(card);
     });
 
-    // 3. BEĞENİ BUTONLARI (TEKİL BEĞENİ / TOGGLE)
-    document.querySelectorAll(".like-btn").forEach(btn => {
+    // LIKE BUTONLARI
+    document.querySelectorAll(".yt-like-btn").forEach(btn => {
       btn.onclick = async () => {
         if (!currentUserObj) {
           alert("Beğenmek için giriş yapmalısın kanka!");
@@ -161,51 +165,47 @@ try {
             const uid = currentUserObj.uid;
 
             if (likedBy.includes(uid)) {
-              // Beğeniyi Kaldır
-              likedBy = likedBy.filter(id => id !== uid);
+              likedBy = likedBy.filter(i => i !== uid);
             } else {
-              // Beğen
               likedBy.push(uid);
             }
 
             await updateDoc(ref, { likedBy: likedBy });
           }
         } catch (e) {
-          console.error("Beğeni hatası:", e);
+          console.error("Like hatası:", e);
         }
       };
     });
 
-    // 4. SİLME İŞLEMİ
-    document.querySelectorAll(".delete-btn").forEach(btn => {
-      btn.onclick = async () => {
-        const suggestId = btn.getAttribute("data-id");
-        if (confirm("Bu öneriyi silmek istediğine emin misin kanka?")) {
-          try {
-            await deleteDoc(doc(db, "suggestions", suggestId));
-          } catch (e) {
-            alert("Silinemedi: " + e.message);
-          }
-        }
+    // 3 NOKTA MENÜ
+    document.querySelectorAll(".options-btn").forEach(btn => {
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        const id = btn.getAttribute("data-id");
+        const drop = document.getElementById(`dropdown-${id}`);
+        document.querySelectorAll(".options-dropdown").forEach(d => {
+          if (d !== drop) d.style.display = "none";
+        });
+        drop.style.display = drop.style.display === "flex" ? "none" : "flex";
       };
     });
 
-    // 5. DÜZENLEME İŞLEMİ
-    document.querySelectorAll(".edit-btn").forEach(btn => {
-      btn.onclick = async () => {
-        const suggestId = btn.getAttribute("data-id");
-        const currentText = btn.getAttribute("data-text");
+    // MODAL İLE DÜZENLEME AÇMA
+    document.querySelectorAll(".edit-item").forEach(btn => {
+      btn.onclick = () => {
+        targetEditId = btn.getAttribute("data-id");
+        const text = btn.getAttribute("data-text");
+        document.getElementById("editModalInput").value = text;
+        document.getElementById("editModal").style.display = "flex";
+      };
+    });
 
-        const newText = prompt("Önerini düzenle kanka:", currentText);
-        if (newText !== null && newText.trim() !== "") {
-          try {
-            await updateDoc(doc(db, "suggestions", suggestId), {
-              text: newText.trim()
-            });
-          } catch (e) {
-            alert("Güncellenemedi: " + e.message);
-          }
-        }
+    // MODAL İLE SİLME AÇMA
+    document.querySelectorAll(".del-item").forEach(btn => {
+      btn.onclick = () => {
+        targetDeleteId = btn.getAttribute("data-id");
+        document.getElementById("deleteModal").style.display = "flex";
       };
     });
 
@@ -213,6 +213,36 @@ try {
 } catch(e) {
   console.error(e);
 }
+
+// DIŞARI TIKLANINCA MENÜLERİ KAPAT
+document.addEventListener("click", () => {
+  document.querySelectorAll(".options-dropdown").forEach(d => d.style.display = "none");
+});
+
+// DÜZENLEME KAYDETME
+document.getElementById("saveEditBtn").onclick = async () => {
+  const newText = document.getElementById("editModalInput").value.trim();
+  if (targetEditId && newText) {
+    try {
+      await updateDoc(doc(db, "suggestions", targetEditId), { text: newText });
+      document.getElementById("editModal").style.display = "none";
+    } catch (e) {
+      alert("Hata: " + e.message);
+    }
+  }
+};
+
+// SİLME ONAYLAMA
+document.getElementById("confirmDeleteBtn").onclick = async () => {
+  if (targetDeleteId) {
+    try {
+      await deleteDoc(doc(db, "suggestions", targetDeleteId));
+      document.getElementById("deleteModal").style.display = "none";
+    } catch (e) {
+      alert("Hata: " + e.message);
+    }
+  }
+};
 
 function getTimeAgo(timestamp) {
   if (!timestamp) return "Az önce";
