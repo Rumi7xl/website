@@ -128,13 +128,13 @@ Yeni korku oyunu serisi yap
 </div>
 
 <div id="loginForm" class="account-form">
-<input type="email" placeholder="E-posta" autocomplete="username">
-<input type="password" placeholder="Şifre" autocomplete="current-password">
+<input type="email" name="email" placeholder="E-posta" autocomplete="email">
+<input type="password" name="password" placeholder="Şifre" autocomplete="current-password">
 <button type="button" class="account-submit">Giriş Yap</button>
 </div>
 
 <div id="registerForm" class="account-form" style="display:none;">
-<input type="text" placeholder="Kullanıcı adı" autocomplete="username">
+<input type="text" name="username" placeholder="Kullanıcı adı" autocomplete="username">
 <input type="email" placeholder="E-posta" autocomplete="email">
 <input type="password" placeholder="Şifre" autocomplete="new-password">
 <button type="button" class="account-submit">Kayıt Ol</button>
@@ -159,13 +159,23 @@ modal.style.display="flex";
 };
 
 function showLogin(){
+
 loginForm.style.display="flex";
 registerForm.style.display="none";
+
+document.getElementById("loginTab").classList.add("active");
+document.getElementById("registerTab").classList.remove("active");
+
 }
 
 function showRegister(){
+
 loginForm.style.display="none";
 registerForm.style.display="flex";
+
+document.getElementById("registerTab").classList.add("active");
+document.getElementById("loginTab").classList.remove("active");
+
 }
 
 function closeAccount(){
