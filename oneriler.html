@@ -117,7 +117,89 @@ Yeni korku oyunu serisi yap
 
 
 
-<script type="module" src="auth.js"></script>
+
+<div class="account-modal" id="accountModal">
+<div class="account-window">
+<button class="close-account" onclick="closeAccount()">✕</button>
+
+<div class="account-tabs">
+<button id="loginTab" class="active" onclick="showLogin()">Giriş Yap</button>
+<button id="registerTab" onclick="showRegister()">Kayıt Ol</button>
+</div>
+
+<div id="loginForm" class="account-form">
+<input type="email" placeholder="E-posta" autocomplete="username">
+<input type="password" placeholder="Şifre" autocomplete="current-password">
+<button type="button" class="account-submit">Giriş Yap</button>
+</div>
+
+<div id="registerForm" class="account-form" style="display:none;">
+<input type="text" placeholder="Kullanıcı adı" autocomplete="username">
+<input type="email" placeholder="E-posta" autocomplete="email">
+<input type="password" placeholder="Şifre" autocomplete="new-password">
+<button type="button" class="account-submit">Kayıt Ol</button>
+</div>
+
+</div>
+</div>
+
+<script>
+const modal=document.getElementById("accountModal");
+
+document.querySelector(".login-btn").onclick=(e)=>{
+e.preventDefault();
+showLogin();
+modal.style.display="flex";
+};
+
+document.querySelector(".register-btn").onclick=(e)=>{
+e.preventDefault();
+showRegister();
+modal.style.display="flex";
+};
+
+function showLogin(){
+loginForm.style.display="flex";
+registerForm.style.display="none";
+}
+
+function showRegister(){
+loginForm.style.display="none";
+registerForm.style.display="flex";
+}
+
+function closeAccount(){
+modal.style.display="none";
+}
+</script>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+import {getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+
+const app=initializeApp({
+apiKey:"AIzaSyCiuXtHu3J9Va46a4KiETO2Jr5num2KoQ",
+authDomain:"rumi7xl-web.firebaseapp.com",
+projectId:"rumi7xl-web",
+storageBucket:"rumi7xl-web.firebasestorage.app",
+messagingSenderId:"1077565304835",
+appId:"1:1077565304835:web:a672a4440797b76f42de36"
+});
+
+const auth=getAuth(app);
+
+document.querySelector("#loginForm .account-submit").onclick=async()=>{
+let i=document.querySelectorAll("#loginForm input");
+await signInWithEmailAndPassword(auth,i[0].value,i[1].value);
+location.reload();
+};
+
+document.querySelector("#registerForm .account-submit").onclick=async()=>{
+let i=document.querySelectorAll("#registerForm input");
+await createUserWithEmailAndPassword(auth,i[1].value,i[2].value);
+location.reload();
+};
+</script>
 
 </body>
 
