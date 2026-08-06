@@ -1,143 +1,97 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RUMİ7XL | Öneriler</title>
-<link rel="icon" type="image/png" href="favicon.png?v=2">
-
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-<link rel="stylesheet" href="style.css?v=1.1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RUMİ7XL - Öneriler</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header class="navbar">
-<a href="/" class="logo">RUMİ7XL</a>
-<nav class="nav-links">
-<a href="/">Ana Sayfa</a>
-<a href="topluluk.html">Topluluk</a>
-<a href="oneriler.html">Öneriler</a>
-<a href="icerikler.html">İçerikler</a>
-<a href="duyurular.html">Duyurular</a>
-</nav>
-<div class="account-box">
-<a href="#" class="login-btn">👤 Giriş Yap</a>
-<a href="#" class="register-btn">✨ Kayıt Ol</a>
-</div>
-</header>
-
-<section class="suggestions">
-<h1>RUMİ7XL Öneriler</h1>
-<p>İçerik, yayın ve oyun önerilerini burada paylaşabilirsin.</p>
-
-<div class="suggest-box">
-<textarea placeholder="Bir öneri yaz..."></textarea>
-<button>Gönder</button>
-</div>
-
-<div class="suggestions-list">
-<div class="suggest-card">
-<b>👤 Kullanıcı</b>
-<p>GTA 6 yayınları gelsin 🔥</p>
-<div class="actions">👍 12 &nbsp;&nbsp; 💬 3</div>
-</div>
-
-<div class="suggest-card">
-<b>👤 Kullanıcı</b>
-<p>Yeni korku oyunu serisi yap</p>
-<div class="actions">👍 5 &nbsp;&nbsp; 💬 1</div>
-</div>
-</div>
-</section>
-
-<!-- HESAP POPUP -->
-<div class="account-modal" id="accountModal">
-<div class="account-window">
-<button class="close-account" onclick="closeAccount()">✕</button>
-
-<div class="account-tabs">
-<button id="loginTab" class="active" onclick="showLogin()">Giriş Yap</button>
-<button id="registerTab" onclick="showRegister()">Kayıt Ol</button>
-</div>
-
-<form id="loginForm" class="account-form" autocomplete="on">
-<input type="email" name="email" placeholder="E-posta" autocomplete="email">
-<input type="password" name="password" placeholder="Şifre" autocomplete="current-password">
-
-<div style="text-align: right; width: 100%; margin-top: -5px; margin-bottom: 5px;">
-  <a href="#" id="forgotPasswordBtn" style="color: #a855f7; font-size: 0.85rem; text-decoration: none;">Şifremi Unuttum?</a>
-</div>
-
-<button type="submit" class="account-submit">Giriş Yap</button>
-</form>
-
-<form id="registerForm" class="account-form" style="display:none;" autocomplete="on">
-<input type="text" name="username" placeholder="Kullanıcı adı" autocomplete="username">
-<input type="email" name="register-email" placeholder="E-posta" autocomplete="email">
-<input type="password" name="new-password" placeholder="Şifre" autocomplete="new-password">
-<button type="submit" class="account-submit">Kayıt Ol</button>
-</form>
-</div>
-</div>
-
-<!-- MODERN PROFİL FOTOĞRAFI POPUP (ÖNİZLEMELİ) -->
-<div class="settings-modal" id="photoModal">
-  <div class="settings-window">
-    <button class="close-account" onclick="document.getElementById('photoModal').style.display='none'">✕</button>
-    <h2>🖼️ Profil Fotoğrafı</h2>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="index.html" class="logo">RUMİ7XL</a>
     
-    <form id="photoSettingsForm">
-      <label for="photoFileInput" class="custom-file-upload">
-        <span id="uploadLabelText" style="color:#aaa; font-size:0.9rem;">📁 Cihazdan / Galeriden Resim Seç</span>
-        <img id="photoPreview" class="preview-avatar" src="" alt="Önizleme">
-      </label>
-      <input type="file" id="photoFileInput" accept="image/*" required style="display: none;">
-      
-      <button type="submit" class="settings-btn" style="margin-top: 15px;">Fotoğrafı Yükle ve Kaydet</button>
-    </form>
+    <div class="nav-links">
+      <a href="index.html">Ana Sayfa</a>
+      <a href="topluluk.html">Topluluk</a>
+      <a href="oneriler.html" class="active">Öneriler</a>
+      <a href="icerikler.html">İçerikler</a>
+      <a href="duyurular.html">Duyurular</a>
+    </div>
+
+    <div class="account-box"></div>
+  </nav>
+
+  <!-- ÖNERİLER ALANI -->
+  <div class="suggestions">
+    <h1>RUMİ7XL Öneriler</h1>
+    <p>İçerik, yayın ve oyun önerilerini burada paylaşabilirsin.</p>
+
+    <div class="suggest-box">
+      <textarea id="suggestInput" placeholder="Bir öneri yaz..."></textarea>
+      <button id="sendSuggestBtn">Gönder</button>
+    </div>
+
+    <div class="suggestions-list" id="suggestionsList">
+      <!-- ÖNERİLER LİSTESİ BURAYA DİNAMİK GELECEK -->
+    </div>
   </div>
-</div>
 
-<!-- ŞİFRE DEĞİŞTİRME POPUP -->
-<div class="settings-modal" id="passwordModal">
-  <div class="settings-window">
-    <button class="close-account" onclick="document.getElementById('passwordModal').style.display='none'">✕</button>
-    <h2>🔑 Şifre Değiştir</h2>
-    
-    <form id="passwordSettingsForm" autocomplete="off">
-      <label style="color:#aaa; font-size:0.85rem; display:block; text-align:left; margin-bottom:5px;">Yeni Şifreniz:</label>
-      <input type="password" name="changePassword" placeholder="Yeni Şifreniz" required autocomplete="new-password">
-      <button type="submit" class="settings-btn">Şifreyi Güncelle</button>
-    </form>
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 RUMİ7XL - Tüm Hakları Saklıdır.</p>
+  </footer>
+
+  <!-- MODALLAR -->
+  <div id="accountModal" class="account-modal">
+    <div class="account-window">
+      <button class="close-account" onclick="document.getElementById('accountModal').style.display='none'">✕</button>
+      <div class="account-tabs">
+        <button id="loginTabBtn" class="active" onclick="switchTab('login')">Giriş Yap</button>
+        <button id="registerTabBtn" onclick="switchTab('register')">Kayıt Ol</button>
+      </div>
+      <form id="loginForm" class="account-form">
+        <input type="email" name="email" placeholder="E-posta" required>
+        <input type="password" name="password" placeholder="Şifre" required>
+        <button type="submit" class="account-submit">Giriş Yap</button>
+        <a href="#" id="forgotPasswordBtn" style="color:#aaa; font-size:12px; text-align:center; margin-top:10px; display:block;">Şifremi Unuttum</a>
+      </form>
+      <form id="registerForm" class="account-form" style="display:none;">
+        <input type="text" name="username" placeholder="Kullanıcı Adı" required>
+        <input type="email" name="register-email" placeholder="E-posta" required>
+        <input type="password" name="new-password" placeholder="Şifre" required>
+        <button type="submit" class="account-submit">Kayıt Ol</button>
+      </form>
+    </div>
   </div>
-</div>
 
-<script>
-function showLogin(){
-document.getElementById("loginForm").style.display="flex";
-document.getElementById("registerForm").style.display="none";
-document.getElementById("loginTab").classList.add("active");
-document.getElementById("registerTab").classList.remove("active");
-}
+  <div id="photoModal" class="account-modal">
+    <div class="account-window">
+      <button class="close-account" onclick="document.getElementById('photoModal').style.display='none'">✕</button>
+      <h2 style="color:#9146ff; margin-bottom:15px; font-size:20px; text-align:center;">Profil Fotoğrafı Değiştir</h2>
+      <form id="photoSettingsForm" class="account-form">
+        <label for="photoFileInput" style="border: 2px dashed #333; padding: 20px; text-align: center; border-radius: 15px; cursor: pointer; display: block; background: #181818;">
+          <span id="uploadLabelText">📁 Galeriden Resim Seç</span>
+          <input type="file" id="photoFileInput" accept="image/*" style="display:none;">
+          <img id="photoPreview" style="display:none; width:80px; height:80px; border-radius:50%; margin: 10px auto 0; object-fit:cover; border:2px solid #9146ff;">
+        </label>
+        <button type="submit" class="account-submit">Yükle ve Kaydet</button>
+      </form>
+    </div>
+  </div>
 
-function showRegister(){
-document.getElementById("loginForm").style.display="none";
-document.getElementById("registerForm").style.display="flex";
-document.getElementById("registerTab").classList.add("active");
-document.getElementById("loginTab").classList.remove("active");
-}
+  <div id="passwordModal" class="account-modal">
+    <div class="account-window">
+      <button class="close-account" onclick="document.getElementById('passwordModal').style.display='none'">✕</button>
+      <h2 style="color:#9146ff; margin-bottom:15px; font-size:20px; text-align:center;">Şifre Değiştir</h2>
+      <form id="passwordSettingsForm" class="account-form">
+        <input type="password" name="changePassword" placeholder="Yeni Şifreniz" required>
+        <button type="submit" class="account-submit">Şifreyi Güncelle</button>
+      </form>
+    </div>
+  </div>
 
-function closeAccount(){
-document.getElementById("accountModal").style.display="none";
-}
-
-window.showLogin = showLogin;
-window.showRegister = showRegister;
-window.closeAccount = closeAccount;
-</script>
-
-<script type="module" src="auth.js?v=1.1"></script>
+  <script type="module" src="auth.js"></script>
 </body>
 </html>
