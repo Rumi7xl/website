@@ -30,13 +30,18 @@ const chatMessages = document.getElementById("chatMessages");
 
 let currentUserObj = null;
 
+// SAYFA YÜKLENDİĞİ AN İNPUTA ODAKLAN (MOUSE GEREKMEDEN YAZMA)
+window.addEventListener("DOMContentLoaded", () => {
+  if (chatInput) chatInput.focus();
+});
+
 onAuthStateChanged(auth, (user) => {
   currentUserObj = user;
 });
 
 // MESAJ GÖNDERME
 async function sendMessage() {
-  const text = chatInput.value.trim();
+  const text = chatInput ? chatInput.value.trim() : "";
   if (!text) return;
 
   if (!currentUserObj) {
@@ -64,6 +69,9 @@ async function sendMessage() {
       createdAt: Date.now()
     });
 
+    // Mesaj attıktan sonra imleç kutuda kalmaya devam etsin
+    if (chatInput) chatInput.focus();
+
   } catch (e) {
     alert("Mesaj gönderilemedi: " + e.message);
   }
@@ -85,6 +93,7 @@ onSnapshot(q, (snapshot) => {
 
   if (snapshot.empty) {
     chatMessages.innerHTML = `<p style="color:#aaa; text-align:center;">Sohbet odası henüz boş. İlk mesajı sen at! 👋</p>`;
+    if (chatInput) chatInput.focus();
     return;
   }
 
@@ -112,8 +121,9 @@ onSnapshot(q, (snapshot) => {
     chatMessages.appendChild(msgDiv);
   });
 
-  // Otomatik en aşağı kaydır
+  // Otomatik en aşağı kaydır ve odaklan
   chatMessages.scrollTop = chatMessages.scrollHeight;
+  if (chatInput) chatInput.focus();
 });
 
 function getTimeStr(timestamp) {
