@@ -1,121 +1,47 @@
 <!DOCTYPE html>
 <html lang="tr">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>RUMİ7XL | Topluluk</title>
-
 <link rel="icon" type="image/png" href="favicon.png?v=2">
-
 <link rel="stylesheet" href="style.css">
-
 </head>
-
-
 <body>
 
-
 <header class="navbar">
-
-<a href="/" class="logo">
-RUMİ7XL
-</a>
-
-
+<a href="/" class="logo">RUMİ7XL</a>
 <nav class="nav-links">
-
-<a href="/">Ana Sayfa</a>
-<a href="topluluk.html">Topluluk</a>
-<a href="oneriler.html">Öneriler</a>
-<a href="icerikler.html">İçerikler</a>
-<a href="duyurular.html">Duyurular</a>
-
+  <a href="/">Ana Sayfa</a>
+  <a href="topluluk.html">Topluluk</a>
+  <a href="oneriler.html">Öneriler</a>
+  <a href="icerikler.html">İçerikler</a>
+  <a href="duyurular.html">Duyurular</a>
 </nav>
-
-
 <div class="account-box">
-
-<a href="#" class="login-btn">👤 Giriş Yap</a>
-<a href="#" class="register-btn">✨ Kayıt Ol</a>
-
+  <a href="#" class="login-btn">👤 Giriş Yap</a>
+  <a href="#" class="register-btn">✨ Kayıt Ol</a>
 </div>
-
-
 </header>
 
-
-
 <section class="community">
-
-
 <h1>RUMİ7XL Topluluk</h1>
-
-<p>
-Burada herkes sohbet edebilir, fikirlerini paylaşabilir.
-</p>
-
-
+<p>Burada herkes sohbet edebilir, fikirlerini paylaşabilir.</p>
 
 <div class="chat-box">
-
-
-<div class="message">
-
-<b>👤 RUMİ7XL</b>
-
-<span>
-Hoş geldiniz millet 👋
-</span>
-
+  <div class="message"><b>👤 RUMİ7XL</b><span>Hoş geldiniz millet 👋</span></div>
+  <div class="message"><b>👤 Kullanıcı</b><span>Selam herkese 🔥</span></div>
 </div>
-
-
-
-<div class="message">
-
-<b>👤 Kullanıcı</b>
-
-<span>
-Selam herkese 🔥
-</span>
-
-</div>
-
-
-
-</div>
-
-
 
 <div class="chat-input">
-
-<input type="text" placeholder="Mesajını yaz...">
-
-<button>
-Gönder
-</button>
-
+  <input type="text" placeholder="Mesajını yaz...">
+  <button>Gönder</button>
 </div>
-
-
-
 </section>
 
-
-
-<script type="module" src="auth.js"></script>
-
-
-
 <!-- HESAP POPUP -->
-
 <div class="account-modal" id="accountModal">
-
 <div class="account-window">
-
 <button class="close-account" onclick="closeAccount()">✕</button>
 
 <div class="account-tabs">
@@ -123,38 +49,23 @@ Gönder
 <button id="registerTab" onclick="showRegister()">Kayıt Ol</button>
 </div>
 
-<div id="loginForm" class="account-form">
+<form id="loginForm" class="account-form" autocomplete="on">
 <input type="email" name="email" placeholder="E-posta" autocomplete="username">
 <input type="password" name="password" placeholder="Şifre" autocomplete="current-password">
-<button type="button" class="account-submit">Giriş Yap</button>
-</div>
+<button type="submit" class="account-submit">Giriş Yap</button>
+</form>
 
-<div id="registerForm" class="account-form" style="display:none;">
+<form id="registerForm" class="account-form" style="display:none;" autocomplete="on">
 <input type="text" name="username" placeholder="Kullanıcı adı" autocomplete="username">
 <input type="email" name="register-email" placeholder="E-posta" autocomplete="email">
 <input type="password" name="new-password" placeholder="Şifre" autocomplete="new-password">
-<button type="button" class="account-submit">Kayıt Ol</button>
-</div>
+<button type="submit" class="account-submit">Kayıt Ol</button>
+</form>
 
 </div>
 </div>
-
 
 <script>
-const modal=document.getElementById("accountModal");
-
-document.querySelector(".login-btn").onclick=(e)=>{
-e.preventDefault();
-showLogin();
-modal.style.display="flex";
-};
-
-document.querySelector(".register-btn").onclick=(e)=>{
-e.preventDefault();
-showRegister();
-modal.style.display="flex";
-};
-
 function showLogin(){
 document.getElementById("loginForm").style.display="flex";
 document.getElementById("registerForm").style.display="none";
@@ -170,64 +81,14 @@ document.getElementById("loginTab").classList.remove("active");
 }
 
 function closeAccount(){
-modal.style.display="none";
+document.getElementById("accountModal").style.display="none";
 }
+
+window.showLogin = showLogin;
+window.showRegister = showRegister;
+window.closeAccount = closeAccount;
 </script>
 
-
-<script type="module">
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
-import {
-getAuth,
-createUserWithEmailAndPassword,
-signInWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
-
-const firebaseConfig={
-apiKey:"AIzaSyCiuXtHu3J9Va46a4KiETO2JrSn5um2KoQ",
-authDomain:"rumi7xl-web.firebaseapp.com",
-projectId:"rumi7xl-web",
-storageBucket:"rumi7xl-web.firebasestorage.app",
-messagingSenderId:"1077565304835",
-appId:"1:1077565304835:web:a672a4440797b76f42de36"
-};
-
-const app=initializeApp(firebaseConfig);
-const auth=getAuth(app);
-
-document.querySelector("#loginForm .account-submit").onclick=async()=>{
-
-const i=document.querySelectorAll("#loginForm input");
-
-try{
-await signInWithEmailAndPassword(auth,i[0].value,i[1].value);
-alert("Giriş başarılı");
-closeAccount();
-location.reload();
-}catch(e){
-alert(e.message);
-}
-
-};
-
-
-document.querySelector("#registerForm .account-submit").onclick=async()=>{
-
-const i=document.querySelectorAll("#registerForm input");
-
-try{
-await createUserWithEmailAndPassword(auth,i[1].value,i[2].value);
-alert("Hesap oluşturuldu");
-closeAccount();
-}catch(e){
-alert(e.message);
-}
-
-};
-
-</script>
-
+<script type="module" src="auth.js"></script>
 </body>
-
 </html>
