@@ -44,45 +44,9 @@
       </div>
     </div>
 
-    <!-- ÖNERİLER LİSTESİ (TASLAK / İÇERİK) -->
+    <!-- ÖNERİLER CANLI LİSTESİ -->
     <div class="suggestions-list" id="suggestionsList" style="display: flex; flex-direction: column; gap: 20px;">
-      
-      <!-- TASLAK ÖNERİ 1 -->
-      <div class="suggest-card" style="background: #111; border: 1px solid #222; border-radius: 18px; padding: 20px; display: flex; gap: 15px;">
-        <img src="https://ui-avatars.com/api/?name=Kullanici+1&background=9146ff&color=fff" style="width: 45px; height: 45px; border-radius: 50%; border: 2px solid #9146ff; object-fit: cover;">
-        <div style="flex: 1;">
-          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-            <span style="font-weight: bold; color: white; font-size: 15px;">AhmetKral</span>
-            <span style="color: #666; font-size: 12px;">2 saat önce</span>
-          </div>
-          <p style="color: #ddd; font-size: 15px; line-height: 1.5; margin-bottom: 12px;">
-            Kanka GTA 6 yayınları veya yeni korku oyunu serisi gelsin 🔥 Ekiple Outlast 2 oynasanız sarar!
-          </p>
-          <div style="display: flex; gap: 20px; color: #aaa; font-size: 13px;">
-            <button style="background: none; border: none; color: #aaa; cursor: pointer; display: flex; align-items: center; gap: 5px;">👍 12</button>
-            <button style="background: none; border: none; color: #aaa; cursor: pointer; display: flex; align-items: center; gap: 5px;">💬 3 Yanıt</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- TASLAK ÖNERİ 2 -->
-      <div class="suggest-card" style="background: #111; border: 1px solid #222; border-radius: 18px; padding: 20px; display: flex; gap: 15px;">
-        <img src="https://ui-avatars.com/api/?name=Gamer+34&background=53fc18&color=000" style="width: 45px; height: 45px; border-radius: 50%; border: 2px solid #53fc18; object-fit: cover;">
-        <div style="flex: 1;">
-          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-            <span style="font-weight: bold; color: white; font-size: 15px;">GamerTR34</span>
-            <span style="color: #666; font-size: 12px;">Dün</span>
-          </div>
-          <p style="color: #ddd; font-size: 15px; line-height: 1.5; margin-bottom: 12px;">
-            Minecraft'ta izleyici modlu survival yapabiliriz, katılan takipçilerle dev kale kurarız.
-          </p>
-          <div style="display: flex; gap: 20px; color: #aaa; font-size: 13px;">
-            <button style="background: none; border: none; color: #aaa; cursor: pointer; display: flex; align-items: center; gap: 5px;">👍 8</button>
-            <button style="background: none; border: none; color: #aaa; cursor: pointer; display: flex; align-items: center; gap: 5px;">💬 Yanıtla</button>
-          </div>
-        </div>
-      </div>
-
+      <p id="loadingText" style="color:#aaa; text-align:center;">Öneriler yükleniyor...</p>
     </div>
 
   </div>
@@ -142,5 +106,6 @@
   </div>
 
   <script type="module" src="auth.js"></script>
+  <script type="module" src="suggestions.js"></script>
 </body>
 </html>
