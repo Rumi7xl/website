@@ -225,6 +225,18 @@ modal.style.display="none";
 </script>
 
 
+<script>
+function showToast(message){
+const toast=document.getElementById("siteToast");
+if(!toast) return;
+toast.innerText=message;
+toast.classList.add("show");
+setTimeout(()=>{
+toast.classList.remove("show");
+},3000);
+}
+</script>
+
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
