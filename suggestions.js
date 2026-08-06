@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
 import { 
   getFirestore, 
   collection, 
@@ -9,7 +9,7 @@ import {
   orderBy, 
   doc, 
   updateDoc, 
-  increment,
+  deleteDoc,
   getDoc 
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
@@ -30,111 +30,190 @@ const suggestInput = document.getElementById("suggestInput");
 const sendBtn = document.getElementById("sendSuggestBtn");
 const suggestionsList = document.getElementById("suggestionsList");
 
-// 1. ÖNERİ GÖNDERME İŞLEMİ
-sendBtn.addEventListener("click", async () => {
-  const user = auth.currentUser;
-  const text = suggestInput.value.trim();
+let currentUserObj = null;
 
-  if (!user) {
-    alert("Öneri paylaşabilmek için lütfen giriş yap kanka!");
-    if (window.openAccountModal) window.openAccountModal('login');
-    return;
-  }
+// Oturum durumunu takip et
+onAuthStateChanged(auth, (user) => {
+  currentUserObj = user;
+});
 
-  if (!text) {
-    alert("Lütfen boş öneri gönderme!");
-    return;
-  }
+// 1. ÖNERİ GÖNDERME
+if (sendBtn) {
+  sendBtn.addEventListener("click", async () => {
+    const text = suggestInput ? suggestInput.value.trim() : "";
 
-  sendBtn.disabled = true;
-  sendBtn.innerText = "Gönderiliyor...";
+    if (!currentUserObj) {
+      alert("Öneri paylaşabilmek için lütfen önce giriş yap kanka!");
+      if (window.openAccountModal) window.openAccountModal('login');
+      return;
+    }
 
-  try {
-    // Kullanıcının güncel Firestore verisini al (Profil fotosu için)
-    let photo = "https://ui-avatars.com/api/?name=" + encodeURIComponent(user.displayName || "User") + "&background=9146ff&color=fff";
+    if (!text) {
+      alert("Lütfen bir şeyler yaz kanka, boş öneri gönderilemez!");
+      return;
+    }
+
+    sendBtn.disabled = true;
+    sendBtn.innerText = "Gönderiliyor...";
+
     try {
-      const uDoc = await getDoc(doc(db, "users", user.uid));
-      if (uDoc.exists() && uDoc.data().photoURL) {
-        photo = uDoc.data().photoURL;
-      }
-    } catch(e){}
+      let photo = "https://ui-avatars.com/api/?name=" + encodeURIComponent(currentUserObj.displayName || "User") + "&background=9146ff&color=fff";
+      
+      try {
+        const uDoc = await getDoc(doc(db, "users", currentUserObj.uid));
+        if (uDoc.exists() && uDoc.data().photoURL) {
+          photo = uDoc.data().photoURL;
+        }
+      } catch(e) {}
 
-    await addDoc(collection(db, "suggestions"), {
-      uid: user.uid,
-      username: user.displayName || user.email.split("@")[0],
-      photoURL: photo,
-      text: text,
-      likes: 0,
-      createdAt: Date.now()
+      await addDoc(collection(db, "suggestions"), {
+        uid: currentUserObj.uid,
+        username: currentUserObj.displayName || currentUserObj.email.split("@")[0],
+        photoURL: photo,
+        text: text,
+        likedBy: [], // Beğenen kullanıcıların UID'leri
+        createdAt: Date.now()
+      });
+
+      suggestInput.value = "";
+    } catch (err) {
+      alert("Hata oluştu: " + err.message);
+    } finally {
+      sendBtn.disabled = false;
+      sendBtn.innerText = "Gönder";
+    }
+  });
+}
+
+// 2. CANLI ÖNERİLERİ LİSTELEME
+try {
+  const q = query(collection(db, "suggestions"), orderBy("createdAt", "desc"));
+
+  onSnapshot(q, (snapshot) => {
+    if (!suggestionsList) return;
+    suggestionsList.innerHTML = "";
+
+    if (snapshot.empty) {
+      suggestionsList.innerHTML = `<p style="color:#aaa; text-align:center;">Henüz hiç öneri yapılmamış. İlk öneriyi sen yap! 🔥</p>`;
+      return;
+    }
+
+    snapshot.forEach((docSnap) => {
+      const data = docSnap.data();
+      const id = docSnap.id;
+      const timeAgo = getTimeAgo(data.createdAt);
+
+      const likedByArr = data.likedBy || [];
+      const isLiked = currentUserObj ? likedByArr.includes(currentUserObj.uid) : false;
+      const isOwner = currentUserObj && currentUserObj.uid === data.uid;
+
+      const card = document.createElement("div");
+      card.className = "suggest-card";
+      card.style.cssText = "background: #111; border: 1px solid #222; border-radius: 18px; padding: 20px; display: flex; gap: 15px; align-items: flex-start; position: relative;";
+
+      card.innerHTML = `
+        <img src="${data.photoURL}" style="width: 45px; height: 45px; border-radius: 50%; border: 2px solid #9146ff; object-fit: cover;" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(data.username)}&background=9146ff&color=fff'">
+        <div style="flex: 1;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-weight: bold; color: white; font-size: 15px;">${data.username}</span>
+              <span style="color: #666; font-size: 12px;">${timeAgo}</span>
+            </div>
+            
+            ${isOwner ? `
+              <div style="display: flex; gap: 8px;">
+                <button class="edit-btn" data-id="${id}" data-text="${escapeHtml(data.text)}" style="background: none; border: none; color: #aaa; cursor: pointer; font-size: 14px; transition: 0.2s;" title="Düzenle">✏️</button>
+                <button class="delete-btn" data-id="${id}" style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 14px; transition: 0.2s;" title="Sil">🗑️</button>
+              </div>
+            ` : ''}
+          </div>
+
+          <p id="text-${id}" style="color: #ddd; font-size: 15px; line-height: 1.5; margin-bottom: 12px; word-break: break-word;">
+            ${escapeHtml(data.text)}
+          </p>
+
+          <div style="display: flex; gap: 20px; color: #aaa; font-size: 13px;">
+            <button class="like-btn" data-id="${id}" style="background: none; border: none; color: ${isLiked ? '#9146ff' : '#aaa'}; cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold; transition: 0.2s;">
+              ${isLiked ? '👍' : '👍🏻'} <span>${likedByArr.length}</span>
+            </button>
+          </div>
+        </div>
+      `;
+
+      suggestionsList.appendChild(card);
     });
 
-    suggestInput.value = "";
-  } catch (err) {
-    alert("Hata oluştu: " + err.message);
-  } finally {
-    sendBtn.disabled = false;
-    sendBtn.innerText = "Gönder";
-  }
-});
+    // 3. BEĞENİ BUTONLARI (TEKİL BEĞENİ / TOGGLE)
+    document.querySelectorAll(".like-btn").forEach(btn => {
+      btn.onclick = async () => {
+        if (!currentUserObj) {
+          alert("Beğenmek için giriş yapmalısın kanka!");
+          return;
+        }
 
-// 2. CANLI ÖNERİLERİ LİSTELEME (REALTIME)
-const q = query(collection(db, "suggestions"), orderBy("createdAt", "desc"));
+        const suggestId = btn.getAttribute("data-id");
+        const ref = doc(db, "suggestions", suggestId);
 
-onSnapshot(q, (snapshot) => {
-  suggestionsList.innerHTML = "";
+        try {
+          const docSnap = await getDoc(ref);
+          if (docSnap.exists()) {
+            let likedBy = docSnap.data().likedBy || [];
+            const uid = currentUserObj.uid;
 
-  if (snapshot.empty) {
-    suggestionsList.innerHTML = `<p style="color:#aaa; text-align:center;">Henüz hiç öneri yapılmamış. İlk öneriyi sen yap! 🔥</p>`;
-    return;
-  }
+            if (likedBy.includes(uid)) {
+              // Beğeniyi Kaldır
+              likedBy = likedBy.filter(id => id !== uid);
+            } else {
+              // Beğen
+              likedBy.push(uid);
+            }
 
-  snapshot.forEach((docSnap) => {
-    const data = docSnap.data();
-    const id = docSnap.id;
-    
-    // Tarih Hesaplama
-    const timeAgo = getTimeAgo(data.createdAt);
+            await updateDoc(ref, { likedBy: likedBy });
+          }
+        } catch (e) {
+          console.error("Beğeni hatası:", e);
+        }
+      };
+    });
 
-    const card = document.createElement("div");
-    card.className = "suggest-card";
-    card.style.cssText = "background: #111; border: 1px solid #222; border-radius: 18px; padding: 20px; display: flex; gap: 15px; align-items: flex-start;";
+    // 4. SİLME İŞLEMİ
+    document.querySelectorAll(".delete-btn").forEach(btn => {
+      btn.onclick = async () => {
+        const suggestId = btn.getAttribute("data-id");
+        if (confirm("Bu öneriyi silmek istediğine emin misin kanka?")) {
+          try {
+            await deleteDoc(doc(db, "suggestions", suggestId));
+          } catch (e) {
+            alert("Silinemedi: " + e.message);
+          }
+        }
+      };
+    });
 
-    card.innerHTML = `
-      <img src="${data.photoURL}" style="width: 45px; height: 45px; border-radius: 50%; border: 2px solid #9146ff; object-fit: cover;" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(data.username)}&background=9146ff&color=fff'">
-      <div style="flex: 1;">
-        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-          <span style="font-weight: bold; color: white; font-size: 15px;">${data.username}</span>
-          <span style="color: #666; font-size: 12px;">${timeAgo}</span>
-        </div>
-        <p style="color: #ddd; font-size: 15px; line-height: 1.5; margin-bottom: 12px; word-break: break-word;">
-          ${escapeHtml(data.text)}
-        </p>
-        <div style="display: flex; gap: 20px; color: #aaa; font-size: 13px;">
-          <button class="like-btn" data-id="${id}" style="background: none; border: none; color: #aaa; cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold; transition: 0.2s;">
-            👍 <span>${data.likes || 0}</span>
-          </button>
-        </div>
-      </div>
-    `;
+    // 5. DÜZENLEME İŞLEMİ
+    document.querySelectorAll(".edit-btn").forEach(btn => {
+      btn.onclick = async () => {
+        const suggestId = btn.getAttribute("data-id");
+        const currentText = btn.getAttribute("data-text");
 
-    suggestionsList.appendChild(card);
+        const newText = prompt("Önerini düzenle kanka:", currentText);
+        if (newText !== null && newText.trim() !== "") {
+          try {
+            await updateDoc(doc(db, "suggestions", suggestId), {
+              text: newText.trim()
+            });
+          } catch (e) {
+            alert("Güncellenemedi: " + e.message);
+          }
+        }
+      };
+    });
+
   });
+} catch(e) {
+  console.error(e);
+}
 
-  // BEĞENİ BUTONLARI DİNLEYİCİSİ
-  document.querySelectorAll(".like-btn").forEach(btn => {
-    btn.onclick = async () => {
-      const suggestId = btn.getAttribute("data-id");
-      const ref = doc(db, "suggestions", suggestId);
-      try {
-        await updateDoc(ref, { likes: increment(1) });
-      } catch (e) {
-        console.error("Beğenilemedi:", e);
-      }
-    };
-  });
-});
-
-// ZAMAN FORMATI FONKSİYONU
 function getTimeAgo(timestamp) {
   if (!timestamp) return "Az önce";
   const diff = Math.floor((Date.now() - timestamp) / 1000);
