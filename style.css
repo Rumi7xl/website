@@ -947,3 +947,35 @@ footer{
         max-width: 90%;
     }
 }
+;
+/* --- MOBİL MENÜ VE HEADER DÜZENLEMESİ --- */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px 15px;
+    }
+
+    .nav-links {
+        display: flex !important;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        width: 100%;
+        padding-bottom: 5px;
+        justify-content: flex-start;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .nav-links a {
+        white-space: nowrap;
+        font-size: 0.85rem;
+        padding: 6px 10px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+    }
+
+    .account-box {
+        width: 100%;
+        justify-content: center;
+    }
+}
