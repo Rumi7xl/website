@@ -77,20 +77,30 @@
 </div>
 </div>
 
-<!-- PROFİL AYARLARI POPUP -->
-<div class="settings-modal" id="settingsModal">
+<!-- PROFİL FOTOĞRAFI POPUP -->
+<div class="settings-modal" id="photoModal">
   <div class="settings-window">
-    <button class="close-account" onclick="document.getElementById('settingsModal').style.display='none'">✕</button>
-    <h2>⚙️ Profil Ayarları</h2>
+    <button class="close-account" onclick="document.getElementById('photoModal').style.display='none'">✕</button>
+    <h2>🖼️ Profil Fotoğrafı</h2>
     
-    <form id="profileSettingsForm">
-      <label style="color:#aaa; font-size:0.85rem; display:block; text-align:left; margin-bottom:5px;">Profil Fotoğrafı URL (Resim Bağlantısı):</label>
-      <input type="url" name="photoUrl" placeholder="https://resim-linki.com/foto.jpg">
-      
-      <label style="color:#aaa; font-size:0.85rem; display:block; text-align:left; margin-bottom:5px; margin-top:10px;">Yeni Şifre (Değiştirmek İstemiyorsan Boş Bırak):</label>
-      <input type="password" name="newPassword" placeholder="Yeni Şifreniz">
-      
-      <button type="submit" class="settings-btn">Kaydet ve Güncelle</button>
+    <form id="photoSettingsForm" autocomplete="off">
+      <label style="color:#aaa; font-size:0.85rem; display:block; text-align:left; margin-bottom:5px;">Fotoğraf URL (Resim Bağlantısı):</label>
+      <input type="url" name="photoUrl" placeholder="https://resim-linki.com/foto.jpg" required autocomplete="off">
+      <button type="submit" class="settings-btn">Fotoğrafı Kaydet</button>
+    </form>
+  </div>
+</div>
+
+<!-- ŞİFRE DEĞİŞTİRME POPUP -->
+<div class="settings-modal" id="passwordModal">
+  <div class="settings-window">
+    <button class="close-account" onclick="document.getElementById('passwordModal').style.display='none'">✕</button>
+    <h2>🔑 Şifre Değiştir</h2>
+    
+    <form id="passwordSettingsForm" autocomplete="off">
+      <label style="color:#aaa; font-size:0.85rem; display:block; text-align:left; margin-bottom:5px;">Yeni Şifreniz:</label>
+      <input type="password" name="changePassword" placeholder="Yeni Şifreniz" required autocomplete="new-password">
+      <button type="submit" class="settings-btn">Şifreyi Güncelle</button>
     </form>
   </div>
 </div>
