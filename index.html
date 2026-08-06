@@ -13,22 +13,38 @@
 
 <header class="navbar">
 
-    <a href="/" class="logo">RUMİ7XL</a>
+<button class="menu-btn" onclick="toggleMenu()">☰</button>
 
-    <nav class="nav-links">
-        <a href="#">Ana Sayfa</a>
-        <a href="#">Topluluk</a>
-        <a href="#">Öneriler</a>
-        <a href="#">İçerikler</a>
-        <a href="#">Duyurular</a>
-    </nav>
+<a href="/" class="logo">RUMİ7XL</a>
 
-    <div class="account-box">
-        <a href="#" class="login-btn">👤 Giriş Yap</a>
-        <a href="#" class="register-btn">✨ Kayıt Ol</a>
-    </div>
+<nav class="nav-links">
+    <a href="#">Ana Sayfa</a>
+    <a href="#">Topluluk</a>
+    <a href="#">Öneriler</a>
+    <a href="#">İçerikler</a>
+    <a href="#">Duyurular</a>
+</nav>
+
+<div class="account-box">
+    <a href="#" class="login-btn">👤 Giriş Yap</a>
+    <a href="#" class="register-btn">✨ Kayıt Ol</a>
+</div>
+
+<div class="mobile-menu" id="mobileMenu">
+    <a href="#">Ana Sayfa</a>
+    <a href="#">Topluluk</a>
+    <a href="#">Öneriler</a>
+    <a href="#">İçerikler</a>
+    <a href="#">Duyurular</a>
+</div>
 
 </header>
+
+<script>
+function toggleMenu(){
+ document.getElementById("mobileMenu").classList.toggle("active");
+}
+</script>
 <section class="hero">
 <div class="hero-content">
 <img alt="RUMİ7XL" class="banner" src="hero-banner.png"/>
