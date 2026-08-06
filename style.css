@@ -443,10 +443,11 @@ footer{
 /* ========================= */
 
 .navbar{
-    position:absolute;
-    top:20px;
-    left:50%;
-    transform:translateX(-50%);
+    position:relative;
+    margin:20px auto 50px;
+    top:auto;
+    left:auto;
+    transform:none;
     width:92%;
     max-width:1500px;
     height:70px;
