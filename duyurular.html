@@ -167,47 +167,69 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/fireba
 import {
 getAuth,
 createUserWithEmailAndPassword,
-signInWithEmailAndPassword
+signInWithEmailAndPassword,
+onAuthStateChanged,
+signOut
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
 
-const firebaseConfig={
-apiKey:"AIzaSyCiuXtHu3J9Va46a4KiETO2JrSn5um2KoQ",
-authDomain:"rumi7xl-web.firebaseapp.com",
-projectId:"rumi7xl-web",
-storageBucket:"rumi7xl-web.firebasestorage.app",
-messagingSenderId:"1077565304835",
-appId:"1:1077565304835:web:a672a4440797b76f42de36"
+
+const firebaseConfig = {
+apiKey: "AIzaSyCiuXtHu3J9Va46a4KiETO2JrSn5um2KoQ",
+authDomain: "rumi7xl-web.firebaseapp.com",
+projectId: "rumi7xl-web",
+storageBucket: "rumi7xl-web.firebasestorage.app",
+messagingSenderId: "1077565304835",
+appId: "1:1077565304835:web:a672a4440797b76f42de36"
 };
 
-const app=initializeApp(firebaseConfig);
-const auth=getAuth(app);
 
-document.querySelector("#loginForm .account-submit").onclick=async()=>{
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
-const i=document.querySelectorAll("#loginForm input");
+
+document.querySelector("#loginForm .account-submit").onclick = async()=>{
+
+const inputs=document.querySelectorAll("#loginForm input");
 
 try{
-await signInWithEmailAndPassword(auth,i[0].value,i[1].value);
+
+await signInWithEmailAndPassword(
+auth,
+inputs[0].value,
+inputs[1].value
+);
+
 alert("Giriş başarılı");
 closeAccount();
-location.reload();
+
 }catch(e){
+
 alert(e.message);
+
 }
 
 };
 
 
-document.querySelector("#registerForm .account-submit").onclick=async()=>{
+document.querySelector("#registerForm .account-submit").onclick = async()=>{
 
-const i=document.querySelectorAll("#registerForm input");
+const inputs=document.querySelectorAll("#registerForm input");
 
 try{
-await createUserWithEmailAndPassword(auth,i[1].value,i[2].value);
+
+await createUserWithEmailAndPassword(
+auth,
+inputs[1].value,
+inputs[2].value
+);
+
 alert("Hesap oluşturuldu");
 closeAccount();
+
 }catch(e){
+
 alert(e.message);
+
 }
 
 };
@@ -225,8 +247,15 @@ box.innerHTML=`
 `;
 
 document.getElementById("logoutBtn").onclick=(e)=>{
+
 e.preventDefault();
-signOut(auth).then(()=>location.reload());
+
+signOut(auth).then(()=>{
+
+location.reload();
+
+});
+
 };
 
 }
