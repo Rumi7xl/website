@@ -82,15 +82,19 @@
 </div>
 </div>
 
-<!-- PROFİL FOTOĞRAFI POPUP (GALERİ SEÇİMİ) -->
+<!-- MODERN PROFİL FOTOĞRAFI POPUP (ÖNİZLEMELİ) -->
 <div class="settings-modal" id="photoModal">
   <div class="settings-window">
     <button class="close-account" onclick="document.getElementById('photoModal').style.display='none'">✕</button>
     <h2>🖼️ Profil Fotoğrafı</h2>
     
     <form id="photoSettingsForm">
-      <label style="color:#aaa; font-size:0.85rem; display:block; text-align:left; margin-bottom:8px;">Galeriden / Cihazdan Fotoğraf Seç:</label>
-      <input type="file" id="photoFileInput" accept="image/*" required style="background: #18181b; padding: 8px; border-radius: 8px; width: 100%; color: #fff; cursor: pointer;">
+      <label for="photoFileInput" class="custom-file-upload">
+        <span id="uploadLabelText" style="color:#aaa; font-size:0.9rem;">📁 Cihazdan / Galeriden Resim Seç</span>
+        <img id="photoPreview" class="preview-avatar" src="" alt="Önizleme">
+      </label>
+      <input type="file" id="photoFileInput" accept="image/*" required style="display: none;">
+      
       <button type="submit" class="settings-btn" style="margin-top: 15px;">Fotoğrafı Yükle ve Kaydet</button>
     </form>
   </div>
@@ -121,7 +125,6 @@ document.getElementById("registerTab").classList.remove("active");
 function showRegister(){
 document.getElementById("loginForm").style.display="none";
 document.getElementById("registerForm").style.display="flex";
-document.getElementById("registerTab").classList.active = false;
 document.getElementById("registerTab").classList.add("active");
 document.getElementById("loginTab").classList.remove("active");
 }
