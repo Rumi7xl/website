@@ -118,7 +118,7 @@ document.addEventListener("submit", async (e) => {
     } catch (err) { alert("Kayıt Hatalı: " + err.message); }
   }
 
-  // FOTOĞRAFI OTOMATİK SIKIŞTIRIP YÜKLEME
+  // ULTRA SIKIŞTIRMA İLE RESİM YÜKLEME (FIREBASE LIMITINI AŞMAZ)
   if (e.target.id === "photoSettingsForm") {
     e.preventDefault();
     const fileInput = document.getElementById("photoFileInput");
@@ -136,31 +136,23 @@ document.addEventListener("submit", async (e) => {
       const img = new Image();
       img.src = evt.target.result;
       img.onload = async function() {
-        // Resmi Sıkıştırma (Canvas)
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
-        const maxSize = 256; // 256x256 piksellik profil fotosu boyutu
+        
+        // Profil avatarı için kare boyut (128x128)
+        const size = 128;
+        canvas.width = size;
+        canvas.height = size;
 
-        let width = img.width;
-        let height = img.height;
+        // Resmi ortalayarak kırpma hesabı
+        let minDim = Math.min(img.width, img.height);
+        let sx = (img.width - minDim) / 2;
+        let sy = (img.height - minDim) / 2;
 
-        if (width > height) {
-          if (width > maxSize) {
-            height *= maxSize / width;
-            width = maxSize;
-          }
-        } else {
-          if (height > maxSize) {
-            width *= maxSize / height;
-            height = maxSize;
-          }
-        }
+        ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, size, size);
 
-        canvas.width = width;
-        canvas.height = height;
-        ctx.drawImage(img, 0, 0, width, height);
-
-        const compressedBase64 = canvas.toDataURL("image/jpeg", 0.8); // JPEG %80 Kalite
+        // Kaliteyi JPEG %60 yaparak karakter uzunluğunu ~1200 karaktere düşürüyoruz (Firebase sınırı ~2048)
+        const compressedBase64 = canvas.toDataURL("image/jpeg", 0.6);
 
         try {
           await updateProfile(user, { photoURL: compressedBase64 });
@@ -168,7 +160,7 @@ document.addEventListener("submit", async (e) => {
           document.getElementById("photoModal").style.display = "none";
           location.reload();
         } catch (err) {
-          alert("Fotoğraf Yükleme Hatası: " + err.message);
+          alert("Fotoğraf Güncelleme Hatası: " + err.message);
         }
       };
     };
