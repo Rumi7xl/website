@@ -153,11 +153,6 @@ TIKTOK'A GİT >
 
 
 </div>
-
-
-
-
-
 <div class="box instagram-card">
 
 
@@ -190,105 +185,6 @@ TAKİP ET >
 
 
 
-<section class="stats-panel">
-
-
-<h2>🔥 RUMİ7XL LIVE PANEL</h2>
-
-
-
-<div class="stats-container">
-
-
-<div class="stats-card">
-
-
-<h3>⭐ KICK ABONE</h3>
-
-
-<div class="stats-number" id="kickSubs">
-0
-</div>
-
-
-<p>Abone</p>
-
-
-</div>
-<div class="stats-card">
-
-
-<h3>🟢 KICK TAKİPÇİ</h3>
-
-
-<div class="stats-number" id="kickFollowers">
-0
-</div>
-
-
-<p>Takipçi</p>
-
-
-<ul id="followersList">
-
-<li>Yükleniyor...</li>
-
-</ul>
-
-
-</div>
-
-
-
-
-
-<div class="stats-card">
-
-
-<h3>▶️ YOUTUBE</h3>
-
-
-<div class="stats-number" id="youtubeSubs">
-0
-</div>
-
-
-<p>Abone</p>
-
-
-</div>
-
-
-
-
-
-<div class="stats-card">
-
-
-<h3>🎵 TIKTOK</h3>
-
-
-<div class="stats-number" id="tiktokFollowers">
-0
-</div>
-
-
-<p>Takipçi</p>
-
-
-</div>
-
-
-
-
-</div>
-
-
-</section>
-
-
-
-
 
 
 <section class="about">
@@ -315,6 +211,7 @@ Canlı yayınlar, oyun içerikleri ve eğlenceli yayınlarla topluluğumla vakit
 
 
 
+
 <footer>
 
 © 2026 RUMİ7XL
@@ -323,82 +220,6 @@ Canlı yayınlar, oyun içerikleri ve eğlenceli yayınlarla topluluğumla vakit
 
 
 
-
-
-
-<script>
-
-
-fetch("https://panel-ao8e.onrender.com/api/stats")
-
-
-.then(response => response.json())
-
-
-.then(data => {
-
-
-
-document.getElementById("kickSubs").innerHTML =
-data.kick.subscribers.toLocaleString("tr-TR");
-
-
-
-
-document.getElementById("kickFollowers").innerHTML =
-data.kick.followers.toLocaleString("tr-TR");
-
-
-
-
-document.getElementById("youtubeSubs").innerHTML =
-data.youtube.subscribers.toLocaleString("tr-TR");
-
-
-
-
-document.getElementById("tiktokFollowers").innerHTML =
-data.tiktok.followers.toLocaleString("tr-TR");
-
-
-
-
-
-let followers = "";
-
-
-data.kick.latestFollowers.forEach(user => {
-
-
-followers += `
-
-<li>
-👤 ${user}
-</li>
-
-`;
-
-});
-
-
-document.getElementById("followersList").innerHTML = followers;
-
-
-
-})
-
-
-.catch(error => {
-
-
-console.log("API bağlantı hatası:", error);
-
-
-});
-
-
-
-</script>
 
 
 
