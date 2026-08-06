@@ -25,8 +25,8 @@
 </header>
 
 <section class="community">
-<h1>RUMİ7XL Topluluk</h1>
-<p>Burada herkes sohbet edebilir, fikirlerini paylaşabilir.</p>
+<h1 style="margin: 0 0 4px 0; font-size: 1.6rem;">RUMİ7XL Topluluk</h1>
+<p style="margin: 0 0 12px 0; color: #aaa; font-size: 0.85rem;">Burada herkes sohbet edebilir, fikirlerini paylaşabilir.</p>
 
 <div class="chat-box" id="chatBox">
   <div class="message">
@@ -55,7 +55,6 @@
 <input type="email" name="email" placeholder="E-posta" autocomplete="username">
 <input type="password" name="password" placeholder="Şifre" autocomplete="current-password">
 
-<!-- YENİ ŞİFREMİ UNUTTUM LINKI -->
 <div style="text-align: right; width: 100%; margin-top: -5px; margin-bottom: 5px;">
   <a href="#" id="forgotPasswordBtn" style="color: #a855f7; font-size: 0.85rem; text-decoration: none;">Şifremi Unuttum?</a>
 </div>
@@ -185,10 +184,17 @@ onSnapshot(q, (snapshot) => {
     
     const cleanUser = escapeHtml(data.username || "Kullanıcı");
     const cleanText = escapeHtml(data.text || "");
+    const userPhoto = data.photoURL || "https://api.dicebear.com/7.x/bottts/svg?seed=" + encodeURIComponent(cleanUser);
+
+    const justifyStyle = isMe ? 'flex-end' : 'flex-start';
 
     messageDiv.innerHTML = `
-      <b style="display: block; font-size: 0.85rem; color: ${isMe ? '#c084fc' : '#9146ff'}; margin-bottom: 4px;">👤 ${cleanUser}</b>
-      <span style="font-size: 0.95rem; color: #fff;">${cleanText}</span>
+      <div class="chat-user-header" style="justify-content: ${justifyStyle};">
+        ${!isMe ? `<img src="${userPhoto}" class="chat-user-avatar">` : ''}
+        <b style="font-size: 0.85rem; color: ${isMe ? '#c084fc' : '#9146ff'};">${cleanUser}</b>
+        ${isMe ? `<img src="${userPhoto}" class="chat-user-avatar">` : ''}
+      </div>
+      <span style="font-size: 0.95rem; color: #fff; word-break: break-word;">${cleanText}</span>
     `;
     chatBox.appendChild(messageDiv);
   });
@@ -209,12 +215,14 @@ async function sendMessage() {
   if (!text) return;
 
   const username = currentUser.displayName || currentUser.email.split("@")[0];
+  const photoURL = currentUser.photoURL || "https://api.dicebear.com/7.x/bottts/svg?seed=" + encodeURIComponent(username);
 
   try {
     chatInput.value = "";
     await addDoc(messagesRef, {
       text: text,
       username: username,
+      photoURL: photoURL,
       uid: currentUser.uid,
       createdAt: Date.now()
     });
