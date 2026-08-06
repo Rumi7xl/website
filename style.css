@@ -784,3 +784,78 @@ footer{
         margin-top:0;
     }
 }
+
+
+/* MOBIL HAMBURGER */
+.menu-btn{
+    display:none;
+    background:none;
+    color:white;
+    border:0;
+    font-size:28px;
+    cursor:pointer;
+}
+
+.mobile-menu{
+    display:none;
+}
+
+@media(max-width:700px){
+
+.navbar{
+    flex-direction:row;
+    justify-content:space-between;
+    position:relative;
+    height:70px;
+    margin:15px auto;
+}
+
+.menu-btn{
+    display:block;
+}
+
+.logo{
+    font-size:26px;
+}
+
+.nav-links{
+    display:none;
+}
+
+.account-box{
+    width:auto;
+    gap:5px;
+}
+
+.account-box a{
+    padding:8px 10px;
+    font-size:12px;
+}
+
+.mobile-menu{
+    position:absolute;
+    top:75px;
+    left:0;
+    width:220px;
+    background:#111;
+    border:1px solid rgba(145,70,255,.4);
+    border-radius:15px;
+    padding:15px;
+    display:none;
+    flex-direction:column;
+    gap:15px;
+    z-index:9999;
+}
+
+.mobile-menu a{
+    color:white;
+    text-decoration:none;
+    padding:10px;
+    border-radius:10px;
+}
+
+.mobile-menu.active{
+    display:flex;
+}
+
+}
