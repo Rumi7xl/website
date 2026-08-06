@@ -1,381 +1,290 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Topluluk & Canlı Sohbet - RUMI7XL</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    /* TOPLULUK SOHBET ÖZEL STİLLERİ */
-    .chat-container {
-      max-width: 900px;
-      margin: 40px auto;
-      background: rgba(20, 20, 30, 0.75);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(168, 85, 247, 0.2);
-      border-radius: 16px;
-      display: flex;
-      flex-direction: column;
-      height: 70vh;
-      overflow: hidden;
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RUMİ7XL | Topluluk</title>
+<link rel="icon" type="image/png" href="favicon.png?v=2">
 
-    .chat-header {
-      padding: 18px 24px;
-      background: rgba(168, 85, 247, 0.1);
-      border-bottom: 1px solid rgba(168, 85, 247, 0.2);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .chat-header h2 {
-      margin: 0;
-      color: #fff;
-      font-size: 1.25rem;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .chat-messages {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .chat-messages::-webkit-scrollbar {
-      width: 6px;
-    }
-    .chat-messages::-webkit-scrollbar-thumb {
-      background: rgba(168, 85, 247, 0.3);
-      border-radius: 3px;
-    }
-
-    .message-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      max-width: 80%;
-    }
-
-    .message-item.own-message {
-      align-self: flex-end;
-      flex-direction: row-reverse;
-    }
-
-    .message-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid rgba(168, 85, 247, 0.5);
-    }
-
-    .message-content {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 10px 14px;
-      border-radius: 14px;
-      color: #e2e8f0;
-      word-break: break-word;
-    }
-
-    .message-item.own-message .message-content {
-      background: rgba(168, 85, 247, 0.2);
-      border-color: rgba(168, 85, 247, 0.4);
-      color: #fff;
-    }
-
-    .message-author {
-      font-size: 0.8rem;
-      font-weight: bold;
-      color: #a855f7;
-      margin-bottom: 4px;
-    }
-
-    .message-item.own-message .message-author {
-      color: #c084fc;
-      text-align: right;
-    }
-
-    .chat-input-area {
-      padding: 16px 20px;
-      background: rgba(15, 15, 23, 0.8);
-      border-top: 1px solid rgba(168, 85, 247, 0.2);
-      display: flex;
-      gap: 12px;
-    }
-
-    .chat-input-area input {
-      flex: 1;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(168, 85, 247, 0.3);
-      padding: 12px 16px;
-      border-radius: 10px;
-      color: #fff;
-      font-size: 0.95rem;
-      outline: none;
-      transition: all 0.3s;
-    }
-
-    .chat-input-area input:focus {
-      border-color: #a855f7;
-      box-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
-    }
-
-    .chat-send-btn {
-      background: linear-gradient(135deg, #a855f7, #7c3aed);
-      color: #fff;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 10px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .chat-send-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
-    }
-  </style>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<link rel="stylesheet" href="style.css?v=1.2">
 </head>
 <body>
 
-  <!-- ÜST MENÜ (NAVBAR) -->
-  <header class="navbar">
-    <div class="logo">
-      <a href="index.html" style="text-decoration:none; color:inherit;">RUMI7XL</a>
-    </div>
-    <nav class="nav-links">
-      <a href="index.html">Ana Sayfa</a>
-      <a href="topluluk.html" class="active">Topluluk</a>
-      <a href="duyurular.html">Duyurular</a>
-    </nav>
-    <div class="account-box">
-      <!-- auth.js burayı otomatik dolduracak -->
-    </div>
-  </header>
+<header class="navbar">
+<a href="/" class="logo">RUMİ7XL</a>
+<nav class="nav-links">
+  <a href="/">Ana Sayfa</a>
+  <a href="topluluk.html" class="active">Topluluk</a>
+  <a href="oneriler.html">Öneriler</a>
+  <a href="icerikler.html">İçerikler</a>
+  <a href="duyurular.html">Duyurular</a>
+</nav>
+<div class="account-box">
+  <a href="#" class="login-btn" onclick="openAccountModal('login'); return false;">👤 Giriş Yap</a>
+  <a href="#" class="register-btn" onclick="openAccountModal('register'); return false;">✨ Kayıt Ol</a>
+</div>
+</header>
 
-  <!-- CANLI SOHBET ALANI -->
-  <main class="chat-container">
-    <div class="chat-header">
-      <h2>💬 Canlı Topluluk Sohbeti</h2>
-    </div>
+<section class="community">
+<h1 style="margin: 0 0 4px 0; font-size: 1.6rem;">RUMİ7XL Topluluk</h1>
+<p style="margin: 0 0 12px 0; color: #aaa; font-size: 0.85rem;">Burada herkes sohbet edebilir, fikirlerini paylaşabilir.</p>
 
-    <div class="chat-messages" id="chatMessages">
-      <div style="text-align: center; color: #94a3b8; margin-top: 20px;">Mesajlar yükleniyor...</div>
-    </div>
+<div class="chat-box" id="chatBox">
+  <div class="message">
+    <b>👤 RUMİ7XL System</b>
+    <span>Sohbet odası yüklendi! İlk mesajı sen at 👋</span>
+  </div>
+</div>
 
-    <div class="chat-input-area">
-      <input type="text" id="chatInput" placeholder="Mesajınızı yazın..." maxlength="500">
-      <button class="chat-send-btn" id="sendBtn">Gönder 🚀</button>
-    </div>
-  </main>
+<form id="chatForm" class="chat-input" onsubmit="return false;">
+  <input type="text" id="chatInput" placeholder="Mesajını yaz..." autocomplete="off">
+  <button type="button" id="sendMessageBtn">Gönder</button>
+</form>
+</section>
 
-  <!-- MODALLAR (GİRİŞ, KAYIT, PROFİL FOTOĞRAFI & ŞİFRE) -->
-  <div id="accountModal" class="modal" style="display:none;">
-    <div class="modal-content">
-      <span class="close-btn" onclick="document.getElementById('accountModal').style.display='none'">&times;</span>
+<!-- HESAP POPUP -->
+<div class="account-modal" id="accountModal" style="display:none;">
+<div class="account-window">
+<button class="close-account" onclick="closeAccount()">✕</button>
+
+<div class="account-tabs">
+<button id="loginTab" class="active" onclick="showLogin()">Giriş Yap</button>
+<button id="registerTab" onclick="showRegister()">Kayıt Ol</button>
+</div>
+
+<form id="loginForm" class="account-form" autocomplete="on">
+<input type="email" name="email" placeholder="E-posta" autocomplete="username" required>
+<input type="password" name="password" placeholder="Şifre" autocomplete="current-password" required>
+
+<div style="text-align: right; width: 100%; margin-top: -5px; margin-bottom: 5px;">
+  <a href="#" id="forgotPasswordBtn" style="color: #a855f7; font-size: 0.85rem; text-decoration: none;">Şifremi Unuttum?</a>
+</div>
+
+<button type="submit" class="account-submit">Giriş Yap</button>
+</form>
+
+<form id="registerForm" class="account-form" style="display:none;" autocomplete="on">
+<input type="text" name="username" placeholder="Kullanıcı adı" autocomplete="username" required>
+<input type="email" name="register-email" placeholder="E-posta" autocomplete="email" required>
+<input type="password" name="new-password" placeholder="Şifre" autocomplete="new-password" required>
+<button type="submit" class="account-submit">Kayıt Ol</button>
+</form>
+</div>
+</div>
+
+<!-- PROFİL FOTOĞRAFI POPUP -->
+<div class="settings-modal" id="photoModal" style="display:none;">
+  <div class="settings-window">
+    <button class="close-account" onclick="document.getElementById('photoModal').style.display='none'">✕</button>
+    <h2>🖼️ Profil Fotoğrafı</h2>
+    
+    <form id="photoSettingsForm">
+      <label for="photoFileInput" class="custom-file-upload">
+        <span id="uploadLabelText" style="color:#aaa; font-size:0.9rem;">📁 Cihazdan / Galeriden Resim Seç</span>
+        <img id="photoPreview" class="preview-avatar" src="" alt="Önizleme" style="display:none;">
+      </label>
+      <input type="file" id="photoFileInput" accept="image/*" required style="display: none;">
       
-      <div class="form-toggle">
-        <button id="loginToggleBtn" class="active" onclick="showLogin()">Giriş Yap</button>
-        <button id="registerToggleBtn" onclick="showRegister()">Kayıt Ol</button>
+      <button type="submit" class="settings-btn" style="margin-top: 15px;">Fotoğrafı Yükle ve Kaydet</button>
+    </form>
+  </div>
+</div>
+
+<!-- ŞİFRE DEĞİŞTİRME POPUP -->
+<div class="settings-modal" id="passwordModal" style="display:none;">
+  <div class="settings-window">
+    <button class="close-account" onclick="document.getElementById('passwordModal').style.display='none'">✕</button>
+    <h2>🔑 Şifre Değiştir</h2>
+    
+    <form id="passwordSettingsForm" autocomplete="off">
+      <label style="color:#aaa; font-size:0.85rem; display:block; text-align:left; margin-bottom:5px;">Yeni Şifreniz:</label>
+      <input type="password" name="changePassword" placeholder="Yeni Şifreniz" required autocomplete="new-password">
+      <button type="submit" class="settings-btn">Şifreyi Güncelle</button>
+    </form>
+  </div>
+</div>
+
+<script>
+function showLogin(){
+  document.getElementById("loginForm").style.display="flex";
+  document.getElementById("registerForm").style.display="none";
+  document.getElementById("loginTab").classList.add("active");
+  document.getElementById("registerTab").classList.remove("active");
+}
+
+function showRegister(){
+  document.getElementById("loginForm").style.display="none";
+  document.getElementById("registerForm").style.display="flex";
+  document.getElementById("registerTab").classList.add("active");
+  document.getElementById("loginTab").classList.remove("active");
+}
+
+function openAccountModal(type) {
+  const modal = document.getElementById("accountModal");
+  if (modal) {
+    modal.style.display = "flex";
+    if (type === 'register') {
+      showRegister();
+    } else {
+      showLogin();
+    }
+  }
+}
+
+function closeAccount(){
+  document.getElementById("accountModal").style.display="none";
+}
+
+window.showLogin = showLogin;
+window.showRegister = showRegister;
+window.openAccountModal = openAccountModal;
+window.closeAccount = closeAccount;
+</script>
+
+<script type="module" src="auth.js?v=1.5"></script>
+
+<!-- CANLI SOHBET SCRIPT (FIRESTORE) -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+import { 
+  getFirestore, 
+  collection, 
+  addDoc, 
+  query, 
+  orderBy, 
+  onSnapshot, 
+  limit,
+  doc,
+  getDoc
+} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCiuXtHu3J9Va46a4KiETO2JrSn5um2KoQ",
+  authDomain: "rumi7xl-web.firebaseapp.com",
+  projectId: "rumi7xl-web",
+  storageBucket: "rumi7xl-web.firebasestorage.app",
+  messagingSenderId: "1077565304835",
+  appId: "1:1077565304835:web:a672a4440797b76f42de36"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const chatBox = document.getElementById("chatBox");
+const chatInput = document.getElementById("chatInput");
+const sendBtn = document.getElementById("sendMessageBtn");
+
+let currentUser = null;
+
+onAuthStateChanged(auth, (user) => {
+  currentUser = user;
+  if (!user) {
+    chatInput.placeholder = "Mesaj yazmak için giriş yapmalısın...";
+  } else {
+    chatInput.placeholder = "Mesajını yaz...";
+  }
+});
+
+const messagesRef = collection(db, "messages");
+const q = query(messagesRef, orderBy("createdAt", "asc"), limit(50));
+
+onSnapshot(q, (snapshot) => {
+  chatBox.innerHTML = "";
+  
+  if (snapshot.empty) {
+    chatBox.innerHTML = `
+      <div class="message">
+        <b>👤 RUMİ7XL System</b>
+        <span>Henüz mesaj yok, ilk mesajı sen at! 🔥</span>
+      </div>`;
+    return;
+  }
+
+  snapshot.forEach((docSnap) => {
+    const data = docSnap.data();
+    const messageDiv = document.createElement("div");
+    
+    const isMe = currentUser && data.uid === currentUser.uid;
+    messageDiv.className = isMe ? "message my-message" : "message";
+    
+    const cleanUser = escapeHtml(data.username || "Kullanıcı");
+    const cleanText = escapeHtml(data.text || "");
+    const userPhoto = data.photoURL || "https://api.dicebear.com/7.x/bottts/svg?seed=" + encodeURIComponent(cleanUser);
+
+    const justifyStyle = isMe ? 'flex-end' : 'flex-start';
+
+    messageDiv.innerHTML = `
+      <div class="chat-user-header" style="justify-content: ${justifyStyle};">
+        ${!isMe ? `<img src="${userPhoto}" class="chat-user-avatar">` : ''}
+        <b style="font-size: 0.85rem; color: ${isMe ? '#c084fc' : '#9146ff'};">${cleanUser}</b>
+        ${isMe ? `<img src="${userPhoto}" class="chat-user-avatar">` : ''}
       </div>
+      <span style="font-size: 0.95rem; color: #fff; word-break: break-word;">${cleanText}</span>
+    `;
+    chatBox.appendChild(messageDiv);
+  });
 
-      <form id="loginForm">
-        <input type="email" name="email" placeholder="E-posta Adresi" required>
-        <input type="password" name="password" placeholder="Şifre" required>
-        <button type="submit" class="submit-btn">Giriş Yap</button>
-        <p style="text-align:center; margin-top:10px;">
-          <a href="#" id="forgotPasswordBtn" style="color:#a855f7; font-size:0.85rem;">Şifremi Unuttum</a>
-        </p>
-      </form>
+  chatBox.scrollTop = chatBox.scrollHeight;
+}, (err) => {
+  console.error("Firestore Dinleme Hatası:", err);
+});
 
-      <form id="registerForm" style="display:none;">
-        <input type="text" name="username" placeholder="Kullanıcı Adı" required>
-        <input type="email" name="register-email" placeholder="E-posta Adresi" required>
-        <input type="password" name="new-password" placeholder="Şifre" required>
-        <button type="submit" class="submit-btn">Kayıt Ol</button>
-      </form>
-    </div>
-  </div>
+async function sendMessage() {
+  if (!currentUser) {
+    window.openAccountModal('login');
+    return;
+  }
 
-  <div id="photoModal" class="modal" style="display:none;">
-    <div class="modal-content">
-      <span class="close-btn" onclick="document.getElementById('photoModal').style.display='none'">&times;</span>
-      <h2>🖼️ Profil Fotoğrafı</h2>
-      <form id="photoSettingsForm">
-        <label for="photoFileInput" class="custom-file-upload">
-          <span id="uploadLabelText">📸 Fotoğraf Seç</span>
-          <img id="photoPreview" src="" style="display:none; width:80px; height:80px; border-radius:50%; margin:10px auto; object-fit:cover;">
-        </label>
-        <input type="file" id="photoFileInput" accept="image/*" style="display:none;">
-        <button type="submit" class="submit-btn" style="margin-top:15px;">Fotoğrafı Yükle ve Kaydet</button>
-      </form>
-    </div>
-  </div>
+  const text = chatInput.value.trim();
+  if (!text) return;
 
-  <div id="passwordModal" class="modal" style="display:none;">
-    <div class="modal-content">
-      <span class="close-btn" onclick="document.getElementById('passwordModal').style.display='none'">&times;</span>
-      <h2>🔑 Şifre Değiştir</h2>
-      <form id="passwordSettingsForm">
-        <input type="password" name="changePassword" placeholder="Yeni Şifreniz" required>
-        <button type="submit" class="submit-btn">Şifreyi Güncelle</button>
-      </form>
-    </div>
-  </div>
+  const username = currentUser.displayName || currentUser.email.split("@")[0];
+  let photoURL = currentUser.photoURL || "https://api.dicebear.com/7.x/bottts/svg?seed=" + encodeURIComponent(username);
 
-  <!-- AUTH KODU VE CANLI MESAJLAŞMA SCRIPT'İ -->
-  <script type="module" src="auth.js?v=1.3"></script>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
-    import { 
-      getFirestore, 
-      collection, 
-      addDoc, 
-      query, 
-      orderBy, 
-      limit, 
-      onSnapshot,
-      doc,
-      getDoc 
-    } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCiuXtHu3J9Va46a4KiETO2JrSn5um2KoQ",
-      authDomain: "rumi7xl-web.firebaseapp.com",
-      projectId: "rumi7xl-web",
-      storageBucket: "rumi7xl-web.firebasestorage.app",
-      messagingSenderId: "1077565304835",
-      appId: "1:1077565304835:web:a672a4440797b76f42de36"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    let currentUser = null;
-
-    onAuthStateChanged(auth, (user) => {
-      currentUser = user;
-    });
-
-    const messagesRef = collection(db, "messages");
-    const q = query(messagesRef, orderBy("createdAt", "asc"), limit(100));
-
-    const chatMessages = document.getElementById("chatMessages");
-    const chatInput = document.getElementById("chatInput");
-    const sendBtn = document.getElementById("sendBtn");
-
-    // CANLI MESAJLARI DİNLE
-    onSnapshot(q, (snapshot) => {
-      chatMessages.innerHTML = "";
-      if (snapshot.empty) {
-        chatMessages.innerHTML = `<div style="text-align: center; color: #94a3b8; margin-top: 20px;">Henüz mesaj yok. İlk mesajı sen at kanka! 🚀</div>`;
-        return;
-      }
-
-      snapshot.forEach((docSnap) => {
-        const data = docSnap.data();
-        const isOwn = currentUser && currentUser.uid === data.uid;
-
-        const messageDiv = document.createElement("div");
-        messageDiv.className = `message-item ${isOwn ? 'own-message' : ''}`;
-
-        const photo = data.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(data.username || 'User')}`;
-
-        messageDiv.innerHTML = `
-          <img src="${photo}" class="message-avatar" alt="Avatar">
-          <div class="message-content">
-            <div class="message-author">${data.username || 'Kullanıcı'}</div>
-            <div>${escapeHTML(data.text)}</div>
-          </div>
-        `;
-
-        chatMessages.appendChild(messageDiv);
-      });
-
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    });
-
-    // MESAJ GÖNDER
-    async function sendMessage() {
-      if (!currentUser) {
-        document.getElementById("accountModal").style.display = "flex";
-        return;
-      }
-
-      const text = chatInput.value.trim();
-      if (!text) return;
-
-      const username = currentUser.displayName || currentUser.email.split("@")[0];
-      let photoURL = currentUser.photoURL || "https://api.dicebear.com/7.x/bottts/svg?seed=" + encodeURIComponent(username);
-
-      // Veritabanındaki güncel profil resmini al
-      try {
-        const userDoc = await getDoc(doc(db, "users", currentUser.uid));
-        if (userDoc.exists() && userDoc.data().photoURL) {
-          photoURL = userDoc.data().photoURL;
-        }
-      } catch(e) {
-        console.log("Mesaj gönderilirken profil resmi okunamadı:", e);
-      }
-
-      try {
-        chatInput.value = "";
-        await addDoc(messagesRef, {
-          text: text,
-          username: username,
-          photoURL: photoURL,
-          uid: currentUser.uid,
-          createdAt: Date.now()
-        });
-      } catch (err) {
-        console.error("Mesaj gönderilemedi:", err);
-        alert("Mesaj gönderilemedi: " + err.message);
-      }
+  try {
+    const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+    if (userDoc.exists() && userDoc.data().photoURL) {
+      photoURL = userDoc.data().photoURL;
     }
+  } catch(e) {}
 
-    sendBtn.onclick = sendMessage;
-    chatInput.onkeypress = (e) => {
-      if (e.key === "Enter") sendMessage();
-    };
+  try {
+    chatInput.value = "";
+    await addDoc(messagesRef, {
+      text: text,
+      username: username,
+      photoURL: photoURL,
+      uid: currentUser.uid,
+      createdAt: Date.now()
+    });
+  } catch (err) {
+    console.error("Mesaj gönderilemedi:", err);
+    alert("Mesaj gönderilemedi: " + err.message);
+  }
+}
 
-    function escapeHTML(str) {
-      return str.replace(/[&<>'"]/g, 
-        tag => ({
-          '&': '&amp;',
-          '<': '&lt;',
-          '>': '&gt;',
-          "'": '&#39;',
-          '"': '&quot;'
-        }[tag] || tag)
-      );
+if (sendBtn) sendBtn.onclick = sendMessage;
+
+if (chatInput) {
+  chatInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      sendMessage();
     }
+  });
+}
 
-    // Modal değiştirme yardımcıları
-    window.showLogin = () => {
-      document.getElementById("loginForm").style.display = "block";
-      document.getElementById("registerForm").style.display = "none";
-      document.getElementById("loginToggleBtn").classList.add("active");
-      document.getElementById("registerToggleBtn").classList.remove("active");
-    };
+function escapeHtml(text) {
+  const div = document.createElement("div");
+  div.innerText = text;
+  return div.innerHTML;
+}
+</script>
 
-    window.showRegister = () => {
-      document.getElementById("loginForm").style.display = "none";
-      document.getElementById("registerForm").style.display = "block";
-      document.getElementById("registerToggleBtn").classList.add("active");
-      document.getElementById("loginToggleBtn").classList.remove("active");
-    };
-  </script>
 </body>
 </html>
