@@ -150,31 +150,69 @@ modal.style.display="none";
 </script>
 
 <script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
-import {getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
 
-const app=initializeApp({
-apiKey:"AIzaSyCiuXtHu3J9Va46a4KiETO2JrSn5um2KoQ",
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+import {
+getAuth,
+signInWithEmailAndPassword,
+createUserWithEmailAndPassword,
+onAuthStateChanged,
+signOut
+} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+
+const firebaseConfig = {
+apiKey:"AIzaSyCiuXtHu3J9Va46a4KiETO2Jr5um2KoQ",
 authDomain:"rumi7xl-web.firebaseapp.com",
 projectId:"rumi7xl-web",
 storageBucket:"rumi7xl-web.firebasestorage.app",
 messagingSenderId:"1077565304835",
 appId:"1:1077565304835:web:a672a4440797b76f42de36"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+document.querySelector("#loginForm .account-submit").onclick = async ()=>{
+const i=document.querySelectorAll("#loginForm input");
+
+try{
+await signInWithEmailAndPassword(auth,i[0].value,i[1].value);
+alert("Giriş başarılı");
+closeAccount();
+location.reload();
+}catch(e){
+alert(e.message);
+}
+};
+
+document.querySelector("#registerForm .account-submit").onclick = async ()=>{
+const i=document.querySelectorAll("#registerForm input");
+
+try{
+await createUserWithEmailAndPassword(auth,i[1].value,i[2].value);
+alert("Hesap oluşturuldu");
+closeAccount();
+}catch(e){
+alert(e.message);
+}
+};
+
+onAuthStateChanged(auth,(user)=>{
+const box=document.querySelector(".account-box");
+
+if(user && box){
+box.innerHTML=`
+<a>👤 ${user.email.split("@")[0]}</a>
+<a href="#" id="logoutBtn">🚪 Çıkış Yap</a>
+`;
+
+document.getElementById("logoutBtn").onclick=(e)=>{
+e.preventDefault();
+signOut(auth).then(()=>location.reload());
+};
+}
 });
 
-const auth=getAuth(app);
-
-document.querySelector("#loginForm .account-submit").onclick=async()=>{
-let i=document.querySelectorAll("#loginForm input");
-await signInWithEmailAndPassword(auth,i[0].value,i[1].value);
-location.reload();
-};
-
-document.querySelector("#registerForm .account-submit").onclick=async()=>{
-let i=document.querySelectorAll("#registerForm input");
-await createUserWithEmailAndPassword(auth,i[1].value,i[2].value);
-location.reload();
-};
 </script>
 
 </body>
