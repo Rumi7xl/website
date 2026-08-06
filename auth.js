@@ -93,13 +93,15 @@ function showToast(message, type = 'success') {
   }, 3000);
 }
 
+// OTURUM DURUMU KONTROLÜ
 onAuthStateChanged(auth, async (user) => {
   const accountBox = document.querySelector(".account-box");
   if (!accountBox) return;
 
   if (user) {
     const name = user.displayName || user.email.split("@")[0];
-    let photo = "https://api.dicebear.com/7.x/bottts/svg?seed=" + encodeURIComponent(name);
+    // Kırılmayan güvenli varsayılan profil fotosu
+    let photo = "https://ui-avatars.com/api/?name=" + encodeURIComponent(name) + "&background=9146ff&color=fff";
 
     try {
       const userDoc = await getDoc(doc(db, "users", user.uid));
@@ -112,19 +114,30 @@ onAuthStateChanged(auth, async (user) => {
       console.log(e);
     }
 
+    // 3. FOTOĞRAFTAKİ BİREBİR TASARIM VE DROPDOWN YAPISI
     accountBox.innerHTML = `
       <div style="position: relative; display: inline-block;">
-        <button id="userProfileBtn" style="background: #181818; border: 1px solid #333; color: white; padding: 8px 16px; border-radius: 20px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: bold;">
-          <img src="${photo}" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1px solid #9146ff;">
-          <span>${name}</span>
+        <button id="userProfileBtn" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 6px 16px 6px 8px; border-radius: 30px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-weight: bold; transition: 0.3s;">
+          <img src="${photo}" id="headerUserImg" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid #9146ff; box-shadow: 0 0 10px rgba(145,70,255,0.5);">
+          <span style="font-size: 15px;">${name}</span>
         </button>
-        <div id="dropdownMenu" style="display: none; position: absolute; right: 0; top: 45px; background: #111; border: 1px solid #9146ff; border-radius: 15px; padding: 10px; width: 170px; box-shadow: 0 0 25px rgba(145,70,255,.4); z-index: 999999; flex-direction: column; gap: 8px;">
-          <a href="#" id="openPhotoModalBtn" style="color: #ddd; text-decoration: none; font-size: 0.85rem; padding: 6px 10px; border-radius: 8px; display: block;">🖼️ Fotoğraf Değiştir</a>
-          <a href="#" id="openPassModalBtn" style="color: #ddd; text-decoration: none; font-size: 0.85rem; padding: 6px 10px; border-radius: 8px; display: block;">🔑 Şifre Değiştir</a>
-          <a href="#" id="logoutBtn" style="color: #ef4444; text-decoration: none; font-size: 0.85rem; padding: 6px 10px; border-radius: 8px; display: block; font-weight: bold;">🚪 Çıkış Yap</a>
+        
+        <div id="dropdownMenu" style="display: none; position: absolute; right: 0; top: 50px; background: #111; border: 1px solid #9146ff; border-radius: 18px; padding: 12px; width: 180px; box-shadow: 0 0 30px rgba(145,70,255,0.4); z-index: 999999; flex-direction: column; gap: 6px;">
+          <a href="#" id="openPhotoModalBtn" style="color: #fff; text-decoration: none; font-size: 0.9rem; padding: 8px 12px; border-radius: 10px; display: flex; align-items: center; gap: 8px; transition: 0.2s;">🖼️ Fotoğraf Değiştir</a>
+          <a href="#" id="openPassModalBtn" style="color: #fff; text-decoration: none; font-size: 0.9rem; padding: 8px 12px; border-radius: 10px; display: flex; align-items: center; gap: 8px; transition: 0.2s;">🔑 Şifre Değiştir</a>
+          <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 4px 0;"></div>
+          <a href="#" id="logoutBtn" style="color: #ef4444; text-decoration: none; font-size: 0.9rem; padding: 8px 12px; border-radius: 10px; display: flex; align-items: center; gap: 8px; font-weight: bold; transition: 0.2s;">🚪 Çıkış Yap</a>
         </div>
       </div>
     `;
+
+    // Resim yüklenemezse fallback devreye girsin
+    const headerImg = document.getElementById("headerUserImg");
+    if (headerImg) {
+      headerImg.onerror = () => {
+        headerImg.src = "https://ui-avatars.com/api/?name=" + encodeURIComponent(name) + "&background=9146ff&color=fff";
+      };
+    }
 
     const profileBtn = document.getElementById("userProfileBtn");
     const dropdownMenu = document.getElementById("dropdownMenu");
@@ -164,6 +177,7 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
+// DIŞARI TIKLANDIĞINDA DROPDOWN KAPAT
 document.addEventListener("click", (e) => {
   const menu = document.getElementById("dropdownMenu");
   const btn = document.getElementById("userProfileBtn");
@@ -172,6 +186,7 @@ document.addEventListener("click", (e) => {
   }
 });
 
+// RESİM SEÇİLİNCE ÖNİZLEME
 document.addEventListener("change", (e) => {
   if (e.target.id === "photoFileInput") {
     const file = e.target.files[0];
@@ -191,6 +206,7 @@ document.addEventListener("change", (e) => {
   }
 });
 
+// FORM GÖNDERİMLERİ
 document.addEventListener("submit", async (e) => {
   if (e.target.id === "loginForm") {
     e.preventDefault();
@@ -304,20 +320,5 @@ document.addEventListener("submit", async (e) => {
     } catch (err) {
       showToast("Şifre Güncelleme Hatası: " + err.message, 'error');
     }
-  }
-});
-
-document.addEventListener("click", (e) => {
-  if (e.target.id === "forgotPasswordBtn") {
-    e.preventDefault();
-    const loginForm = document.getElementById("loginForm");
-    const email = loginForm?.querySelector("input[type='email']")?.value.trim();
-    if (!email) {
-      showToast("Lütfen e-posta alanını doldurup tekrar deneyin.", 'error');
-      return;
-    }
-    sendPasswordResetEmail(auth, email)
-      .then(() => showToast("Şifre sıfırlama bağlantısı e-postana gönderildi! 📧"))
-      .catch((err) => showToast("Hata: " + err.message, 'error'));
   }
 });
