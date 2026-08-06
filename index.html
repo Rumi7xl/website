@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="tr">
 <head>
 <meta charset="utf-8"/>
@@ -21,12 +20,10 @@
 </script>
 <link href="favicon.png?v=2" rel="icon" type="image/png"/>
 <link href="style.css" rel="stylesheet"/>
-
 </head>
 <body>
 
 <header class="navbar">
-
 <a href="/" class="logo">RUMİ7XL</a>
 
 <nav class="nav-links">
@@ -41,8 +38,6 @@
     <a href="#" class="login-btn">👤 Giriş Yap</a>
     <a href="#" class="register-btn">✨ Kayıt Ol</a>
 </div>
-
-
 </header>
 
 <section class="hero">
@@ -50,315 +45,111 @@
 <img alt="RUMİ7XL" class="banner" src="hero-banner.png"/>
 <h1>RUMİ7XL</h1>
 <h2>Resmi Web Sitesi</h2>
-<p>
-Canlı Yayınlar • Oyun İçerikleri • RUMİ7XL
-</p>
-<div class="live-box">
-🟢 İçeriklerime buradan ulaşabilirsin
-</div>
-<div class="arrow">
-↓
-</div>
+<p>Canlı Yayınlar • Oyun İçerikleri • RUMİ7XL</p>
+<div class="live-box">🟢 İçeriklerime buradan ulaşabilirsin</div>
+<div class="arrow">↓</div>
 </div>
 </section>
+
 <section class="platforms">
 <div class="box kick-card">
-<div class="platform-logo kick">
-<img src="kick-logo.png"/>
-</div>
+<div class="platform-logo kick"><img src="kick-logo.png"/></div>
 <h2>KICK</h2>
-<p>
-RUMİ7XL Kick kanalından canlı yayınları takip edebilirsin.
-</p>
-<a href="https://kick.com/rumi7xl" target="_blank">
-KICK'E GİT &gt;
-</a>
+<p>RUMİ7XL Kick kanalından canlı yayınları takip edebilirsin.</p>
+<a href="https://kick.com/rumi7xl" target="_blank">KICK'E GİT &gt;</a>
 </div>
+
 <div class="box youtube-card">
-<div class="platform-logo youtube">
-<img src="youtube-logo.png"/>
-</div>
+<div class="platform-logo youtube"><img src="youtube-logo.png"/></div>
 <h2>YOUTUBE</h2>
-<p>
-Videolar ve yayın içerikleri için takip edebilirsin.
-</p>
-<a href="https://www.youtube.com/@Rumi7xl" target="_blank">
-KANALA GİT &gt;
-</a>
+<p>Videolar ve yayın içerikleri için takip edebilirsin.</p>
+<a href="https://www.youtube.com/@Rumi7xl" target="_blank">KANALA GİT &gt;</a>
 </div>
+
 <div class="box tiktok-card">
-<div class="platform-logo tiktok">
-<img src="tiktok-logo.png"/>
-</div>
+<div class="platform-logo tiktok"><img src="tiktok-logo.png"/></div>
 <h2>TIKTOK</h2>
-<p>
-RUMİ7XL TikTok hesabından kısa videoları takip edebilirsin.
-</p>
-<a href="https://www.tiktok.com/@rumi7xl" target="_blank">
-TIKTOK'A GİT &gt;
-</a>
+<p>RUMİ7XL TikTok hesabından kısa videoları takip edebilirsin.</p>
+<a href="https://www.tiktok.com/@rumi7xl" target="_blank">TIKTOK'A GİT &gt;</a>
 </div>
+
 <div class="box instagram-card">
-<div class="platform-logo instagram">
-<img src="instagram-logo.png"/>
-</div>
+<div class="platform-logo instagram"><img src="instagram-logo.png"/></div>
 <h2>INSTAGRAM</h2>
-<p>
-RUMİ7VIP Instagram hesabından güncel paylaşımları takip edebilirsin.
-</p>
-<a href="https://www.instagram.com/rumi7vip" target="_blank">
-TAKİP ET &gt;
-</a>
+<p>RUMİ7VIP Instagram hesabından güncel paylaşımları takip edebilirsin.</p>
+<a href="https://www.instagram.com/rumi7vip" target="_blank">TAKİP ET &gt;</a>
 </div>
-<!-- YENİ KART -->
 </section>
+
 <section class="about">
 <h2>Ben Kimim?</h2>
-<p>
-Merhaba, ben Bercan Yakar. İnternette RUMİ7XL adıyla içerik üretiyorum.
-Kick canlı yayınları, YouTube videoları ve sosyal medya içerikleri hazırlıyorum.
-</p>
-<p>
-Canlı yayınlar, oyun içerikleri ve eğlenceli yayınlarla topluluğumla vakit geçiriyorum.
-</p>
+<p>Merhaba, ben Bercan Yakar. İnternette RUMİ7XL adıyla içerik üretiyorum. Kick canlı yayınları, YouTube videoları ve sosyal medya içerikleri hazırlıyorum.</p>
+<p>Canlı yayınlar, oyun içerikleri ve eğlenceli yayınlarla topluluğumla vakit geçiriyorum.</p>
 </section>
-<footer>
 
-© 2026 RUMİ7XL
-
-</footer>
-
+<footer>© 2026 RUMİ7XL</footer>
 
 <!-- HESAP POPUP -->
-
 <div class="account-modal" id="accountModal">
+  <div class="account-window">
+    <button class="close-account" onclick="closeAccount()">✕</button>
+    <div class="account-tabs">
+      <button id="loginTab" class="active" onclick="showLogin()">Giriş Yap</button>
+      <button id="registerTab" onclick="showRegister()">Kayıt Ol</button>
+    </div>
 
-<div class="account-window">
+    <form id="loginForm" class="account-form" autocomplete="on">
+      <input type="email" name="email" placeholder="E-posta" autocomplete="username">
+      <input type="password" name="password" placeholder="Şifre" autocomplete="current-password">
+      <button type="submit" class="account-submit">Giriş Yap</button>
+    </form>
 
-<button class="close-account" onclick="closeAccount()">✕</button>
-
-<div class="account-tabs">
-
-<button id="loginTab" class="active" onclick="showLogin()">Giriş Yap</button>
-<button id="registerTab" onclick="showRegister()">Kayıt Ol</button>
-
+    <form id="registerForm" class="account-form" style="display:none;" autocomplete="on">
+      <input type="text" name="username" placeholder="Kullanıcı adı" autocomplete="username">
+      <input type="email" name="register-email" placeholder="E-posta" autocomplete="email">
+      <input type="password" name="new-password" placeholder="Şifre" autocomplete="new-password">
+      <button type="submit" class="account-submit">Kayıt Ol</button>
+    </form>
+  </div>
 </div>
-
-
-<form id="loginForm" class="account-form" autocomplete="on">
-
-<input type="email" name="email" placeholder="E-posta" autocomplete="username">
-
-<input type="password" name="password" placeholder="Şifre" autocomplete="current-password">
-
-<button type="button" class="account-submit">
-Giriş Yap
-</button>
-
-</form>
-
-
-<div id="registerForm" class="account-form" style="display:none;">
-
-<input type="text" name="username" placeholder="Kullanıcı adı" autocomplete="username">
-
-<input type="email" name="register-email" placeholder="E-posta" autocomplete="email">
-
-<input type="password" name="new-password" placeholder="Şifre" autocomplete="new-password">
-
-<button type="button" class="account-submit">
-Kayıt Ol
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-
-<script>
-
-const modal = document.getElementById("accountModal");
-
-
-document.querySelector(".login-btn").onclick = function(e){
-    e.preventDefault();
-    showLogin();
-    modal.style.display="flex";
-};
-
-
-document.querySelector(".register-btn").onclick = function(e){
-    e.preventDefault();
-    showRegister();
-    modal.style.display="flex";
-};
-
-
-function showLogin(){
-
-document.getElementById("loginForm").style.display="flex";
-document.getElementById("registerForm").style.display="none";
-
-document.getElementById("loginTab").classList.add("active");
-document.getElementById("registerTab").classList.remove("active");
-
-}
-
-
-function showRegister(){
-
-document.getElementById("loginForm").style.display="none";
-document.getElementById("registerForm").style.display="flex";
-
-document.getElementById("registerTab").classList.add("active");
-document.getElementById("loginTab").classList.remove("active");
-
-}
-
-
-function closeAccount(){
-
-modal.style.display="none";
-
-}
-
-
-window.onclick=function(e){
-
-if(e.target==modal){
-
-modal.style.display="none";
-
-}
-
-};
-
-</script>
-
-
-<script>
-function showToast(message){
-const toast=document.getElementById("siteToast");
-if(!toast) return;
-toast.innerText=message;
-toast.classList.add("show");
-setTimeout(()=>{
-toast.classList.remove("show");
-},3000);
-}
-</script>
-
-<script type="module">
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
-import {
-getAuth,
-createUserWithEmailAndPassword,
-signInWithEmailAndPassword,
-onAuthStateChanged,
-signOut
-} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
-
-const firebaseConfig = {
-apiKey: "AIzaSyCiuXtHu3J9Va46a4KiETO2JrSn5um2KoQ",
-authDomain: "rumi7xl-web.firebaseapp.com",
-projectId: "rumi7xl-web",
-storageBucket: "rumi7xl-web.firebasestorage.app",
-messagingSenderId: "1077565304835",
-appId: "1:1077565304835:web:a672a4440797b76f42de36"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-
-// giriş
-document.querySelector("#loginForm .account-submit").onclick = async () => {
-
-const inputs = document.querySelectorAll("#loginForm input");
-
-try {
-
-await signInWithEmailAndPassword(
-auth,
-inputs[0].value,
-inputs[1].value
-);
-
-showToast("Giriş başarılı");
-closeAccount();
-
-} catch(e) {
-
-alert(e.message);
-
-}
-
-};
-
-
-// kayıt
-document.querySelector("#registerForm .account-submit").onclick = async () => {
-
-const inputs = document.querySelectorAll("#registerForm input");
-
-try {
-
-await createUserWithEmailAndPassword(
-auth,
-inputs[1].value,
-inputs[2].value
-);
-
-showToast("Hesap oluşturuldu");
-closeAccount();
-
-} catch(e) {
-
-alert(e.message);
-
-}
-
-};
-
-
-// sağ üst kullanıcı
-onAuthStateChanged(auth,(user)=>{
-
-const box = document.querySelector(".account-box");
-
-if(user){
-
-box.innerHTML = `
-<a>👤 ${user.email.split("@")[0]}</a>
-<a href="#" id="logoutBtn">🚪 Çıkış Yap</a>
-`;
-
-document.getElementById("logoutBtn").onclick=(e)=>{
-e.preventDefault();
-
-signOut(auth).then(()=>{
-
-showToast("Çıkış yapıldı");
-
-setTimeout(()=>{
-location.reload();
-},1000);
-
-});
-
-};
-
-}
-
-});
-
-</script>
-
 
 <div id="siteToast"></div>
+
+<script>
+function showLogin(){
+  document.getElementById("loginForm").style.display="flex";
+  document.getElementById("registerForm").style.display="none";
+  document.getElementById("loginTab").classList.add("active");
+  document.getElementById("registerTab").classList.remove("active");
+}
+
+function showRegister(){
+  document.getElementById("loginForm").style.display="none";
+  document.getElementById("registerForm").style.display="flex";
+  document.getElementById("registerTab").classList.add("active");
+  document.getElementById("loginTab").classList.remove("active");
+}
+
+function closeAccount(){
+  document.getElementById("accountModal").style.display="none";
+}
+
+function showToast(message){
+  const toast=document.getElementById("siteToast");
+  if(!toast) return;
+  toast.innerText=message;
+  toast.classList.add("show");
+  setTimeout(()=>{ toast.classList.remove("show"); },3000);
+}
+
+window.showLogin = showLogin;
+window.showRegister = showRegister;
+window.closeAccount = closeAccount;
+window.showToast = showToast;
+</script>
+
+<!-- TEK KİMLİK DOĞRULAMA MODÜLÜ -->
+<script type="module" src="auth.js"></script>
 
 <style>
 #siteToast{
@@ -376,12 +167,10 @@ transform:translateY(-20px);
 transition:.3s;
 z-index:999999;
 }
-
 #siteToast.show{
 opacity:1;
 transform:translateY(0);
 }
 </style>
-
 </body>
 </html>
