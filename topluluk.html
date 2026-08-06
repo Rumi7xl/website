@@ -156,14 +156,19 @@ onSnapshot(q, (snapshot) => {
   snapshot.forEach((doc) => {
     const data = doc.data();
     const messageDiv = document.createElement("div");
-    messageDiv.className = "message";
+    
+    // Mesaj sana mı ait kontrolü (Giriş yapılmışsa ve UID tutuyorsa)
+    const isMe = currentUser && data.uid === currentUser.uid;
+    
+    // Sana aitse 'my-message' class'ı ekler
+    messageDiv.className = isMe ? "message my-message" : "message";
     
     const cleanUser = escapeHtml(data.username || "Kullanıcı");
     const cleanText = escapeHtml(data.text || "");
 
     messageDiv.innerHTML = `
-      <b>👤 ${cleanUser}</b>
-      <span>${cleanText}</span>
+      <b style="display: block; font-size: 0.85rem; color: ${isMe ? '#c084fc' : '#9146ff'}; margin-bottom: 4px;">👤 ${cleanUser}</b>
+      <span style="font-size: 0.95rem; color: #fff;">${cleanText}</span>
     `;
     chatBox.appendChild(messageDiv);
   });
