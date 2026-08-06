@@ -8,6 +8,7 @@
 <meta content="RUMİ7XL resmi web sitesi. Kick canlı yayınları, YouTube videoları, TikTok içerikleri ve Instagram hesabı." name="description"/>
 <link href="favicon.png?v=2" rel="icon" type="image/png"/>
 <link href="style.css" rel="stylesheet"/>
+<link href="style_hesap_popup.css" rel="stylesheet"/>
 </head>
 <body>
 
@@ -148,6 +149,10 @@ Devam Et
 
 <script>
 const modal = document.getElementById("accountModal");
+
+if(!modal){
+    console.log("Popup bulunamadı");
+}
 
 document.querySelector(".login-btn").onclick = function(e){
     e.preventDefault();
