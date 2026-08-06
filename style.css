@@ -737,3 +737,33 @@ footer{
         font-size:32px;
     }
 }
+
+/* Sohbet Kutusu İçin Esnek Düzen */
+.chat-box {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Genel Mesaj Stili (Başkalarının Mesajları - Solda) */
+.message {
+    align-self: flex-start;
+    max-width: 75%;
+    width: fit-content;
+    background: #18181b;
+    border: 1px solid #27272a;
+    border-left: 4px solid #9146ff;
+    border-radius: 12px;
+    padding: 10px 16px;
+    text-align: left;
+}
+
+/* Kendi Mesajlarımız (Sağda Duracak) */
+.message.my-message {
+    align-self: flex-end;
+    background: #2e1065;
+    border: 1px solid #581c87;
+    border-right: 4px solid #a855f7;
+    border-left: none;
+    text-align: right;
+}
