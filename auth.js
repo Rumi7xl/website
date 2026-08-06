@@ -12,7 +12,7 @@ import {
 
 // Firebase Yapılandırması
 const firebaseConfig = {
-  apiKey: "AIzaSyCiuXtHu3J9Va46a4KiETO2Jr5um2KoQ",
+  apiKey: "AIzaSyCiuXtHu3J9Va46a4KiETO2JrSn5um2KoQ",
   authDomain: "rumi7xl-web.firebaseapp.com",
   projectId: "rumi7xl-web",
   storageBucket: "rumi7xl-web.firebasestorage.app",
@@ -20,21 +20,16 @@ const firebaseConfig = {
   appId: "1:1077565304835:web:a672a4440797b76f42de36"
 };
 
-// Firebase Başlatma
+// Firebase Başlat
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// Oturum Kalıcılığı
+// Oturum Kalıcılığını Ayarla
 setPersistence(auth, browserLocalPersistence).catch((err) => console.error("Persistence Error:", err));
 
-// DOM Elemanları
-const accountBox = document.querySelector(".account-box");
-const modal = document.getElementById("accountModal");
-const loginForm = document.getElementById("loginForm");
-const registerForm = document.getElementById("registerForm");
-
-// Modal Açma Fonksiyonu
+// Modal Yönetimi
 function openAuthModal(mode = "login") {
+  const modal = document.getElementById("accountModal");
   if (typeof window.showLogin === "function" && mode === "login") {
     window.showLogin();
   } else if (typeof window.showRegister === "function" && mode === "register") {
@@ -45,119 +40,123 @@ function openAuthModal(mode = "login") {
   }
 }
 
-// Modal Kapatma Fonksiyonu
 function closeAuthModal() {
+  const modal = document.getElementById("accountModal");
   if (modal) {
     modal.style.display = "none";
   }
 }
 
-// Tıklama Olaylarını Dinleme (Event Delegation)
+// Global Tıklama Dinleyicisi (Event Delegation)
 document.addEventListener("click", (e) => {
-  // Giriş Yap Butonları
   if (e.target.closest(".login-btn")) {
     e.preventDefault();
     openAuthModal("login");
   }
 
-  // Kayıt Ol Butonları
   if (e.target.closest(".register-btn")) {
     e.preventDefault();
     openAuthModal("register");
   }
 
-  // Çıkış Yap Butonu
   if (e.target.closest("#logoutBtn")) {
     e.preventDefault();
     signOut(auth)
       .then(() => {
-        window.location.reload();
+        if (typeof window.showToast === "function") {
+          window.showToast("Çıkış yapıldı");
+          setTimeout(() => location.reload(), 1000);
+        } else {
+          location.reload();
+        }
       })
       .catch((err) => alert("Çıkış hatası: " + err.message));
   }
 });
 
-// GİRİŞ YAP FORM SUBMIT
-if (loginForm) {
-  loginForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const inputs = loginForm.querySelectorAll("input");
-    const email = inputs[0]?.value.trim();
-    const password = inputs[1]?.value;
+// Form İşlemleri
+document.addEventListener("DOMContentLoaded", () => {
+  const loginForm = document.getElementById("loginForm");
+  const registerForm = document.getElementById("registerForm");
 
-    if (!email || !password) {
-      alert("Lütfen tüm alanları doldurun.");
-      return;
-    }
+  if (loginForm) {
+    const loginSubmitBtn = loginForm.querySelector(".account-submit");
+    const handleLogin = async (e) => {
+      e.preventDefault();
+      const inputs = loginForm.querySelectorAll("input");
+      const email = inputs[0]?.value.trim();
+      const password = inputs[1]?.value;
 
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      closeAuthModal();
-      loginForm.reset();
-    } catch (err) {
-      alert("Giriş Hatası: " + err.message);
-    }
-  });
-}
+      if (!email || !password) {
+        alert("Lütfen tüm alanları doldurun.");
+        return;
+      }
 
-// KAYIT OL FORM SUBMIT
-if (registerForm) {
-  registerForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const inputs = registerForm.querySelectorAll("input");
-    const username = inputs[0]?.value.trim();
-    const email = inputs[1]?.value.trim();
-    const password = inputs[2]?.value;
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        closeAuthModal();
+        if (typeof window.showToast === "function") window.showToast("Giriş başarılı");
+      } catch (err) {
+        alert("Giriş Hatası: " + err.message);
+      }
+    };
 
-    if (!username || !email || !password) {
-      alert("Lütfen tüm alanları doldurun.");
-      return;
-    }
+    loginForm.addEventListener("submit", handleLogin);
+    if (loginSubmitBtn) loginSubmitBtn.onclick = handleLogin;
+  }
 
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+  if (registerForm) {
+    const registerSubmitBtn = registerForm.querySelector(".account-submit");
+    const handleRegister = async (e) => {
+      e.preventDefault();
+      const inputs = registerForm.querySelectorAll("input");
       
-      // Kullanıcı Adını Firebase Profiline Kaydet
-      await updateProfile(userCredential.user, {
-        displayName: username
-      });
+      // Dinamik input tespiti (username, email, pass)
+      let username = "", email = "", password = "";
+      if (inputs.length >= 3) {
+        username = inputs[0].value.trim();
+        email = inputs[1].value.trim();
+        password = inputs[2].value;
+      }
 
-      closeAuthModal();
-      registerForm.reset();
-    } catch (err) {
-      alert("Kayıt Hatası: " + err.message);
-    }
-  });
-}
+      if (!username || !email || !password) {
+        alert("Lütfen tüm alanları doldurun.");
+        return;
+      }
 
-// OTURUM DURUMU DİNLENİYOR
-onAuthStateChanged(auth, (user) => {
-  if (!accountBox) return;
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        await updateProfile(userCredential.user, { displayName: username });
+        closeAuthModal();
+        if (typeof window.showToast === "function") window.showToast("Hesap oluşturuldu");
+      } catch (err) {
+        alert("Kayıt Hatası: " + err.message);
+      }
+    };
 
-  if (user) {
-    // Profil ismi varsa kullan yoksa mail adını al
-    const displayName = user.displayName || user.email.split("@")[0];
-
-    accountBox.innerHTML = `
-      <a class="user-name" style="cursor: default;">
-        👤 ${displayName}
-      </a>
-      <a href="#" id="logoutBtn" style="margin-left: 10px; color: #ff4d4d;">
-        🚪 Çıkış Yap
-      </a>
-    `;
-  } else {
-    accountBox.innerHTML = `
-      <a href="#" class="login-btn">
-        👤 Giriş Yap
-      </a>
-      <a href="#" class="register-btn" style="margin-left: 8px;">
-        ✨ Kayıt Ol
-      </a>
-    `;
+    registerForm.addEventListener("submit", handleRegister);
+    if (registerSubmitBtn) registerSubmitBtn.onclick = handleRegister;
   }
 });
 
-// Global Erişimler
+// Oturum Durumu Takibi
+onAuthStateChanged(auth, (user) => {
+  const accountBoxes = document.querySelectorAll(".account-box");
+  accountBoxes.forEach((accountBox) => {
+    if (user) {
+      const displayName = user.displayName || user.email.split("@")[0];
+      accountBox.innerHTML = `
+        <a class="user-name" style="cursor: default;">👤 ${displayName}</a>
+        <a href="#" id="logoutBtn" style="margin-left: 10px; color: #ff4d4d;">🚪 Çıkış Yap</a>
+      `;
+    } else {
+      accountBox.innerHTML = `
+        <a href="#" class="login-btn">👤 Giriş Yap</a>
+        <a href="#" class="register-btn" style="margin-left: 8px;">✨ Kayıt Ol</a>
+      `;
+    }
+  });
+});
+
 window.firebaseAuth = auth;
 window.logout = () => signOut(auth);
