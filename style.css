@@ -600,3 +600,73 @@ footer{
     }
 
 }
+
+
+/* MOBIL TASARIM */
+@media(max-width:700px){
+
+    .navbar{
+        width:94%;
+        height:auto;
+        min-height:60px;
+        padding:12px 15px;
+        border-radius:15px;
+        flex-wrap:wrap;
+        gap:15px;
+    }
+
+    .logo{
+        font-size:24px;
+    }
+
+    .nav-links{
+        order:3;
+        width:100%;
+        display:flex;
+        justify-content:center;
+        gap:15px;
+        overflow-x:auto;
+        padding-bottom:5px;
+    }
+
+    .nav-links a{
+        font-size:13px;
+        white-space:nowrap;
+    }
+
+    .account-box{
+        gap:6px;
+    }
+
+    .account-box a{
+        padding:8px 12px;
+        font-size:12px;
+    }
+
+    .banner{
+        width:94%;
+        height:180px;
+        border-radius:20px;
+    }
+
+    .hero h1{
+        font-size:45px;
+        letter-spacing:4px;
+    }
+
+    .hero h2{
+        font-size:26px;
+    }
+
+    .hero p{
+        font-size:16px;
+    }
+
+    .platforms{
+        width:95%;
+    }
+
+    .box{
+        width:95%;
+    }
+}
