@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
-import { getFirestore, collection, addDoc, updateDoc, doc, serverTimestamp, getDocs, deleteDoc, query, orderBy, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, updateDoc, doc, serverTimestamp, getDocs, deleteDoc, query, orderBy, setDoc, getDoc, where } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCiuXtHu3J9Va46a4KiETO2JrSn5um2KoQ",
@@ -180,7 +180,6 @@ async function loadAdminMessages() {
       return;
     }
 
-    // Toplu işlem butonları ve Hepsini Seç çubuğu
     let htmlContent = `
       <div style="display: flex; gap: 10px; margin-bottom: 15px; background: #181818; padding: 12px; border-radius: 10px; align-items: center; border: 1px solid #333;">
         <input type="checkbox" id="selectAllMsgs" style="cursor: pointer; width: 18px; height: 18px;" onclick="window.toggleSelectAll(this)">
@@ -220,13 +219,12 @@ async function loadAdminMessages() {
   }
 }
 
-// Hepsini seç/kaldır fonksiyonu
 window.toggleSelectAll = function(masterCheckbox) {
   const checkboxes = document.querySelectorAll('.msg-checkbox');
   checkboxes.forEach(cb => cb.checked = masterCheckbox.checked);
 };
 
-// Seçilenleri toplu silme
+// Seçilenleri toplu silme (Özel Modal ile)
 window.deleteSelectedMessages = async function() {
   const selected = document.querySelectorAll('.msg-checkbox:checked');
   if (selected.length === 0) {
@@ -234,7 +232,15 @@ window.deleteSelectedMessages = async function() {
     return;
   }
 
-  if (confirm(`Seçilen ${selected.length} mesajı silmek istediğine emin misin?`)) {
+  const modal = document.getElementById("customConfirmModal");
+  const yesBtn = document.getElementById("confirmYesBtn");
+  const noBtn = document.getElementById("confirmNoBtn");
+
+  document.getElementById("confirmText").innerText = `Seçilen ${selected.length} mesajı silmek istediğine emin misin patron?`;
+  modal.style.display = "flex";
+
+  yesBtn.onclick = async () => {
+    modal.style.display = "none";
     try {
       for (const cb of selected) {
         await deleteDoc(doc(db, "messages", cb.value));
@@ -244,53 +250,115 @@ window.deleteSelectedMessages = async function() {
     } catch (e) {
       showToast("Silinirken hata oluştu!", "error");
     }
-  }
+  };
+
+  noBtn.onclick = () => { modal.style.display = "none"; };
 };
 
-// Kullanıcıya Tıklayınca Yönetim Menüsü (Tüm mesajlarını sil veya Mute at)
-window.openUserModeration = async function(uid, username) {
+// Kullanıcı Moderasyon Menüsü (Şık Popup Tasarımıyla)
+window.openUserModeration = function(uid, username) {
   if (!uid) {
     showToast("Bu mesajın kullanıcısı bulunamadı.", "error");
     return;
   }
 
-  const action = prompt(`[ ${username} ] adlı kullanıcı için ne yapmak istiyorsun?\n\n1 - Kullanıcının TÜM mesajlarını sil\n2 - Kullanıcıyı Sustur (Mute at)\n\nİşlem seç (1 veya 2):`);
-
-  if (action === "1") {
-    if (confirm(`${username} adlı kullanıcının platformdaki TÜM mesajlarını silmek istediğine emin misin?`)) {
-      try {
-        const q = query(collection(db, "messages"));
-        const snap = await getDocs(q);
-        let count = 0;
-        for (const docSnap of snap.docs) {
-          if (docSnap.data().uid === uid) {
-            await deleteDoc(doc(db, "messages", docSnap.id));
-            count++;
-          }
-        }
-        showToast(`${username} kullanıcısının ${count} mesajı silindi!`);
-        loadAdminMessages();
-      } catch (e) {
-        showToast("Hata oluştu!", "error");
-      }
-    }
-  } else if (action === "2") {
-    const minutesStr = prompt(`${username} kaç dakika süreyle susturulsun? (Örn: 10)`);
-    const minutes = parseInt(minutesStr);
-    if (isNaN(minutes) || minutes <= 0) {
-      showToast("Geçerli bir süre girilmedi!", "error");
-      return;
-    }
-
-    const muteUntil = Date.now() + (minutes * 60 * 1000);
-    try {
-      // Kullanıcının susturma bilgisini users koleksiyonuna kaydediyoruz
-      await setDoc(doc(db, "users", uid), { muteUntil: muteUntil }, { merge: true });
-      showToast(`${username} ${minutes} dakika süreyle susturuldu! 🔇`);
-    } catch (e) {
-      showToast("Mute atılırken hata oluştu!", "error");
-    }
+  // Varsa eski özel modalı temizle, yenisini oluştur
+  let modModal = document.getElementById("customUserModModal");
+  if (!modModal) {
+    modModal = document.createElement("div");
+    modModal.id = "customUserModModal";
+    modModal.style.cssText = `
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 999999;
+    `;
+    document.body.appendChild(modModal);
   }
+
+  modModal.innerHTML = `
+    <div style="background: #181818; border: 1px solid #9146ff; padding: 25px; border-radius: 16px; width: 350px; box-shadow: 0 0 30px rgba(145,70,255,0.4); color: #fff; text-align: center;">
+      <h3 style="color: #9146ff; margin-bottom: 10px;">${username}</h3>
+      <p style="font-size: 0.9rem; color: #aaa; margin-bottom: 20px;">Kullanıcı için yapılacak işlemi seç:</p>
+      
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+        <button id="modDeleteAll" style="background: #ef4444; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold;">Tüm Mesajlarını Sil</button>
+        <button id="modMuteUser" style="background: #9146ff; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold;">Kullanıcıyı Sustur (Mute)</button>
+      </div>
+      
+      <button id="modClose" style="background: #333; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; cursor: pointer;">İptal</button>
+    </div>
+  `;
+  modModal.style.display = "flex";
+
+  document.getElementById("modClose").onclick = () => { modModal.style.display = "none"; };
+
+  // 1. Tüm mesajlarını sil
+  document.getElementById("modDeleteAll").onclick = async () => {
+    modModal.style.display = "none";
+    try {
+      const snap = await getDocs(collection(db, "messages"));
+      let count = 0;
+      for (const docSnap of snap.docs) {
+        if (docSnap.data().uid === uid) {
+          await deleteDoc(doc(db, "messages", docSnap.id));
+          count++;
+        }
+      }
+      showToast(`${username} kullanıcısının ${count} mesajı silindi!`);
+      loadAdminMessages();
+    } catch (e) {
+      showToast("Hata oluştu!", "error");
+    }
+  };
+
+  // 2. Sustur (Mute)
+  document.getElementById("modMuteUser").onclick = () => {
+    modModal.style.display = "none";
+    
+    // Süre seçtirme modalı
+    let muteModal = document.getElementById("customMuteModal");
+    if (!muteModal) {
+      muteModal = document.createElement("div");
+      muteModal.id = "customMuteModal";
+      muteModal.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 999999;
+      `;
+      document.body.appendChild(muteModal);
+    }
+
+    muteModal.innerHTML = `
+      <div style="background: #181818; border: 1px solid #9146ff; padding: 25px; border-radius: 16px; width: 320px; box-shadow: 0 0 30px rgba(145,70,255,0.4); color: #fff; text-align: center;">
+        <h3 style="color: #9146ff; margin-bottom: 10px;">Susturma Süresi</h3>
+        <p style="font-size: 0.85rem; color: #aaa; margin-bottom: 15px;">${username} kaç dakika susturulsun?</p>
+        <input type="number" id="muteMinutesInput" value="5" min="1" style="width: 100%; padding: 10px; background: #111; border: 1px solid #333; color: #fff; border-radius: 8px; text-align: center; font-size: 1rem; margin-bottom: 15px;">
+        <div style="display: flex; gap: 10px; justify-content: center;">
+          <button id="muteConfirmBtn" style="background: #9146ff; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; cursor: pointer; font-weight: bold;">Sustur</button>
+          <button id="muteCancelBtn" style="background: #333; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; cursor: pointer;">İptal</button>
+        </div>
+      </div>
+    `;
+    muteModal.style.display = "flex";
+
+    document.getElementById("muteCancelBtn").onclick = () => { muteModal.style.display = "none"; };
+
+    document.getElementById("muteConfirmBtn").onclick = async () => {
+      const minutes = parseInt(document.getElementById("muteMinutesInput").value);
+      muteModal.style.display = "none";
+
+      if (isNaN(minutes) || minutes <= 0) {
+        showToast("Geçerli bir süre gir!", "error");
+        return;
+      }
+
+      const muteUntil = Date.now() + (minutes * 60 * 1000);
+      try {
+        await setDoc(doc(db, "users", uid), { muteUntil: muteUntil }, { merge: true });
+        showToast(`${username} ${minutes} dakika süreyle susturuldu! 🔇`);
+      } catch (e) {
+        showToast("Mute atılırken hata oluştu!", "error");
+      }
+    };
+  };
 };
 
 window.prepareEdit = function(id, title, desc) {
@@ -332,7 +400,7 @@ window.confirmDeleteMessage = function(id) {
       await deleteDoc(doc(db, "messages", id));
       showToast("Mesaj silindi.");
       loadAdminMessages();
-    } catch (e) { showToast("Silinirken hata oluştu!", "error"); }
+    } catch (e) { showToast("Mesaj silinirken hata oluştu!", "error"); }
   };
   noBtn.onclick = () => { modal.style.display = "none"; };
 };
