@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
-import { getFirestore, collection, addDoc, updateDoc, doc, serverTimestamp, getDocs, deleteDoc, query, orderBy, setDoc, getDoc, where } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, updateDoc, doc, serverTimestamp, getDocs, deleteDoc, query, orderBy, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCiuXtHu3J9Va46a4KiETO2JrSn5um2KoQ",
@@ -170,7 +170,7 @@ async function loadAdminMessages() {
   chatContainer.innerHTML = "<p style='color:#aaa;'>Yükleniyor...</p>";
 
   try {
-    // 1. Susturulan (Mute yemiş) kullanıcıları çek
+    // 1. Susturulan kullanıcıları çek
     const usersSnap = await getDocs(collection(db, "users"));
     let mutedUsersHtml = "";
     let activeMutesCount = 0;
@@ -183,7 +183,7 @@ async function loadAdminMessages() {
         const remainingMs = uData.muteUntil - Date.now();
         const min = Math.floor(remainingMs / 60000);
         const sec = Math.floor((remainingMs % 60000) / 1000);
-        const uName = uData.username || uData.email || "Kullanıcı";
+        const uName = uData.username || "Bilinmeyen Kullanıcı";
 
         mutedUsersHtml += `
           <div style="display: flex; align-items: center; justify-content: space-between; background: #1f1424; padding: 10px 14px; border-radius: 8px; margin-bottom: 6px; border: 1px solid #9146ff55;">
@@ -253,7 +253,7 @@ async function loadAdminMessages() {
   }
 }
 
-// Mute Kaldırma Fonksiyonu
+// Mute Kaldırma Fonksiyonu (Süreyi tamamen siler)
 window.removeMute = async function(uid, username) {
   try {
     await setDoc(doc(db, "users", uid), { muteUntil: null }, { merge: true });
@@ -391,6 +391,7 @@ window.openUserModeration = function(uid, username) {
 
       const muteUntil = Date.now() + (minutes * 60 * 1000);
       try {
+        // Kullanıcı adını ve mute süresini kaydediyoruz ki panelde görünsün
         await setDoc(doc(db, "users", uid), { muteUntil: muteUntil, username: username }, { merge: true });
         showToast(`${username} ${minutes} dakika süreyle susturuldu! 🔇`);
         loadAdminMessages();
@@ -440,7 +441,7 @@ window.confirmDeleteMessage = function(id) {
       await deleteDoc(doc(db, "messages", id));
       showToast("Mesaj silindi.");
       loadAdminMessages();
-    } catch (e) { showToast("Silinirken hata oluştu!", "error"); }
+    } catch (e) { showToast("Mesaj silinirken hata oluştu!", "error"); }
   };
   noBtn.onclick = () => { modal.style.display = "none"; };
 };
