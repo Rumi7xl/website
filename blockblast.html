@@ -345,12 +345,21 @@
       const savedPieces = localStorage.getItem("blockBlastPieces");
 
       if (savedBoard && savedScore !== null && savedPieces) {
-        board = JSON.parse(savedBoard);
-        score = parseInt(savedScore);
-        currentPieces = JSON.parse(savedPieces);
-        
-        updateBoardUI();
-        renderPiecesFromMemory();
+        try {
+          board = JSON.parse(savedBoard);
+          score = parseInt(savedScore);
+          currentPieces = JSON.parse(savedPieces);
+          
+          // Eğer kaydedilen parçaların hepsi null veya boşsa yeni parça üret
+          if (!currentPieces || currentPieces.every(p => p === null)) {
+            generatePieces();
+          } else {
+            updateBoardUI();
+            renderPiecesFromMemory();
+          }
+        } catch (e) {
+          generatePieces();
+        }
       } else {
         generatePieces();
       }
