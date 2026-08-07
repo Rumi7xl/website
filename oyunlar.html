@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>RUMİ7XL - Oyunlar</title>
+  <link href="favicon.png?v=2" rel="icon" type="image/png"/>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <link rel="stylesheet" href="style.css?v=1.2">
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="index.html" class="logo">RUMİ7XL</a>
+    <div class="nav-links">
+      <a href="index.html">Ana Sayfa</a>
+      <a href="topluluk.html">Topluluk</a>
+      <a href="oneriler.html">Öneriler</a>
+      <a href="icerikler.html">İçerikler</a>
+      <a href="oyunlar.html" class="active">🎮 Oyunlar</a>
+      <a href="duyurular.html">Duyurular</a>
+    </div>
+    <div class="account-box">
+      <!-- Ana sayfa mantığıyla eklendi, JS dosyanla otomatik dolabilir -->
+    </div>
+  </nav>
+
+  <div class="suggestions" style="max-width: 900px; margin: 40px auto; padding: 0 20px;">
+    <h1 style="font-size: 45px; color: #9146ff; text-align: center; text-shadow: 0 0 20px #9146ff; margin-bottom: 10px;">
+      RUMİ7XL Oyunlar
+    </h1>
+    <p style="color: #aaa; text-align: center; font-size: 16px; margin-bottom: 30px;">
+      Yayınları beklerken vakit geçirebileceğin mini oyun alanı.
+    </p>
+
+    <!-- Oyun Alanı (Buraya Block Blast tarzı oyunu gömeceğiz) -->
+    <div style="background: linear-gradient(145deg, #151515, #090909); border: 1px solid #222; border-radius: 20px; padding: 40px; box-shadow: 0 0 25px rgba(145, 70, 255, 0.15); margin-bottom: 40px; min-height: 500px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+      
+      <h2 style="color: #53fc18; margin-bottom: 15px; text-shadow: 0 0 10px #53fc18;">🚧 Oyun Yapım Aşamasında 🚧</h2>
+      <p style="color: #aaa; text-align: center;">Tasarım iskeleti oturdu, oyun motoru kodları buraya eklenecek.</p>
+
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2026 RUMİ7XL - Tüm Hakları Saklıdır.</p>
+  </footer>
+
+  <!-- Giriş / Kayıt Modal Sistemi -->
+  <div id="accountModal" class="account-modal">
+    <div class="account-window">
+      <button class="close-account" onclick="document.getElementById('accountModal').style.display='none'">✕</button>
+      <div class="account-tabs">
+        <button id="loginTabBtn" class="active" onclick="switchTab('login')">Giriş Yap</button>
+        <button id="registerTabBtn" onclick="switchTab('register')">Kayıt Ol</button>
+      </div>
+      <form id="loginForm" class="account-form">
+        <input type="email" name="email" placeholder="E-posta" required>
+        <input type="password" name="password" placeholder="Şifre" required>
+        <button type="submit" class="account-submit">Giriş Yap</button>
+        <a href="#" id="forgotPasswordBtn" style="color:#aaa; font-size:12px; text-align:center; margin-top:10px; display:block;">Şifremi Unuttum</a>
+      </form>
+      <form id="registerForm" class="account-form" style="display:none;">
+        <input type="text" name="username" placeholder="Kullanıcı Adı" required>
+        <input type="email" name="register-email" placeholder="E-posta" required>
+        <input type="password" name="new-password" placeholder="Şifre" required>
+        <button type="submit" class="account-submit">Kayıt Ol</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Profil Fotoğrafı Modal Sistemi -->
+  <div id="photoModal" class="account-modal">
+    <div class="account-window">
+      <button class="close-account" onclick="document.getElementById('photoModal').style.display='none'">✕</button>
+      <h2 style="color:#9146ff; margin-bottom:15px; font-size:20px; text-align:center;">Profil Fotoğrafı Değiştir</h2>
+      <form id="photoSettingsForm" class="account-form">
+        <label for="photoFileInput" style="border: 2px dashed #333; padding: 20px; text-align: center; border-radius: 15px; cursor: pointer; display: block; background: #181818;">
+          <span id="uploadLabelText">📁 Galeriden Resim Seç</span>
+          <input type="file" id="photoFileInput" accept="image/*" style="display:none;">
+          <img id="photoPreview" style="display:none; width:80px; height:80px; border-radius:50%; margin: 10px auto 0; object-fit:cover; border:2px solid #9146ff;">
+        </label>
+        <button type="submit" class="account-submit">Yükle ve Kaydet</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Şifre Değiştir Modal Sistemi -->
+  <div id="passwordModal" class="account-modal">
+    <div class="account-window">
+      <button class="close-account" onclick="document.getElementById('passwordModal').style.display='none'">✕</button>
+      <h2 style="color:#9146ff; margin-bottom:15px; font-size:20px; text-align:center;">Şifre Değiştir</h2>
+      <form id="passwordSettingsForm" class="account-form">
+        <input type="password" name="changePassword" placeholder="Yeni Şifreniz" required>
+        <button type="submit" class="account-submit">Şifreyi Güncelle</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Ortak Auth ve Topluluk Dosyaları -->
+  <script type="module" src="auth.js?v=1.2"></script>
+</body>
+</html>
