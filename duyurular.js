@@ -1,14 +1,13 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
-// ⚠️ BURAYA KENDİ FIREBASE AYARLARINI YAPIŞTIR
 const firebaseConfig = {
-  apiKey: "SENIN_API_KEY",
-  authDomain: "SENIN_PROJEN.firebaseapp.com",
-  projectId: "SENIN_PROJEN",
-  storageBucket: "SENIN_PROJEN.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "1:123456789:web:abcde"
+  apiKey: "AIzaSyCiuXtHu3J9Va46a4KiETO2JrSn5um2KoQ",
+  authDomain: "rumi7xl-web.firebaseapp.com",
+  projectId: "rumi7xl-web",
+  storageBucket: "rumi7xl-web.firebasestorage.app",
+  messagingSenderId: "1077565304835",
+  appId: "1:1077565304835:web:a672a4440797b76f42de36"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -21,22 +20,19 @@ async function loadAnnouncements() {
   container.innerHTML = "<p style='color:#aaa; text-align:center;'>Duyurular yükleniyor...</p>";
 
   try {
-    // Veritabanından duyuruları en yeniden en eskiye doğru (desc) çekiyoruz
     const q = query(collection(db, "duyurular"), orderBy("date", "desc"));
     const querySnapshot = await getDocs(q);
 
-    container.innerHTML = ""; // Yükleniyor yazısını sil
+    container.innerHTML = "";
 
     if (querySnapshot.empty) {
       container.innerHTML = "<p style='color:#aaa; text-align:center; font-size:18px;'>Şu an için yeni bir duyuru bulunmuyor.</p>";
       return;
     }
 
-    // Gelen her duyuru için HTML kartı oluştur
     querySnapshot.forEach((doc) => {
       const data = doc.data();
       
-      // Tarihi düzgün bir saate çevir
       let dateStr = "Tarih Yok";
       if (data.date) {
         const dateObj = data.date.toDate();
@@ -59,5 +55,4 @@ async function loadAnnouncements() {
   }
 }
 
-// Sayfa açıldığında duyuruları yükle
 loadAnnouncements();
