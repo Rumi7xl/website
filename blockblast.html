@@ -15,11 +15,19 @@
       margin-top: 10px;
       position: relative;
     }
-    .score-board {
-      font-size: 22px;
+    .score-container {
+      display: flex;
+      gap: 20px;
+      font-size: 18px;
       font-weight: bold;
+    }
+    .score-board {
       color: #53fc18;
       text-shadow: 0 0 10px rgba(83, 252, 24, 0.5);
+    }
+    .highscore-board {
+      color: #fbbf24;
+      text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
     }
     .grid-board {
       display: grid;
@@ -39,11 +47,6 @@
       background: #181818;
       border-radius: 6px;
       transition: background 0.1s;
-    }
-    /* Üzerine gelince şeffaf yansıma efekti */
-    .cell.preview-valid {
-      background: rgba(83, 252, 24, 0.35) !important;
-      box-shadow: inset 0 0 8px rgba(255,255,255,0.2);
     }
     .pieces-container {
       display: flex;
@@ -86,7 +89,6 @@
       background: #252525;
       border-radius: 3px;
     }
-    /* Sürüklenen blok hayaleti - Parmağın hafif üstünde durur */
     #dragGhost {
       position: fixed;
       pointer-events: none;
@@ -134,7 +136,10 @@
   <div style="max-width: 500px; margin: 15px auto; padding: 0 20px; text-align: center;">
     
     <div class="game-wrapper" id="gameWrapper">
-      <div class="score-board">Skor: <span id="currentScore">0</span></div>
+      <div class="score-container">
+        <div class="score-board">Skor: <span id="currentScore">0</span></div>
+        <div class="highscore-board">En Yüksek: <span id="highScore">0</span></div>
+      </div>
 
       <div style="position: relative;">
         <div id="gridBoard" class="grid-board"></div>
@@ -161,6 +166,7 @@
     const BOARD_SIZE = 8;
     let board = Array(BOARD_SIZE).fill(0).map(() => Array(BOARD_SIZE).fill(null));
     let score = 0;
+    let highScore = localStorage.getItem("blockBlastHighScore") ? parseInt(localStorage.getItem("blockBlastHighScore")) : 0;
     let currentPieces = [null, null, null];
 
     const COLORS = ['#53fc18', '#a855f7', '#38bdf8', '#fbbf24', '#f43f5e', '#ec4899', '#6366f1'];
@@ -179,6 +185,7 @@
     const gridBoard = document.getElementById("gridBoard");
     const piecesContainer = document.getElementById("piecesContainer");
     const currentScoreEl = document.getElementById("currentScore");
+    const highScoreEl = document.getElementById("highScore");
     const gameOverScreen = document.getElementById("gameOverScreen");
     const finalScoreEl = document.getElementById("finalScore");
     const dragGhost = document.getElementById("dragGhost");
@@ -194,47 +201,85 @@
           gridBoard.appendChild(cell);
         }
       }
+      updateBoardUI();
+    }
+
+    // Oyun Durumunu Kaydet (localStorage)
+    function saveGameState() {
+      localStorage.setItem("blockBlastBoard", JSON.stringify(board));
+      localStorage.setItem("blockBlastScore", score);
+      localStorage.setItem("blockBlastPieces", JSON.stringify(currentPieces));
+      if (score > highScore) {
+        highScore = score;
+        localStorage.setItem("blockBlastHighScore", highScore);
+      }
+      updateScoreUI();
+    }
+
+    // Kaydedilen Durumu Yükle
+    function loadGameState() {
+      const savedBoard = localStorage.getItem("blockBlastBoard");
+      const savedScore = localStorage.getItem("blockBlastScore");
+      const savedPieces = localStorage.getItem("blockBlastPieces");
+
+      if (savedBoard && savedScore !== null && savedPieces) {
+        board = JSON.parse(savedBoard);
+        score = parseInt(savedScore);
+        currentPieces = JSON.parse(savedPieces);
+        
+        renderPiecesFromMemory();
+      } else {
+        generatePieces();
+      }
+      updateScoreUI();
     }
 
     function generatePieces() {
       currentPieces = [];
-      piecesContainer.innerHTML = "";
-      
       for (let i = 0; i < 3; i++) {
         const shape = SHAPES[Math.floor(Math.random() * SHAPES.length)];
         const color = COLORS[Math.floor(Math.random() * COLORS.length)];
         currentPieces.push({ shape, color });
-        
+      }
+      renderPiecesFromMemory();
+      saveGameState();
+      checkGameOver();
+    }
+
+    function renderPiecesFromMemory() {
+      piecesContainer.innerHTML = "";
+      for (let i = 0; i < 3; i++) {
+        const pieceObj = currentPieces[i];
         const pieceBox = document.createElement("div");
         pieceBox.classList.add("piece-box");
         pieceBox.dataset.index = i;
 
-        const rows = shape.length;
-        const cols = shape[0].length;
+        if (pieceObj) {
+          const { shape, color } = pieceObj;
+          const rows = shape.length;
+          const cols = shape[0].length;
 
-        const miniGrid = document.createElement("div");
-        miniGrid.classList.add("mini-grid");
-        miniGrid.style.gridTemplateColumns = `repeat(${cols}, 16px)`;
-        miniGrid.style.gridTemplateRows = `repeat(${rows}, 16px)`;
+          const miniGrid = document.createElement("div");
+          miniGrid.classList.add("mini-grid");
+          miniGrid.style.gridTemplateColumns = `repeat(${cols}, 16px)`;
+          miniGrid.style.gridTemplateRows = `repeat(${rows}, 16px)`;
 
-        for (let r = 0; r < rows; r++) {
-          for (let c = 0; c < cols; c++) {
-            const miniCell = document.createElement("div");
-            miniCell.classList.add("mini-cell");
-            if (shape[r][c] === 1) {
-              miniCell.classList.add("filled");
-              miniCell.style.background = color;
+          for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+              const miniCell = document.createElement("div");
+              miniCell.classList.add("mini-cell");
+              if (shape[r][c] === 1) {
+                miniCell.classList.add("filled");
+                miniCell.style.background = color;
+              }
+              miniGrid.appendChild(miniCell);
             }
-            miniGrid.appendChild(miniCell);
           }
+          pieceBox.appendChild(miniGrid);
+          initDragAndDrop(pieceBox, i, shape, color);
         }
-
-        pieceBox.appendChild(miniGrid);
-        initDragAndDrop(pieceBox, i, shape, color);
         piecesContainer.appendChild(pieceBox);
       }
-
-      checkGameOver();
     }
 
     function initDragAndDrop(boxEl, index, shape, color) {
@@ -260,7 +305,6 @@
         const clientY = e.clientY || (e.touches ? e.touches[0].clientY : 0);
         moveGhost(clientX, clientY);
 
-        // Canlı Önizleme (Hover Preview)
         clearPreview();
         const targetCell = document.elementFromPoint(clientX, clientY - 80)?.closest(".cell");
         if (targetCell) {
@@ -300,6 +344,7 @@
             if (currentPieces.every(p => p === null)) {
               generatePieces();
             } else {
+              saveGameState();
               checkGameOver();
             }
           }
@@ -412,7 +457,7 @@
         }
       }
       updateBoardUI();
-      updateScore();
+      saveGameState();
     }
 
     function updateBoardUI() {
@@ -465,7 +510,7 @@
 
         triggerConfetti();
         updateBoardUI();
-        updateScore();
+        saveGameState();
       }
     }
 
@@ -494,8 +539,9 @@
       }
     }
 
-    function updateScore() {
+    function updateScoreUI() {
       currentScoreEl.innerText = score;
+      highScoreEl.innerText = highScore;
     }
 
     function checkGameOver() {
@@ -524,16 +570,19 @@
     }
 
     function resetGame() {
+      localStorage.removeItem("blockBlastBoard");
+      localStorage.removeItem("blockBlastScore");
+      localStorage.removeItem("blockBlastPieces");
       board = Array(BOARD_SIZE).fill(0).map(() => Array(BOARD_SIZE).fill(null));
       score = 0;
-      updateScore();
+      updateScoreUI();
       gameOverScreen.style.display = "none";
       updateBoardUI();
       generatePieces();
     }
 
     initBoardUI();
-    generatePieces();
+    loadGameState();
   </script>
 
   <script type="module" src="auth.js?v=1.2"></script>
