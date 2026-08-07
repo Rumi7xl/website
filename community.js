@@ -7,8 +7,9 @@ import {
   onSnapshot, 
   query, 
   orderBy, 
-  getDoc,
-  doc 
+  doc,
+  onDocSnapshot,
+  getDoc
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -30,29 +31,30 @@ const chatMessages = document.getElementById("chatMessages");
 
 let currentUserObj = null;
 let isFirstLoad = true;
-let muteCheckInterval = null;
+let muteInterval = null;
 
-// SAYFA İLK AÇILDIĞINDA ANINDA YAZI KUTUSUNA ODAKLAN
 window.addEventListener("DOMContentLoaded", () => {
   if (chatInput) chatInput.focus();
 });
 
-onAuthStateChanged(auth, async (user) => {
+onAuthStateChanged(auth, (user) => {
   currentUserObj = user;
   if (user) {
-    checkMuteStatusLoop(user.uid);
+    // Kullanıcının mute (susturulma) durumunu gerçek zamanlı dinle
+    listenToUserMuteStatus(user.uid);
   }
 });
 
-// Susturma durumunu ve canlı sayacı saniye saniye kontrol eden döngü
-function checkMuteStatusLoop(uid) {
-  if (muteCheckInterval) clearInterval(muteCheckInterval);
+function listenToUserMuteStatus(uid) {
+  // Firestore'daki users/{uid} belgesini anlık dinliyoruz
+  onSnapshot(doc(db, "users", uid), (docSnap) => {
+    if (muteInterval) clearInterval(muteInterval);
 
-  muteCheckInterval = setInterval(async () => {
-    try {
-      const uDoc = await getDoc(doc(db, "users", uid));
-      if (uDoc.exists() && uDoc.data().muteUntil) {
-        const muteUntil = uDoc.data().muteUntil;
+    if (docSnap.exists() && docSnap.data().muteUntil) {
+      const muteUntil = docSnap.data().muteUntil;
+
+      // Her saniye kalan süreyi hesapla
+      muteInterval = setInterval(() => {
         const remaining = muteUntil - Date.now();
 
         if (remaining > 0) {
@@ -66,15 +68,24 @@ function checkMuteStatusLoop(uid) {
           }
           if (sendBtn) sendBtn.disabled = true;
         } else {
+          // Süre bittiğinde inputu aç
           if (chatInput && chatInput.disabled) {
             chatInput.disabled = false;
             chatInput.placeholder = "Mesajını yaz...";
           }
           if (sendBtn) sendBtn.disabled = false;
+          clearInterval(muteInterval);
         }
+      }, 1000);
+    } else {
+      // Mute yoksa normal haline getir
+      if (chatInput) {
+        chatInput.disabled = false;
+        chatInput.placeholder = "Mesajını yaz...";
       }
-    } catch (e) {}
-  }, 1000);
+      if (sendBtn) sendBtn.disabled = false;
+    }
+  });
 }
 
 // MESAJ GÖNDERME
@@ -88,7 +99,7 @@ async function sendMessage() {
     return;
   }
 
-  // Gönderim anında son bir kez mute kontrolü
+  // Gönderim anında son kontrol
   try {
     const uDoc = await getDoc(doc(db, "users", currentUserObj.uid));
     if (uDoc.exists() && uDoc.data().muteUntil && uDoc.data().muteUntil > Date.now()) {
@@ -135,8 +146,6 @@ const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
 
 onSnapshot(q, (snapshot) => {
   if (!chatMessages) return;
-  
-  // Ekran gidip gelmesin diye mesajları hafızada biriktirip tek hamlede basıyoruz
   const fragment = document.createDocumentFragment();
 
   if (snapshot.empty) {
@@ -145,7 +154,6 @@ onSnapshot(q, (snapshot) => {
     snapshot.forEach((docSnap) => {
       const data = docSnap.data();
       const timeStr = getTimeStr(data.createdAt);
-      
       const isMyMsg = currentUserObj && currentUserObj.uid === data.uid;
 
       const msgDiv = document.createElement("div");
@@ -161,7 +169,6 @@ onSnapshot(q, (snapshot) => {
           <div>${escapeHtml(data.text)}</div>
         </div>
       `;
-
       fragment.appendChild(msgDiv);
     });
 
@@ -169,10 +176,8 @@ onSnapshot(q, (snapshot) => {
     chatMessages.appendChild(fragment);
   }
 
-  // Otomatik aşağı kaydır
   chatMessages.scrollTop = chatMessages.scrollHeight;
 
-  // Sadece ilk yüklemede tıklamaya gerek kalmadan odaklan
   if (isFirstLoad) {
     if (chatInput) chatInput.focus();
     isFirstLoad = false;
