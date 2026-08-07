@@ -24,7 +24,7 @@ onAuthStateChanged(auth, (user) => {
   } else {
     loadStats();
     loadAdminAnnouncements();
-    loadAdminMessages(); // Topluluk mesajlarını yükle
+    loadAdminMessages(); // Mesajları doğru koleksiyondan çekiyoruz
   }
 });
 
@@ -194,7 +194,7 @@ async function loadAdminAnnouncements() {
   }
 }
 
-// TOPLULUK MESAJLARINI YÖNETİCİ PANELİNDE LİSTELEME
+// DOĞRU KOLEKSİYON ('messages') ÜZERİNDEN MESAJLARI ÇEKME
 async function loadAdminMessages() {
   const chatContainer = document.getElementById("adminChatList");
   if (!chatContainer) return;
@@ -202,7 +202,7 @@ async function loadAdminMessages() {
   chatContainer.innerHTML = "<p style='color:#aaa;'>Mesajlar yükleniyor...</p>";
 
   try {
-    const q = query(collection(db, "community_messages"), orderBy("date", "desc"));
+    const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
     const snap = await getDocs(q);
 
     chatContainer.innerHTML = "";
@@ -217,13 +217,13 @@ async function loadAdminMessages() {
       const id = docSnap.id;
 
       let dateStr = "";
-      if (data.date) {
-        const d = data.date.toDate();
+      if (data.createdAt) {
+        const d = new Date(data.createdAt);
         dateStr = d.toLocaleDateString("tr-TR") + " - " + d.toLocaleTimeString("tr-TR", {hour: '2-digit', minute:'2-digit'});
       }
 
       const username = data.username || "Anonim";
-      const messageText = data.text || data.message || "";
+      const messageText = data.text || "";
 
       const item = document.createElement("div");
       item.className = "mod-item";
@@ -276,7 +276,7 @@ window.confirmDeleteAnnounce = function(id) {
   noBtn.onclick = () => { modal.style.display = "none"; };
 };
 
-// MESAJ SİLME ONAYI
+// MESAJ SİLME ONAYI (doğru koleksiyondan siler)
 window.confirmDeleteMessage = function(id) {
   const modal = document.getElementById("customConfirmModal");
   const yesBtn = document.getElementById("confirmYesBtn");
@@ -288,7 +288,7 @@ window.confirmDeleteMessage = function(id) {
   yesBtn.onclick = async () => {
     modal.style.display = "none";
     try {
-      await deleteDoc(doc(db, "community_messages", id));
+      await deleteDoc(doc(db, "messages", id));
       showToast("Mesaj silindi.");
       loadAdminMessages();
     } catch (e) {
