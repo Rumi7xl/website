@@ -40,6 +40,11 @@
       border-radius: 6px;
       transition: background 0.1s;
     }
+    /* Üzerine gelince şeffaf yansıma efekti */
+    .cell.preview-valid {
+      background: rgba(83, 252, 24, 0.35) !important;
+      box-shadow: inset 0 0 8px rgba(255,255,255,0.2);
+    }
     .pieces-container {
       display: flex;
       justify-content: center;
@@ -81,13 +86,13 @@
       background: #252525;
       border-radius: 3px;
     }
-    /* Sürüklenen blok hayaleti - Parmağın sol üstüne tam oturur */
+    /* Sürüklenen blok hayaleti - Parmağın hafif üstünde durur */
     #dragGhost {
       position: fixed;
       pointer-events: none;
       z-index: 99999;
       display: none;
-      transform: translate(-30px, -90px);
+      transform: translate(-30px, -110px);
     }
     #gameOverScreen {
       display: none;
@@ -254,12 +259,24 @@
         const clientX = e.clientX || (e.touches ? e.touches[0].clientX : 0);
         const clientY = e.clientY || (e.touches ? e.touches[0].clientY : 0);
         moveGhost(clientX, clientY);
+
+        // Canlı Önizleme (Hover Preview)
+        clearPreview();
+        const targetCell = document.elementFromPoint(clientX, clientY - 80)?.closest(".cell");
+        if (targetCell) {
+          const r = parseInt(targetCell.dataset.row);
+          const c = parseInt(targetCell.dataset.col);
+          if (canPlace(shape, r, c)) {
+            showPreview(shape, r, c, color);
+          }
+        }
       }
 
       function endDrag(e) {
         if (!isDragging) return;
         e.preventDefault();
         isDragging = false;
+        clearPreview();
 
         const clientX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
         const clientY = e.changedTouches ? e.changedTouches[0].clientY : e.clientY;
@@ -267,8 +284,7 @@
         dragGhost.style.display = "none";
         boxEl.style.opacity = "1";
 
-        // Bırakılan noktadaki hücreyi direkt tespit ediyoruz
-        const targetCell = document.elementFromPoint(clientX, clientY)?.closest(".cell");
+        const targetCell = document.elementFromPoint(clientX, clientY - 80)?.closest(".cell");
         
         if (targetCell) {
           const r = parseInt(targetCell.dataset.row);
@@ -319,6 +335,7 @@
           if (shape[r][c] === 1) {
             div.style.background = color;
             div.style.boxShadow = `0 0 12px ${color}`;
+            div.style.opacity = "0.9";
           }
           ghostGrid.appendChild(div);
         }
@@ -330,6 +347,40 @@
     function moveGhost(x, y) {
       dragGhost.style.left = x + "px";
       dragGhost.style.top = y + "px";
+    }
+
+    function showPreview(shape, startR, startC, color) {
+      const rows = shape.length;
+      const cols = shape[0].length;
+      const cells = gridBoard.children;
+
+      for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+          if (shape[i][j] === 1) {
+            let r = startR + i;
+            let c = startC + j;
+            if (r < BOARD_SIZE && c < BOARD_SIZE) {
+              const index = r * BOARD_SIZE + c;
+              cells[index].style.background = color;
+              cells[index].style.opacity = "0.5";
+              cells[index].style.boxShadow = `0 0 8px ${color}`;
+            }
+          }
+        }
+      }
+    }
+
+    function clearPreview() {
+      const cells = gridBoard.children;
+      for (let i = 0; i < cells.length; i++) {
+        cells[i].style.opacity = "1";
+        const r = Math.floor(i / BOARD_SIZE);
+        const c = i % BOARD_SIZE;
+        if (board[r][c] === null) {
+          cells[i].style.background = "#181818";
+          cells[i].style.boxShadow = "none";
+        }
+      }
     }
 
     function canPlace(shape, r, c) {
@@ -370,6 +421,7 @@
       for (let r = 0; r < BOARD_SIZE; r++) {
         for (let c = 0; c < BOARD_SIZE; c++) {
           const val = board[r][c];
+          cells[idx].style.opacity = "1";
           if (val !== null) {
             cells[idx].style.background = val;
             cells[idx].style.boxShadow = `inset 0 0 8px rgba(0,0,0,0.4), 0 0 6px ${val}`;
