@@ -31,21 +31,9 @@
     </div>
   </div>
 
-  <!-- DUYURU KARTLARI -->
-  <div class="suggestions-list" style="max-width: 900px; margin: 30px auto; padding: 0 20px;">
-    
-    <div class="suggest-card" style="background: linear-gradient(145deg, #151515, #090909); border: 1px solid #222; border-left: 4px solid #9146ff;">
-      <h2 style="color: #9146ff; font-size: 24px; margin-bottom: 10px;">🔥 Hoş Geldiniz</h2>
-      <p style="color: #ddd; font-size: 16px;">RUMİ7XL resmi web sitesi açıldı. Yeni içerikler ve yayın duyuruları burada paylaşılacak.</p>
-      <span style="color: #aaa; font-size: 13px;">📅 2026</span>
-    </div>
-
-    <div class="suggest-card" style="background: linear-gradient(145deg, #151515, #090909); border: 1px solid #222; border-left: 4px solid #53fc18;">
-      <h2 style="color: #53fc18; font-size: 24px; margin-bottom: 10px;">🎮 Yeni İçerikler</h2>
-      <p style="color: #ddd; font-size: 16px;">Yeni yayınlar ve oyun içerikleri yakında burada olacak.</p>
-      <span style="color: #aaa; font-size: 13px;">📅 Güncel</span>
-    </div>
-
+  <!-- DUYURU KARTLARI (JS ile dinamik dolacak) -->
+  <div class="suggestions-list" id="announcementList" style="max-width: 900px; margin: 30px auto; padding: 0 20px;">
+    <!-- Admin panelinden paylaşılan duyurular buraya otomatik gelecek -->
   </div>
 
   <!-- FOOTER -->
@@ -103,5 +91,6 @@
   </div>
 
   <script type="module" src="auth.js"></script>
+  <script type="module" src="duyurular.js"></script>
 </body>
 </html>
