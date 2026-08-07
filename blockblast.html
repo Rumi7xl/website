@@ -98,7 +98,7 @@
       background: #252525;
       border-radius: 3px;
     }
-    /* Sağ Taraf Liderlik Listesi */
+    /* Sağ Taraf Firebase Liderlik Listesi */
     .leaderboard-sidebar {
       background: #111;
       border: 1px solid #333;
@@ -166,7 +166,6 @@
       100% { transform: translate(var(--tx), var(--ty)) scale(0.3); opacity: 0; }
     }
 
-    /* Mobilde alt alta durması için duyarlı tasarım */
     @media (max-width: 768px) {
       .game-main-layout {
         flex-direction: column;
@@ -190,7 +189,7 @@
 
   <div class="game-main-layout">
     
-    <!-- Sol/Orta Oyun Alanı -->
+    <!-- Oyun Alanı -->
     <div class="game-wrapper" id="gameWrapper">
       <div class="score-container">
         <div class="score-board">Skor: <span id="currentScore">0</span></div>
@@ -212,12 +211,10 @@
 
     <!-- Sağ Taraf Liderlik Listesi -->
     <div class="leaderboard-sidebar">
-      <h3>🏆 Topluluk Sıralaması</h3>
-      <div class="rank-item"><span class="rank-num">1. RUMİ7XL</span> <span style="color:#fbbf24; font-weight:bold;">420</span></div>
-      <div class="rank-item"><span class="rank-num">2. Oyuncu</span> <span style="color:#aaa;">350</span></div>
-      <div class="rank-item"><span class="rank-num">3. ProGamer</span> <span style="color:#aaa;">280</span></div>
-      <div class="rank-item"><span class="rank-num">4. Ziyaretçi</span> <span style="color:#aaa;">190</span></div>
-      <div class="rank-item"><span class="rank-num">5. HızlıParmak</span> <span style="color:#aaa;">120</span></div>
+      <h3>🏆 Canlı Sıralama</h3>
+      <div id="leaderboardList">
+        <div class="rank-item" style="color: #777; text-align: center;">Yükleniyor...</div>
+      </div>
     </div>
 
   </div>
@@ -228,24 +225,23 @@
     <p>© 2026 RUMİ7XL - Tüm Hakları Saklıdır.</p>
   </footer>
 
-  <script>
+  <!-- Firebase Modülü ve Oyun Mantığı -->
+  <script type="module">
+    import { db, auth } from "./auth.js";
+    import { collection, addifiable, getDocs, query, orderBy, limit, setDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
     const BOARD_SIZE = 8;
     let board = Array(BOARD_SIZE).fill(0).map(() => Array(BOARD_SIZE).fill(null));
     let score = 0;
-    let highScore = localStorage.getItem("blockBlastHighScore") ? parseInt(localStorage.getItem("blockBlastHighScore")) : 0;
+    let highScore = 0;
     let currentPieces = [null, null, null];
+    let currentUser = null;
 
     const COLORS = ['#53fc18', '#a855f7', '#38bdf8', '#fbbf24', '#f43f5e', '#ec4899', '#6366f1'];
-    
     const SHAPES = [
-      [[1]], 
-      [[1, 1]], 
-      [[1], [1]], 
-      [[1, 1], [1, 1]], 
-      [[1, 1, 1]], 
-      [[1], [1], [1]], 
-      [[1, 1], [1, 0]], 
-      [[1, 1, 1], [1, 0, 0]]
+      [[1]], [[1, 1]], [[1], [1]], [[1, 1], [1, 1]], 
+      [[1, 1, 1]], [[1], [1], [1]], [[1, 1], [1, 0]], [[1, 1, 1], [1, 0, 0]]
     ];
 
     const gridBoard = document.getElementById("gridBoard");
@@ -255,6 +251,25 @@
     const gameOverScreen = document.getElementById("gameOverScreen");
     const finalScoreEl = document.getElementById("finalScore");
     const dragGhost = document.getElementById("dragGhost");
+    const leaderboardList = document.getElementById("leaderboardList");
+
+    // Kullanıcı oturumunu takip et ve Firestore'dan en yüksek skorunu çek
+    onAuthStateChanged(auth, async (user) => {
+      currentUser = user;
+      if (user) {
+        try {
+          const userDocRef = doc(db, "scores", user.uid);
+          const userDoc = await getDoc(userDocRef);
+          if (userDoc.exists()) {
+            highScore = userDoc.data().score || 0;
+          }
+        } catch (err) {
+          console.log("Skor çekilemedi:", err);
+        }
+      }
+      updateScoreUI();
+      fetchLeaderboard();
+    });
 
     function initBoardUI() {
       gridBoard.innerHTML = "";
@@ -269,14 +284,53 @@
       }
     }
 
+    async function saveScoreToFirebase() {
+      if (!currentUser) return;
+      if (score > highScore) {
+        highScore = score;
+        try {
+          await setDoc(doc(db, "scores", currentUser.uid), {
+            username: currentUser.displayName || currentUser.email.split('@')[0],
+            score: highScore,
+            updatedAt: new Date()
+          });
+          fetchLeaderboard();
+        } catch (err) {
+          console.log("Skor kaydedilemedi:", err);
+        }
+      }
+    }
+
+    // Firestore'dan liderlik tablosunu çek
+    async function fetchLeaderboard() {
+      try {
+        const q = query(collection(db, "scores"), orderBy("score", "desc"), limit(5));
+        const querySnapshot = await getDocs(q);
+        leaderboardList.innerHTML = "";
+        
+        let rank = 1;
+        querySnapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          const item = document.createElement("div");
+          item.classList.add("rank-item");
+          item.innerHTML = `<span class="rank-num">${rank}. ${data.username}</span> <span style="color:#fbbf24; font-weight:bold;">${data.score}</span>`;
+          leaderboardList.appendChild(item);
+          rank++;
+        });
+
+        if (querySnapshot.empty) {
+          leaderboardList.innerHTML = `<div class="rank-item" style="color: #777; text-align: center;">Henüz skor yok</div>`;
+        }
+      } catch (err) {
+        console.log("Liderlik tablosu yüklenemedi:", err);
+      }
+    }
+
     function saveGameState() {
       localStorage.setItem("blockBlastBoard", JSON.stringify(board));
       localStorage.setItem("blockBlastScore", score);
       localStorage.setItem("blockBlastPieces", JSON.stringify(currentPieces));
-      if (score > highScore) {
-        highScore = score;
-        localStorage.setItem("blockBlastHighScore", highScore);
-      }
+      saveScoreToFirebase();
       updateScoreUI();
     }
 
@@ -633,7 +687,7 @@
       }
     }
 
-    function resetGame() {
+    window.resetGame = function() {
       localStorage.removeItem("blockBlastBoard");
       localStorage.removeItem("blockBlastScore");
       localStorage.removeItem("blockBlastPieces");
@@ -648,7 +702,5 @@
     initBoardUI();
     loadGameState();
   </script>
-
-  <script type="module" src="auth.js?v=1.2"></script>
 </body>
 </html>
