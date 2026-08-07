@@ -21,77 +21,64 @@ window.addEventListener("DOMContentLoaded", async () => {
     if (docSnap.exists()) {
       const data = docSnap.data();
 
-      // 1. Canlı Durum Küpü
+      // 1. Canlı Durum Kartı
       const liveCard = document.querySelector(".live-card");
       if (liveCard) {
         const isLive = data.isLive || false;
-        liveCard.innerHTML = `
-          <div class="platform-logo kick">
-            <span style="font-size: 35px;">${isLive ? '🟢' : '🔴'}</span>
-          </div>
-          <h2>CANLI DURUM</h2>
-          <p style="line-height: 1.6;">
-            ${isLive ? 'RUMI7XL şu anda yayında!' : 'RUMI7XL şu anda yayında değil.'}<br>
-            <b>Oyun:</b> ${data.liveGame || 'Belirtilmedi'}<br>
-            <b>İzleyici:</b> ${data.liveViewers || '0'}
+        const bodyEl = liveCard.querySelector(".card-body-content");
+        const linkEl = liveCard.querySelector("a");
+        
+        bodyEl.innerHTML = `
+          <p style="margin: 0 0 8px 0; font-weight: bold; color: ${isLive ? '#22c55e' : '#ef4444'}; font-size: 15px;">
+            ${isLive ? '🟢 YAYINDA!' : '🔴 YAYINDA DEĞİL'}
           </p>
-          <a href="${data.kickLink || 'https://kick.com/rumi7xl'}" target="_blank">KICK'E GİT →</a>
+          <p style="margin: 0 0 5px 0; color: #bbb;">🎮 <b>Oyun:</b> ${data.liveGame || 'Belirtilmedi'}</p>
+          <p style="margin: 0; color: #bbb;">👥 <b>İzleyici:</b> ${data.liveViewers || '0'}</p>
         `;
+        linkEl.href = data.kickLink || 'https://kick.com/rumi7xl';
       }
 
-      // 2. Kick Yayınları Küpü
-      const kickCard = document.querySelectorAll(".box")[1];
+      // 2. Kick Kanalı Kartı
+      const kickCard = document.querySelector(".kick-card");
       if (kickCard) {
-        kickCard.innerHTML = `
-          <div class="platform-logo kick" style="display:flex; align-items:center; justify-content:center;">
-            <img src="kick-logo.png" alt="Kick" style="width: 40px; height: 40px; object-fit: contain;">
-          </div>
-          <h2>KICK YAYINLARI</h2>
-          <p style="line-height: 1.6;">${data.kickDesc || '• Minecraft<br>• Valorant<br>• GTA V<br>• Simülasyon Oyunları'}</p>
-          <a href="${data.kickLink || 'https://kick.com/rumi7xl'}" target="_blank">KANALA GİT →</a>
+        const bodyEl = kickCard.querySelector(".card-body-content");
+        const linkEl = kickCard.querySelector("a");
+
+        bodyEl.innerHTML = `
+          <p style="margin: 0; color: #ccc; white-space: pre-line; line-height: 1.5;">${data.kickDesc || '• Minecraft\n• Valorant\n• GTA V'}</p>
         `;
+        linkEl.href = data.kickLink || 'https://kick.com/rumi7xl';
       }
 
-      // 3. YouTube Küpü (Dinamik Liste)
-      const youtubeCard = document.querySelectorAll(".box")[2];
+      // 3. YouTube Kartı (Liste Şeklinde)
+      const youtubeCard = document.querySelector(".youtube-card");
       if (youtubeCard) {
-        let ytLinksHtml = "";
+        const bodyEl = youtubeCard.querySelector(".card-body-content");
+        const linkEl = youtubeCard.querySelector("a");
+
+        let ytHtml = "";
         if (data.youtubeVideos && data.youtubeVideos.length > 0) {
           data.youtubeVideos.forEach(vid => {
-            ytLinksHtml += `<a href="${vid.url}" target="_blank" style="display:block; color:#ccc; text-decoration:none; margin-bottom:6px; font-size:14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">▶ ${vid.title}</a>`;
+            ytHtml += `<a href="${vid.url}" target="_blank" style="display:block; color:#ccc; text-decoration:none; margin-bottom:8px; font-size:13px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; background:#1a1a1a; padding:6px 10px; border-radius:6px; border:1px solid #2a2a2a;">▶ ${vid.title}</a>`;
           });
         } else {
-          ytLinksHtml = `<p style="color:#777; font-size:14px;">Henüz video eklenmedi.</p>`;
+          ytHtml = `<p style="color:#777; margin-top:30px;">Henüz video eklenmedi.</p>`;
         }
 
-        youtubeCard.innerHTML = `
-          <div class="platform-logo youtube" style="display:flex; align-items:center; justify-content:center;">
-            <img src="youtube-logo.png" alt="YouTube" style="width: 40px; height: 40px; object-fit: contain;">
-          </div>
-          <h2>YOUTUBE</h2>
-          <div style="margin: 15px 0; max-height: 140px; overflow-y: auto; text-align: left; padding-right: 5px;">
-            ${ytLinksHtml}
-          </div>
-          <a href="${data.youtubeChannelLink || 'https://youtube.com'}" target="_blank" style="margin-top:auto;">KANALA GİT →</a>
-        `;
+        bodyEl.innerHTML = ytHtml;
+        linkEl.href = data.youtubeChannelLink || 'https://youtube.com';
       }
 
-      // 4. TikTok Küpü (Eğer eklemek istersen 4. kutu olarak sayfaya otomatik ekler veya günceller)
-      let tiktokCard = document.querySelector(".tiktok-card");
-      if (!tiktokCard && document.querySelector(".platforms")) {
-        tiktokCard = document.createElement("div");
-        tiktokCard.className = "box tiktok-card";
-        document.querySelector(".platforms").appendChild(tiktokCard);
-      }
+      // 4. TikTok Kartı
+      const tiktokCard = document.querySelector(".tiktok-card");
       if (tiktokCard) {
-        tiktokCard.innerHTML = `
-          <div class="platform-logo tiktok" style="display:flex; align-items:center; justify-content:center;">
-            <img src="tiktok-logo.png" alt="TikTok" style="width: 40px; height: 40px; object-fit: contain;">
-          </div>
-          <h2>TİKTOK</h2>
-          <p style="line-height: 1.6;">${data.tiktokDesc || 'En komik kesitler ve kısa videolar TikTok adresimde!'}</p>
-          <a href="${data.tiktokLink || 'https://tiktok.com'}" target="_blank">TIKTOK'A GİT →</a>
+        const bodyEl = tiktokCard.querySelector(".card-body-content");
+        const linkEl = tiktokCard.querySelector("a");
+
+        bodyEl.innerHTML = `
+          <p style="margin: 0; color: #ccc; line-height: 1.5;">${data.tiktokDesc || 'En komik kesitler ve kısa videolar TikTok adresimde!'}</p>
         `;
+        linkEl.href = data.tiktokLink || 'https://tiktok.com';
       }
 
     }
