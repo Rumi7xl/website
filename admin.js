@@ -19,13 +19,51 @@ const ADMIN_EMAIL = "rumi7xl@gmail.com";
 
 onAuthStateChanged(auth, (user) => {
   if (!user || user.email !== ADMIN_EMAIL) {
-    alert("Yetkisiz giriş! Bu alana sadece RUMİ7XL yöneticisi girebilir.");
-    window.location.href = "index.html"; 
+    showToast("Yetkisiz giriş!", "error");
+    setTimeout(() => { window.location.href = "index.html"; }, 1000);
   } else {
     loadStats();
     loadAdminAnnouncements();
   }
 });
+
+// ŞIK TOAST BİLDİRİM FONKSİYONU
+function showToast(message, type = 'success') {
+  let toast = document.getElementById("customToast");
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "customToast";
+    toast.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #111;
+      color: #fff;
+      border: 1px solid ${type === 'error' ? '#ef4444' : '#9146ff'};
+      padding: 12px 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 25px rgba(145, 70, 255, 0.4);
+      z-index: 999999;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      opacity: 0;
+      transform: translateY(-20px);
+    `;
+    document.body.appendChild(toast);
+  }
+
+  toast.innerHTML = (type === 'error' ? '❌ ' : '✨ ') + message;
+  toast.style.opacity = "1";
+  toast.style.transform = "translateY(0)";
+
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    toast.style.transform = "translateY(-20px)";
+  }, 3000);
+}
 
 const sendAnnounceBtn = document.getElementById("sendAnnounceBtn");
 const cancelEditBtn = document.getElementById("cancelEditBtn");
@@ -38,7 +76,7 @@ if (sendAnnounceBtn) {
     const editingId = document.getElementById("editingId").value;
 
     if (!title || !desc) {
-      alert("Lütfen başlık ve içeriği boş bırakma kanka!");
+      showToast("Lütfen başlık ve içeriği boş bırakma kanka!", "error");
       return;
     }
 
@@ -61,7 +99,7 @@ if (sendAnnounceBtn) {
         if (imageUrl) updateData.image = imageUrl;
 
         await updateDoc(doc(db, "duyurular", editingId), updateData);
-        alert("Duyuru başarıyla güncellendi! 🔥");
+        showToast("Duyuru başarıyla güncellendi! 🔥");
         resetForm();
       } else {
         await addDoc(collection(db, "duyurular"), {
@@ -70,7 +108,7 @@ if (sendAnnounceBtn) {
           image: imageUrl || "",
           date: serverTimestamp()
         });
-        alert("Duyuru başarıyla yayınlandı! 🚀");
+        showToast("Duyuru başarıyla yayınlandı! 🚀");
         resetForm();
       }
 
@@ -78,7 +116,7 @@ if (sendAnnounceBtn) {
       loadStats();
     } catch (error) {
       console.error("Hata:", error);
-      alert("Bir hata oluştu!");
+      showToast("Bir hata oluştu!", "error");
     } finally {
       sendAnnounceBtn.innerText = "Duyuruyu Yayınla";
       sendAnnounceBtn.disabled = false;
@@ -138,7 +176,7 @@ async function loadAdminAnnouncements() {
           <small style="color: #777; display: block; margin-bottom: 10px;">📅 ${dateStr}</small>
           <div class="card-actions">
             <button class="edit-btn" onclick="window.prepareEdit('${id}', \`${data.title.replace(/`/g, '\\`')}\`, \`${data.description.replace(/`/g, '\\`')}\`)">Düzenle</button>
-            <button class="delete-btn" onclick="window.deleteAnnounce('${id}')">Sil</button>
+            <button class="delete-btn" onclick="window.confirmDelete('${id}')">Sil</button>
           </div>
         </div>
       `;
@@ -160,17 +198,29 @@ window.prepareEdit = function(id, title, desc) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
-window.deleteAnnounce = async function(id) {
-  if (confirm("Bu duyuruyu silmek istediğine emin misin patron?")) {
+// ÖZEL ONAY MODALI İLE SİLME İŞLEMİ
+window.confirmDelete = function(id) {
+  const modal = document.getElementById("customConfirmModal");
+  const yesBtn = document.getElementById("confirmYesBtn");
+  const noBtn = document.getElementById("confirmNoBtn");
+
+  modal.style.display = "flex";
+
+  yesBtn.onclick = async () => {
+    modal.style.display = "none";
     try {
       await deleteDoc(doc(db, "duyurular", id));
-      alert("Duyuru silindi.");
+      showToast("Duyuru silindi.");
       loadAdminAnnouncements();
       loadStats();
     } catch (e) {
-      alert("Silinirken hata oluştu!");
+      showToast("Silinirken hata oluştu!", "error");
     }
-  }
+  };
+
+  noBtn.onclick = () => {
+    modal.style.display = "none";
+  };
 };
 
 async function loadStats() {
