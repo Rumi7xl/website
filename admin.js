@@ -24,6 +24,7 @@ onAuthStateChanged(auth, (user) => {
   } else {
     loadStats();
     loadAdminAnnouncements();
+    loadAdminMessages(); // Topluluk mesajlarını yükle
   }
 });
 
@@ -180,7 +181,7 @@ async function loadAdminAnnouncements() {
           <small style="color: #777; display: block; margin-bottom: 10px;">📅 ${dateStr}</small>
           <div class="card-actions">
             <button class="edit-btn" onclick="window.prepareEdit('${id}', \`${data.title.replace(/`/g, '\\`')}\`, \`${data.description.replace(/`/g, '\\`')}\`)">Düzenle</button>
-            <button class="delete-btn" onclick="window.confirmDelete('${id}')">Sil</button>
+            <button class="delete-btn" onclick="window.confirmDeleteAnnounce('${id}')">Sil</button>
           </div>
         </div>
       `;
@@ -193,6 +194,55 @@ async function loadAdminAnnouncements() {
   }
 }
 
+// TOPLULUK MESAJLARINI YÖNETİCİ PANELİNDE LİSTELEME
+async function loadAdminMessages() {
+  const chatContainer = document.getElementById("adminChatList");
+  if (!chatContainer) return;
+
+  chatContainer.innerHTML = "<p style='color:#aaa;'>Mesajlar yükleniyor...</p>";
+
+  try {
+    const q = query(collection(db, "community_messages"), orderBy("date", "desc"));
+    const snap = await getDocs(q);
+
+    chatContainer.innerHTML = "";
+
+    if (snap.empty) {
+      chatContainer.innerHTML = "<p style='color:#aaa;'>Henüz toplulukta atılmış bir mesaj yok.</p>";
+      return;
+    }
+
+    snap.forEach((docSnap) => {
+      const data = docSnap.data();
+      const id = docSnap.id;
+
+      let dateStr = "";
+      if (data.date) {
+        const d = data.date.toDate();
+        dateStr = d.toLocaleDateString("tr-TR") + " - " + d.toLocaleTimeString("tr-TR", {hour: '2-digit', minute:'2-digit'});
+      }
+
+      const username = data.username || "Anonim";
+      const messageText = data.text || data.message || "";
+
+      const item = document.createElement("div");
+      item.className = "mod-item";
+      item.innerHTML = `
+        <div class="text">
+          <strong style="color: #9146ff;">${username}:</strong> ${messageText}
+          <br><small style="color: #777;">📅 ${dateStr}</small>
+        </div>
+        <button class="delete-btn" onclick="window.confirmDeleteMessage('${id}')">Sil</button>
+      `;
+      chatContainer.appendChild(item);
+    });
+
+  } catch (err) {
+    console.error("Mesajlar yüklenirken hata:", err);
+    chatContainer.innerHTML = "<p style='color:#ef4444;'>Mesajlar yüklenirken hata oluştu.</p>";
+  }
+}
+
 window.prepareEdit = function(id, title, desc) {
   document.getElementById("editingId").value = id;
   document.getElementById("announceTitle").value = title;
@@ -202,11 +252,13 @@ window.prepareEdit = function(id, title, desc) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
-window.confirmDelete = function(id) {
+// DUYURU SİLME ONAYI
+window.confirmDeleteAnnounce = function(id) {
   const modal = document.getElementById("customConfirmModal");
   const yesBtn = document.getElementById("confirmYesBtn");
   const noBtn = document.getElementById("confirmNoBtn");
 
+  document.getElementById("confirmText").innerText = "Bu duyuruyu silmek istediğine emin misin?";
   modal.style.display = "flex";
 
   yesBtn.onclick = async () => {
@@ -221,9 +273,30 @@ window.confirmDelete = function(id) {
     }
   };
 
-  noBtn.onclick = () => {
+  noBtn.onclick = () => { modal.style.display = "none"; };
+};
+
+// MESAJ SİLME ONAYI
+window.confirmDeleteMessage = function(id) {
+  const modal = document.getElementById("customConfirmModal");
+  const yesBtn = document.getElementById("confirmYesBtn");
+  const noBtn = document.getElementById("confirmNoBtn");
+
+  document.getElementById("confirmText").innerText = "Bu mesajı silmek istediğine emin misin patron?";
+  modal.style.display = "flex";
+
+  yesBtn.onclick = async () => {
     modal.style.display = "none";
+    try {
+      await deleteDoc(doc(db, "community_messages", id));
+      showToast("Mesaj silindi.");
+      loadAdminMessages();
+    } catch (e) {
+      showToast("Mesaj silinirken hata oluştu!", "error");
+    }
   };
+
+  noBtn.onclick = () => { modal.style.display = "none"; };
 };
 
 async function loadStats() {
