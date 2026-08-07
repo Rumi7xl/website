@@ -24,7 +24,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<link href="style.css?v=1.1" rel="stylesheet"/>
+<link href="style.css?v=1.2" rel="stylesheet"/>
 </head>
 <body>
 
@@ -92,9 +92,10 @@
 <p>Canlı yayınlar, oyun içerikleri ve eğlenceli yayınlarla topluluğumla vakit geçiriyorum.</p>
 </section>
 
-<footer>© 2026 RUMİ7XL</footer>
+<footer>
+  <p>© 2026 RUMİ7XL - Tüm Hakları Saklıdır.</p>
+</footer>
 
-<!-- HESAP POPUP -->
 <div class="account-modal" id="accountModal">
   <div class="account-window">
     <button class="close-account" onclick="closeAccount()">✕</button>
@@ -106,11 +107,9 @@
     <form id="loginForm" class="account-form" autocomplete="on">
       <input type="email" name="email" placeholder="E-posta" autocomplete="username">
       <input type="password" name="password" placeholder="Şifre" autocomplete="current-password">
-      
       <div style="text-align: right; width: 100%; margin-top: -5px; margin-bottom: 5px;">
         <a href="#" id="forgotPasswordBtn" style="color: #a855f7; font-size: 0.85rem; text-decoration: none;">Şifremi Unuttum?</a>
       </div>
-
       <button type="submit" class="account-submit">Giriş Yap</button>
     </form>
 
@@ -123,30 +122,25 @@
   </div>
 </div>
 
-<!-- MODERN PROFİL FOTOĞRAFI POPUP (ÖNİZLEMELİ) -->
 <div class="settings-modal" id="photoModal">
   <div class="settings-window">
     <button class="close-account" onclick="document.getElementById('photoModal').style.display='none'">✕</button>
     <h2>🖼️ Profil Fotoğrafı</h2>
-    
     <form id="photoSettingsForm">
       <label for="photoFileInput" class="custom-file-upload">
         <span id="uploadLabelText" style="color:#aaa; font-size:0.9rem;">📁 Cihazdan / Galeriden Resim Seç</span>
         <img id="photoPreview" class="preview-avatar" src="" alt="Önizleme">
       </label>
       <input type="file" id="photoFileInput" accept="image/*" required style="display: none;">
-      
       <button type="submit" class="settings-btn" style="margin-top: 15px;">Fotoğrafı Yükle ve Kaydet</button>
     </form>
   </div>
 </div>
 
-<!-- ŞİFRE DEĞİŞTİRME POPUP -->
 <div class="settings-modal" id="passwordModal">
   <div class="settings-window">
     <button class="close-account" onclick="document.getElementById('passwordModal').style.display='none'">✕</button>
     <h2>🔑 Şifre Değiştir</h2>
-    
     <form id="passwordSettingsForm" autocomplete="off">
       <label style="color:#aaa; font-size:0.85rem; display:block; text-align:left; margin-bottom:5px;">Yeni Şifreniz:</label>
       <input type="password" name="changePassword" placeholder="Yeni Şifreniz" required autocomplete="new-password">
@@ -164,18 +158,15 @@ function showLogin(){
   document.getElementById("loginTab").classList.add("active");
   document.getElementById("registerTab").classList.remove("active");
 }
-
 function showRegister(){
   document.getElementById("loginForm").style.display="none";
   document.getElementById("registerForm").style.display="flex";
   document.getElementById("registerTab").classList.add("active");
   document.getElementById("loginTab").classList.remove("active");
 }
-
 function closeAccount(){
   document.getElementById("accountModal").style.display="none";
 }
-
 function showToast(message){
   const toast=document.getElementById("siteToast");
   if(!toast) return;
@@ -183,14 +174,13 @@ function showToast(message){
   toast.classList.add("show");
   setTimeout(()=>{ toast.classList.remove("show"); },3000);
 }
-
 window.showLogin = showLogin;
 window.showRegister = showRegister;
 window.closeAccount = closeAccount;
 window.showToast = showToast;
 </script>
 
-<script type="module" src="auth.js?v=1.1"></script>
+<script type="module" src="auth.js?v=1.2"></script>
 
 <style>
 #siteToast{
