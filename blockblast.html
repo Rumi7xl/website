@@ -247,7 +247,6 @@
     const dragGhost = document.getElementById("dragGhost");
     const leaderboardList = document.getElementById("leaderboardList");
 
-    // 1. OYUNU HEMEN BAŞLAT (Firebase'i beklemeden arayüzü çiz)
     function initBoardUI() {
       gridBoard.innerHTML = "";
       for (let r = 0; r < BOARD_SIZE; r++) {
@@ -261,10 +260,11 @@
       }
     }
 
+    // Oyunu ve arayüzü hemen başlat
     initBoardUI();
     loadGameState();
+    fetchLeaderboard();
 
-    // 2. FIREBASE İŞLEMLERİNİ ARKA PLANDA YÜRÜT
     onAuthStateChanged(auth, async (user) => {
       currentUser = user;
       if (user) {
@@ -323,7 +323,7 @@
           leaderboardList.innerHTML = `<div class="rank-item" style="color: #777; text-align: center;">Henüz skor yok</div>`;
         }
       } catch (err) {
-        leaderboardList.innerHTML = `<div class="rank-item" style="color: #777; text-align: center;">Liste yüklenemedi</div>`;
+        leaderboardList.innerHTML = `<div class="rank-item" style="color: #777; text-align: center;">Skorlar yükleniyor...</div>`;
       }
     }
 
