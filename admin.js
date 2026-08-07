@@ -29,7 +29,7 @@ onAuthStateChanged(auth, (user) => {
     loadStats();
     loadAdminAnnouncements();
     loadAdminPanelData();
-    injectAdminSidebarTab();
+    injectAdminMenuTab();
   }
 });
 
@@ -231,62 +231,48 @@ async function loadAdminPanelData() {
   });
 }
 
-// SOLDAN SEÇİLEBİLEN İÇERİKLER YÖNETİM SEKMESİ VE PANELİ
-function injectAdminSidebarTab() {
-  // Admin panelindeki yan menüyü (sidebar) veya buton alanını bulalım
-  const sidebarNav = document.querySelector(".admin-sidebar") || document.querySelector(".sidebar") || document.querySelector("aside") || document.querySelector("nav") || document.body;
+// SOLDAN SEÇİLEBİLEN İÇERİKLER YÖNETİM SEKMESİ ("Siteye Dön" butonunun üstüne yerleşir)
+function injectAdminMenuTab() {
+  const linksContainer = document.querySelector(".admin-nav") || document.querySelector("aside") || document.querySelector("nav") || document.body;
 
-  // Eğer özel bir sidebar butonu grubu varsa oraya ekleyelim, yoksa sol üste şık bir buton koyalım
-  let tabBtn = document.getElementById("adminIceriklerSidebarBtn");
+  let tabBtn = document.getElementById("adminIceriklerMenuBtn");
   if (!tabBtn) {
-    tabBtn = document.createElement("button");
-    tabBtn.id = "adminIceriklerSidebarBtn";
+    tabBtn = document.createElement("a");
+    tabBtn.id = "adminIceriklerMenuBtn";
     tabBtn.innerHTML = "🎬 İçerikler Yönetimi";
     tabBtn.style.cssText = `
-      display: block; width: 100%; background: #1f1424; color: #c084fc; border: 1px solid #9146ff55;
-      padding: 12px 18px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 0.95rem;
-      margin: 15px 0; text-align: left; transition: all 0.2s;
+      display: flex; align-items: center; gap: 10px; background: #141414; color: #c084fc; 
+      border: 1px solid #333; padding: 12px 18px; border-radius: 12px; cursor: pointer; 
+      font-weight: bold; font-size: 0.95rem; margin: 10px 0; text-decoration: none; transition: all 0.2s;
     `;
-    tabBtn.onmouseover = () => { tabBtn.style.background = "#2a1b33"; };
-    tabBtn.onmouseout = () => { tabBtn.style.background = "#1f1424"; };
+    tabBtn.onmouseover = () => { tabBtn.style.background = "#1f1424"; tabBtn.style.borderColor = "#9146ff"; };
+    tabBtn.onmouseout = () => { tabBtn.style.background = "#141414"; tabBtn.style.borderColor = "#333"; };
     
-    // Eğer sidebar varsa içine ekle, yoksa body'ye sol üst sabit buton yap
-    if (document.querySelector(".admin-sidebar") || document.querySelector("aside")) {
-      sidebarNav.appendChild(tabBtn);
+    // "Siteye Dön" butonunu bulup hemen üstüne ekleyelim
+    const siteyeDonBtn = Array.from(document.querySelectorAll('a, button')).find(el => el.innerText.includes("Siteye Dön"));
+    if (siteyeDonBtn && siteyeDonBtn.parentNode) {
+      siteyeDonBtn.parentNode.insertBefore(tabBtn, siteyeDonBtn);
     } else {
-      // Alternatif olarak ana admin panel içeriğinin üst kısmına yerleştirilebilir
-      const container = document.querySelector(".admin-container") || document.body;
-      container.prepend(tabBtn);
+      linksContainer.appendChild(tabBtn);
     }
   }
 
-  tabBtn.onclick = () => {
-    openIceriklerAdminModal();
+  tabBtn.onclick = (e) => {
+    e.preventDefault();
+    renderIceriklerAdminScreen();
   };
 }
 
-async function openIceriklerAdminModal() {
-  let modal = document.getElementById("adminIceriklerModal");
-  if (!modal) {
-    modal = document.createElement("div");
-    modal.id = "adminIceriklerModal";
-    modal.style.cssText = `
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 999999;
-      box-sizing: border-box; padding: 20px;
-    `;
-    document.body.appendChild(modal);
-  }
+async function renderIceriklerAdminScreen() {
+  // Ana içerik alanını (örneğin topluluk mesajlarının olduğu yer) bulup oraya yönetim panelini basalım
+  const mainContentArea = document.querySelector(".admin-content") || document.querySelector("main") || document.body;
 
-  modal.style.display = "flex";
-
-  // Mevcut ayarları çek
   let config = {
     isLive: false,
     liveGame: "GTA V",
     liveViewers: "0",
     kickLink: "https://kick.com/rumi7xl",
-    kickDesc: "• Minecraft\n• Valorant\n• GTA V\n• Simülasyon Oyunları",
+    kickDesc: "• Minecraft\n• Valorant\n• GTA V",
     youtubeChannelLink: "https://youtube.com",
     youtubeVideos: [],
     tiktokLink: "https://tiktok.com",
@@ -302,67 +288,75 @@ async function openIceriklerAdminModal() {
 
   adminYoutubeVideosCache = config.youtubeVideos || [];
 
-  modal.innerHTML = `
-    <div style="background: #141414; border: 1px solid #9146ff; padding: 30px; border-radius: 20px; width: 100%; max-width: 700px; max-height: 90vh; overflow-y: auto; box-shadow: 0 0 40px rgba(145,70,255,0.4); color: #fff; position: relative; box-sizing: border-box;">
+  // Ana alanı temizle ve içerikler yönetim formunu diğer sekmeler gibi tam boy yerleştir
+  const wrapper = document.createElement("div");
+  wrapper.id = "adminIceriklerScreen";
+  wrapper.innerHTML = `
+    <div style="background: #141414; border: 1px solid #333; padding: 30px; border-radius: 16px; color: #fff; max-width: 900px; margin: 0 auto; box-sizing: border-box;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+        <h2 style="color: #c084fc; margin: 0; font-size: 1.6rem;">🎬 İçerikler Sayfası Yönetim Paneli</h2>
+        <button onclick="location.reload()" style="background: #222; color: #aaa; border: 1px solid #444; padding: 8px 16px; border-radius: 8px; cursor: pointer;">← Diğer Panellere Dön</button>
+      </div>
       
-      <button onclick="document.getElementById('adminIceriklerModal').style.display='none'" style="position: absolute; top: 20px; right: 20px; background: #222; color: #fff; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; font-weight: bold; font-size: 1.1rem;">✕</button>
-      
-      <h3 style="color: #c084fc; margin-bottom: 20px; font-size: 1.5rem; text-align: center;">🎬 İçerikler Sayfası Yönetim Paneli</h3>
-      
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 20px;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 25px;">
         
         <!-- Canlı Durum Ayarları -->
-        <div style="background: #1b1b1b; padding: 15px; border-radius: 12px; border: 1px solid #2a2a2a;">
-          <h4 style="color: #22c55e; margin-bottom: 12px;">🔴 Canlı Yayın Durumu</h4>
-          <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; cursor: pointer;">
-            <input type="checkbox" id="admIsLive" ${config.isLive ? 'checked' : ''} style="width: 18px; height: 18px; cursor: pointer;">
-            <span style="font-weight: bold;">Şu Anda Yayında mı?</span>
+        <div style="background: #181818; padding: 20px; border-radius: 12px; border: 1px solid #2a2a2a;">
+          <h4 style="color: #22c55e; margin-bottom: 15px; font-size: 1.1rem;">🔴 Canlı Yayın Durumu Kutusu</h4>
+          <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px; cursor: pointer;">
+            <input type="checkbox" id="admIsLive" ${config.isLive ? 'checked' : ''} style="width: 20px; height: 20px; cursor: pointer;">
+            <span style="font-weight: bold; font-size: 1rem;">Şu Anda Yayında mı?</span>
           </label>
-          <div style="margin-bottom: 10px;">
-            <label style="font-size: 0.85rem; color: #aaa; display: block; margin-bottom: 4px;">Oynanan Oyun:</label>
-            <input type="text" id="admLiveGame" value="${config.liveGame || ''}" style="width: 100%; padding: 8px; background: #111; border: 1px solid #333; color: #fff; border-radius: 6px; box-sizing: border-box;">
+          <div style="margin-bottom: 12px;">
+            <label style="font-size: 0.85rem; color: #aaa; display: block; margin-bottom: 5px;">Oynanan Oyun:</label>
+            <input type="text" id="admLiveGame" value="${config.liveGame || ''}" style="width: 100%; padding: 10px; background: #111; border: 1px solid #333; color: #fff; border-radius: 8px; box-sizing: border-box;">
           </div>
           <div>
-            <label style="font-size: 0.85rem; color: #aaa; display: block; margin-bottom: 4px;">İzleyici Sayısı:</label>
-            <input type="text" id="admLiveViewers" value="${config.liveViewers || '0'}" style="width: 100%; padding: 8px; background: #111; border: 1px solid #333; color: #fff; border-radius: 6px; box-sizing: border-box;">
+            <label style="font-size: 0.85rem; color: #aaa; display: block; margin-bottom: 5px;">İzleyici Sayısı:</label>
+            <input type="text" id="admLiveViewers" value="${config.liveViewers || '0'}" style="width: 100%; padding: 10px; background: #111; border: 1px solid #333; color: #fff; border-radius: 8px; box-sizing: border-box;">
           </div>
         </div>
 
-        <!-- Kick & TikTok Ayarları -->
-        <div style="background: #1b1b1b; padding: 15px; border-radius: 12px; border: 1px solid #2a2a2a;">
-          <h4 style="color: #22c55e; margin-bottom: 12px;">🎮 Kick & 📱 TikTok</h4>
-          <div style="margin-bottom: 10px;">
-            <label style="font-size: 0.85rem; color: #aaa; display: block; margin-bottom: 4px;">Kick Kanal Linki:</label>
-            <input type="text" id="admKickLink" value="${config.kickLink || ''}" style="width: 100%; padding: 8px; background: #111; border: 1px solid #333; color: #fff; border-radius: 6px; box-sizing: border-box;">
+        <!-- Kick, TikTok & Açıklama Ayarları -->
+        <div style="background: #181818; padding: 20px; border-radius: 12px; border: 1px solid #2a2a2a;">
+          <h4 style="color: #22c55e; margin-bottom: 15px; font-size: 1.1rem;">🎮 Kick & 📱 TikTok Kutuları</h4>
+          <div style="margin-bottom: 12px;">
+            <label style="font-size: 0.85rem; color: #aaa; display: block; margin-bottom: 5px;">Kanal Linki (Kick):</label>
+            <input type="text" id="admKickLink" value="${config.kickLink || ''}" style="width: 100%; padding: 10px; background: #111; border: 1px solid #333; color: #fff; border-radius: 8px; box-sizing: border-box;">
           </div>
-          <div style="margin-bottom: 10px;">
-            <label style="font-size: 0.85rem; color: #aaa; display: block; margin-bottom: 4px;">Kick Açıklaması / Kategoriler:</label>
-            <textarea id="admKickDesc" rows="2" style="width: 100%; padding: 8px; background: #111; border: 1px solid #333; color: #fff; border-radius: 6px; resize: vertical; box-sizing: border-box;">${config.kickDesc || ''}</textarea>
+          <div style="margin-bottom: 12px;">
+            <label style="font-size: 0.85rem; color: #aaa; display: block; margin-bottom: 5px;">Kick Oyun Listesi / Açıklama:</label>
+            <textarea id="admKickDesc" rows="2" style="width: 100%; padding: 10px; background: #111; border: 1px solid #333; color: #fff; border-radius: 8px; resize: vertical; box-sizing: border-box;">${config.kickDesc || ''}</textarea>
           </div>
-          <div style="margin-bottom: 10px;">
-            <label style="font-size: 0.85rem; color: #aaa; display: block; margin-bottom: 4px;">TikTok Linki:</label>
-            <input type="text" id="admTiktokLink" value="${config.tiktokLink || ''}" style="width: 100%; padding: 8px; background: #111; border: 1px solid #333; color: #fff; border-radius: 6px; box-sizing: border-box;">
+          <div>
+            <label style="font-size: 0.85rem; color: #aaa; display: block; margin-bottom: 5px;">TikTok Linki:</label>
+            <input type="text" id="admTiktokLink" value="${config.tiktokLink || ''}" style="width: 100%; padding: 10px; background: #111; border: 1px solid #333; color: #fff; border-radius: 8px; box-sizing: border-box;">
           </div>
         </div>
 
       </div>
 
       <!-- YouTube Video Listesi Yönetimi -->
-      <div style="background: #1b1b1b; padding: 15px; border-radius: 12px; border: 1px solid #2a2a2a; margin-bottom: 25px;">
-        <h4 style="color: #ef4444; margin-bottom: 12px;">🎬 YouTube Videoları Ekle / Yönet</h4>
+      <div style="background: #181818; padding: 20px; border-radius: 12px; border: 1px solid #2a2a2a; margin-bottom: 25px;">
+        <h4 style="color: #ef4444; margin-bottom: 15px; font-size: 1.1rem;">🎬 YouTube Videoları Ekle / Yönet (Liste Şeklinde)</h4>
         <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
-          <input type="text" id="admNewYtTitle" placeholder="Video Başlığı (Örn: Minecraft #1)" style="flex: 2; min-width: 180px; padding: 8px; background: #111; border: 1px solid #333; color: #fff; border-radius: 6px; box-sizing: border-box;">
-          <input type="text" id="admNewYtUrl" placeholder="Video Linki (https://youtube.com/...)" style="flex: 3; min-width: 200px; padding: 8px; background: #111; border: 1px solid #333; color: #fff; border-radius: 6px; box-sizing: border-box;">
-          <button onclick="window.addAdminYtVideo()" style="background: #ef4444; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold;">Ekle</button>
+          <input type="text" id="admNewYtTitle" placeholder="Video Başlığı (Örn: Minecraft Serisi #1)" style="flex: 2; min-width: 200px; padding: 10px; background: #111; border: 1px solid #333; color: #fff; border-radius: 8px; box-sizing: border-box;">
+          <input type="text" id="admNewYtUrl" placeholder="Video Linki (https://youtube.com/...)" style="flex: 3; min-width: 220px; padding: 10px; background: #111; border: 1px solid #333; color: #fff; border-radius: 8px; box-sizing: border-box;">
+          <button onclick="window.addAdminYtVideo()" style="background: #ef4444; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold;">Ekle</button>
         </div>
-        <div id="admYtVideoListContainer" style="max-height: 150px; overflow-y: auto; background: #111; padding: 10px; border-radius: 8px;">
+        <div id="admYtVideoListContainer" style="max-height: 180px; overflow-y: auto; background: #111; padding: 12px; border-radius: 8px;">
           <!-- Dinamik Liste -->
         </div>
       </div>
 
-      <button onclick="window.saveIceriklerChanges()" style="background: #9146ff; color: #fff; border: none; padding: 14px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 1.05rem; width: 100%;">Değişiklikleri Kaydet ve Yayınla 🚀</button>
+      <button onclick="window.saveIceriklerChanges()" style="background: #9146ff; color: #fff; border: none; padding: 14px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 1.1rem; width: 100%;">Değişiklikleri Kaydet ve Yayınla 🚀</button>
     </div>
   `;
+
+  // Mevcut admin ekranındaki panellerin yerine bunu basalım
+  const targetArea = document.querySelector(".platforms") || document.querySelector("#adminChatList") || mainContentArea;
+  targetArea.innerHTML = "";
+  targetArea.appendChild(wrapper);
 
   renderAdminYtListInPanel();
 }
@@ -372,16 +366,16 @@ function renderAdminYtListInPanel() {
   if (!container) return;
 
   if (adminYoutubeVideosCache.length === 0) {
-    container.innerHTML = `<p style="color: #777; font-size: 0.85rem; margin: 0; text-align: center;">Henüz video eklenmedi.</p>`;
+    container.innerHTML = `<p style="color: #777; font-size: 0.9rem; margin: 0; text-align: center;">Henüz video eklenmedi.</p>`;
     return;
   }
 
   let html = "";
   adminYoutubeVideosCache.forEach((vid, index) => {
     html += `
-      <div style="display: flex; justify-content: space-between; align-items: center; background: #181818; padding: 6px 10px; border-radius: 6px; margin-bottom: 6px;">
-        <span style="color: #fff; font-size: 0.85rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; margin-right: 10px;">▶ ${vid.title}</span>
-        <button onclick="window.removeAdminYtVideo(${index})" style="background: #ef4444; color: #fff; border: none; padding: 3px 8px; border-radius: 4px; cursor: pointer; font-size: 0.75rem;">Sil</button>
+      <div style="display: flex; justify-content: space-between; align-items: center; background: #1c1c1c; padding: 8px 12px; border-radius: 6px; margin-bottom: 8px;">
+        <span style="color: #fff; font-size: 0.9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; margin-right: 15px;">▶ ${vid.title}</span>
+        <button onclick="window.removeAdminYtVideo(${index})" style="background: #ef4444; color: #fff; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">Sil</button>
       </div>
     `;
   });
@@ -431,7 +425,7 @@ window.saveIceriklerChanges = async function() {
     }, { merge: true });
 
     showToast("İçerikler sayfası başarıyla güncellendi! 🔥");
-    document.getElementById("adminIceriklerModal").style.display = 'none';
+    setTimeout(() => { location.reload(); }, 1200);
   } catch (e) {
     showToast("Kaydedilirken hata oluştu!", "error");
   }
