@@ -267,7 +267,7 @@ function renderYtList() {
     html += `
       <div style="display: flex; justify-content: space-between; align-items: center; background: #1c1c1c; padding: 8px 12px; border-radius: 6px; margin-bottom: 8px;">
         <span style="color: #fff; font-size: 0.9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; margin-right: 15px;">▶ ${vid.title}</span>
-        <button onclick="window.removeYt(${index})" style="background: #ef4444; color: #fff; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">Sil</button>
+        <button type="button" onclick="window.removeYt(${index})" style="background: #ef4444; color: #fff; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">Sil</button>
       </div>
     `;
   });
@@ -276,7 +276,8 @@ function renderYtList() {
 
 const addYtBtn = document.getElementById("addYtBtn");
 if (addYtBtn) {
-  addYtBtn.onclick = () => {
+  addYtBtn.onclick = (e) => {
+    e.preventDefault();
     const titleInput = document.getElementById("admNewYtTitle");
     const urlInput = document.getElementById("admNewYtUrl");
     const title = titleInput.value.trim();
@@ -289,6 +290,7 @@ if (addYtBtn) {
     titleInput.value = "";
     urlInput.value = "";
     renderYtList();
+    showToast("Video listeye eklendi! Kaydetmeyi unutma.");
   };
 }
 
@@ -497,7 +499,7 @@ window.openUserModeration = function(uid, username) {
     muteModal.style.display = "flex";
     document.getElementById("muteCancelBtn").onclick = () => { muteModal.style.display = "none"; };
     document.getElementById("muteConfirmBtn").onclick = async () => {
-      const minutes = parseInt(document.getElementById("muteMinutesInput").value);
+      const minutes = parseInt(document.getElementById("muteMinutesInput5") || document.getElementById("muteMinutesInput").value);
       muteModal.style.display = "none";
       if (isNaN(minutes) || minutes <= 0) {
         showToast("Geçerli bir süre gir!", "error");
@@ -558,8 +560,29 @@ window.confirmDeleteMessage = function(id) {
 
 async function loadStats() {
   try {
-    const snap = await getDocs(collection(db, "duyurular"));
+    const duyuruSnap = await getDocs(collection(db, "duyurular"));
     const statEl = document.getElementById("totalAnnouncements");
-    if (statEl) statEl.innerText = snap.size;
+    if (statEl) statEl.innerText = duyuruSnap.size;
+
+    const usersSnap = await getDocs(collection(db, "users"));
+    let totalUsers = usersSnap.size;
+    let onlineUsers = 0;
+    let offlineUsers = 0;
+    const now = Date.now();
+    usersSnap.forEach((uDoc) => {
+      const uData = uDoc.data();
+      if (uData.lastSeen && (now - uData.lastSeen < 120000)) {
+        onlineUsers++;
+      } else {
+        offlineUsers++;
+      }
+    });
+
+    const tu = document.getElementById("totalUsersCount");
+    const ou = document.getElementById("onlineUsersCount");
+    const ofu = document.getElementById("offlineUsersCount");
+    if (tu) tu.innerText = totalUsers;
+    if (ou) ou.innerText = onlineUsers;
+    if (ofu) ofu.innerText = offlineUsers;
   } catch (e) {}
 }
