@@ -35,7 +35,7 @@
     </div>
   </section>
 
-  <!-- İÇERİK KARTLARI (KÜPLER) - ANA SAYFA STİLİNDE -->
+  <!-- İÇERİK KARTLARI (KÜPLER) -->
   <section class="platforms">
     
     <!-- 1. KÜP: CANLI DURUM -->
@@ -44,10 +44,10 @@
         <span style="font-size: 38px;">🔴</span>
       </div>
       <h2>CANLI DURUM</h2>
-      <div class="card-body-content" style="color: #bbb; font-size: 14px; line-height: 1.6; margin-bottom: 25px; min-height: 80px; display: flex; flex-direction: column; justify-content: center;">
+      <div id="liveCardBody" class="card-body-content" style="color: #bbb; font-size: 14px; line-height: 1.6; margin-bottom: 25px; min-height: 80px; display: flex; flex-direction: column; justify-content: center;">
         Yükleniyor...
       </div>
-      <a href="https://kick.com/rumi7xl" target="_blank">KICK'E GİT &gt;</a>
+      <a id="liveCardBtn" href="https://kick.com/rumi7xl" target="_blank">KICK'E GİT &gt;</a>
     </div>
 
     <!-- 2. KÜP: KICK YAYINLARI -->
@@ -56,10 +56,10 @@
         <img src="kick-logo.png" alt="Kick" style="width: 44px; height: 44px; object-fit: contain;">
       </div>
       <h2>KICK KANALI</h2>
-      <div class="card-body-content" style="color: #bbb; font-size: 14px; line-height: 1.6; margin-bottom: 25px; min-height: 80px; display: flex; flex-direction: column; justify-content: center;">
+      <div id="kickCardBody" class="card-body-content" style="color: #bbb; font-size: 14px; line-height: 1.6; margin-bottom: 25px; min-height: 80px; display: flex; flex-direction: column; justify-content: center; white-space: pre-line; text-align: left;">
         Yükleniyor...
       </div>
-      <a href="https://kick.com/rumi7xl" target="_blank">KANALA GİT &gt;</a>
+      <a id="kickCardBtn" href="https://kick.com/rumi7xl" target="_blank">KANALA GİT &gt;</a>
     </div>
 
     <!-- 3. KÜP: YOUTUBE VİDEOLARI -->
@@ -68,10 +68,10 @@
         <img src="youtube-logo.png" alt="YouTube" style="width: 44px; height: 44px; object-fit: contain;">
       </div>
       <h2>YOUTUBE</h2>
-      <div class="card-body-content" style="color: #bbb; font-size: 14px; line-height: 1.6; margin-bottom: 25px; min-height: 80px; max-height: 130px; overflow-y: auto; text-align: left; padding: 0 5px;">
+      <div id="youtubeCardBody" class="card-body-content" style="color: #bbb; font-size: 14px; line-height: 1.6; margin-bottom: 25px; min-height: 80px; max-height: 130px; overflow-y: auto; text-align: left; padding: 0 5px;">
         Yükleniyor...
       </div>
-      <a href="https://www.youtube.com/@Rumi7xl" target="_blank">VİDEOLARA GİT &gt;</a>
+      <a id="youtubeCardBtn" href="https://www.youtube.com/@Rumi7xl" target="_blank">VİDEOLARA GİT &gt;</a>
     </div>
 
     <!-- 4. KÜP: TİKTOK İÇERİKLERİ -->
@@ -80,10 +80,10 @@
         <img src="tiktok-logo.png" alt="TikTok" style="width: 42px; height: 42px; object-fit: contain;">
       </div>
       <h2>TIKTOK</h2>
-      <div class="card-body-content" style="color: #bbb; font-size: 14px; line-height: 1.6; margin-bottom: 25px; min-height: 80px; display: flex; flex-direction: column; justify-content: center;">
-        Yükleniyor...
+      <div id="tiktokCardBody" class="card-body-content" style="color: #bbb; font-size: 14px; line-height: 1.6; margin-bottom: 25px; min-height: 80px; display: flex; flex-direction: column; justify-content: center;">
+        En komik kesitler ve kısa videolar TikTok adresimde!
       </div>
-      <a href="https://www.tiktok.com/@rumi7xl" target="_blank">TIKTOK'A GİT &gt;</a>
+      <a id="tiktokCardBtn" href="https://www.tiktok.com/@rumi7xl" target="_blank">TIKTOK'A GİT &gt;</a>
     </div>
 
   </section>
@@ -121,6 +121,72 @@
   </div>
 
   <div id="siteToast"></div>
+
+  <!-- ICERIKLER VERI CEKME SCRIPTI -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCiuXtHu3J9Va46a4KiETO2JrSn5um2KoQ",
+      authDomain: "rumi7xl-web.firebaseapp.com",
+      projectId: "rumi7xl-web",
+      storageBucket: "rumi7xl-web.firebasestorage.app",
+      messagingSenderId: "1077565304835",
+      appId: "1:1077565304835:web:a672a4440797b76f42de36"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function loadPublicContent() {
+      try {
+        const docSnap = await getDoc(doc(db, "siteSettings", "iceriklerConfig"));
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+
+          // 1. Canlı Durum Kartı
+          const liveText = data.isLive ? "<span style='color:#22c55e; font-weight:bold; font-size:16px;'>YAYINDA!</span>" : "<span style='color:#ef4444; font-weight:bold;'>YAYINDA DEĞİL</span>";
+          document.getElementById("liveCardBody").innerHTML = `
+            ${liveText}
+            <div style="margin-top:8px;">Oyun: <b style="color:#fff;">${data.liveGame || '-'}</b></div>
+            <div style="margin-top:4px;">İzleyici: <b style="color:#fff;">${data.liveViewers || '0'}</b></div>
+          `;
+          if (data.kickLink) {
+            document.getElementById("liveCardBtn.href") // güvenli atama
+            document.getElementById("liveCardBtn").href = data.kickLink;
+          }
+
+          // 2. Kick Kanalı Kartı
+          document.getElementById("kickCardBody").innerText = data.kickDesc || "Açıklama girilmemiş.";
+          if (data.kickLink) {
+            document.getElementById("kickCardBtn").href = data.kickLink;
+          }
+
+          // 3. YouTube Kartı
+          const ytBody = document.getElementById("youtubeCardBody");
+          if (data.youtubeVideos && data.youtubeVideos.length > 0) {
+            let ytHtml = "";
+            data.youtubeVideos.forEach(vid => {
+              ytHtml += `<div style="margin-bottom:6px;"><a href="${vid.url}" target="_blank" style="color:#ef4444; text-decoration:none; font-size:13px; display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">▶ ${vid.title}</a></div>`;
+            });
+            ytBody.innerHTML = ytHtml;
+          } else {
+            ytBody.innerHTML = `<p style="color: #777; font-size: 13px; text-align: center; margin: 0;">Henüz video eklenmedi.</p>`;
+          }
+
+          // 4. TikTok Kartı
+          if (data.tiktokLink) {
+            document.getElementById("tiktokCardBtn").href = data.tiktokLink;
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    loadPublicContent();
+  </script>
 
   <script>
   function showLogin(){
@@ -179,6 +245,5 @@
 
   <!-- SCRIPT BAGLANTILARI -->
   <script type="module" src="auth.js?v=1.1"></script>
-  <script type="module" src="icerikler.js"></script>
 </body>
 </html>
