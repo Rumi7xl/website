@@ -24,12 +24,10 @@
     .admin-btn { background: #9146ff; color: white; border: none; padding: 12px 25px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; }
     .admin-btn:hover { background: #7a35e6; box-shadow: 0 0 15px rgba(145, 70, 255, 0.5); }
     
-    /* Emoji Paleti ve Ekstra Araçlar */
     .emoji-bar { display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
     .emoji-btn { background: #1a1a1a; border: 1px solid #333; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 1.1rem; transition: 0.2s; }
     .emoji-btn:hover { background: #9146ff; border-color: #9146ff; }
     
-    /* Paylaşılan Duyuru Kartları (Alt Kısım) */
     .announcement-card { background: #181818; border: 1px solid #333; border-radius: 12px; padding: 20px; margin-bottom: 15px; display: flex; gap: 20px; align-items: flex-start; }
     .announcement-card img { width: 120px; height: 120px; object-fit: cover; border-radius: 8px; border: 1px solid #444; }
     .announcement-info { flex: 1; }
@@ -42,22 +40,20 @@
 </head>
 <body>
   <div class="admin-container">
-    <!-- SOL MENÜ -->
     <div class="admin-sidebar">
       <h2>👑 RUMİ7XL<br><span style="font-size: 14px; color: #aaa;">Yönetici Paneli</span></h2>
       <div class="admin-menu">
-        <button class="tab-btn active" onclick="switchAdminTab('dashboard')">📊 İstatistikler</button>
-        <button class="tab-btn" onclick="switchAdminTab('announcements')">📢 Duyuru Paylaş</button>
-        <button class="tab-btn" onclick="switchAdminTab('moderation')">🛡️ Sohbet Yönetimi</button>
+        <button class="tab-btn" id="btn-dashboard" onclick="switchAdminTab('dashboard', this)">📊 İstatistikler</button>
+        <button class="tab-btn" id="btn-announcements" onclick="switchAdminTab('announcements', this)">📢 Duyuru Paylaş</button>
+        <button class="tab-btn" id="btn-moderation" onclick="switchAdminTab('moderation', this)">🛡️ Sohbet Yönetimi</button>
         <button class="tab-btn" style="margin-top: 50px; background: #ef4444; border-color: #ef4444; text-align: center;" onclick="window.location.href='index.html'">🏠 Siteye Dön</button>
       </div>
     </div>
 
-    <!-- SAĞ İÇERİK -->
     <div class="admin-content">
       
       <!-- 1. İSTATİSTİKLER -->
-      <div id="dashboard" class="admin-section active">
+      <div id="dashboard" class="admin-section">
         <h2 style="color: #9146ff; margin-bottom: 20px;">Sitenin Genel Durumu</h2>
         <div class="stats-grid">
           <div class="stat-card"><h3>Toplam Kayıtlı Üye</h3><p id="totalUsers">0</p></div>
@@ -66,14 +62,13 @@
         </div>
       </div>
 
-      <!-- 2. DUYURU PAYLAŞ & ALT TARAFTA LİSTELEME -->
-      <div id="announcements" class="admin-section active" style="display: block;">
+      <!-- 2. DUYURU PAYLAŞ & LİSTELEME -->
+      <div id="announcements" class="admin-section">
         <h2 style="color: #9146ff; margin-bottom: 20px;">Yeni Duyuru Oluştur</h2>
         <div class="admin-form">
           <input type="hidden" id="editingId" value="">
           <input type="text" id="announceTitle" placeholder="Duyuru Başlığı...">
           
-          <!-- Emoji Ekleme Barı -->
           <div class="emoji-bar">
             <span style="font-size:0.85rem; color:#888; align-self:center; margin-right:5px;">Hızlı Emoji:</span>
             <button type="button" class="emoji-btn" onclick="addEmoji('🔥')">🔥</button>
@@ -94,7 +89,6 @@
           <button class="admin-btn" id="cancelEditBtn" style="background:#444; display:none; margin-left:10px;">İptal</button>
         </div>
 
-        <!-- ALT TARAFTA LİSTELENECEK ALAN -->
         <h3 style="color: #9146ff; margin-top: 40px; margin-bottom: 20px; border-top: 1px solid #222; padding-top: 20px;">📜 Yayınlanan Duyurular (Düzenle / Sil)</h3>
         <div id="adminAnnouncementList">
           <p style="color: #aaa;">Duyurular yükleniyor...</p>
@@ -113,14 +107,28 @@
   </div>
 
   <script>
-    function switchAdminTab(tabId) {
-      document.querySelectorAll('.admin-section').forEach(el => el.style.display = 'none');
+    function switchAdminTab(tabId, btnElement) {
+      document.querySelectorAll('.admin-section').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
       
       const target = document.getElementById(tabId);
-      if (target) target.style.display = 'block';
-      event.currentTarget.classList.add('active');
+      if (target) target.classList.add('active');
+      if (btnElement) btnElement.classList.add('active');
+      
+      // Hangi sekmede olduğunu hafızaya kaydet (F5 atınca sıfırlanmasın)
+      localStorage.setItem("activeAdminTab", tabId);
     }
+
+    // Sayfa açıldığında hafızadaki sekmeyi getir
+    window.addEventListener("DOMContentLoaded", () => {
+      const savedTab = localStorage.getItem("activeAdminTab") || "dashboard";
+      const targetBtn = document.getElementById("btn-" + savedTab);
+      if (targetBtn) {
+        switchAdminTab(savedTab, targetBtn);
+      } else {
+        switchAdminTab("dashboard", document.getElementById("btn-dashboard"));
+      }
+    });
 
     function addEmoji(emoji) {
       const descInput = document.getElementById("announceDesc");
