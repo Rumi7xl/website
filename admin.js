@@ -557,43 +557,38 @@ window.confirmDeleteMessage = function(id) {
   const modal = document.getElementById("customConfirmModal");
   const yesBtn = document.getElementById("confirmYesBtn");
   const noBtn = document.getElementById("confirmNoBtn");
-  document.getElementById("confirmText").innerText = "Bu mesajı silmek istediğine emin misin patron?";
-  modal.style.display = "flex";
-  yesBtn.onclick = async () => {
-    modal.style.display = "none";
-    try {
-      await deleteDoc(doc(db, "messages", id));
-      showToast("Mesaj silindi.");
-    } catch (e) { showToast("Mesaj silinirken hata oluştu!", "error"); }
-  };
-  noBtn.onclick = () => { modal.style.display = "none"; };
+  document.Bir uygulama geliştirip yayınlama aşamasında, arka planda yetkilendirme işlemlerini güvenli bir şekilde yönetecek bir yönetim (admin) mekanizması kurmak en önemli yapı taşlarından biridir. "Admin JS kodu" genellikle bir Node.js (Express) arka ucunda, sadece yöneticilerin belirli sayfalara veya verilere erişebilmesini sağlayan bir yetki kontrolü (middleware) olarak tasarlanır.
+
+İşte temel bir **Node.js / Express.js Admin Yetkilendirme** kodu örneği:
+
+```javascript
+const express = require('express');
+const app = express();
+
+// Örnek bir kullanıcı nesnesi (Gerçek uygulamada bu bilgi veritabanından veya JWT'den gelir)
+const aktifKullanici = {
+    id: 1,
+    kullaniciAdi: "kullanici_adi",
+    rol: "admin" // Bu değer 'kullanici' veya 'admin' olabilir
 };
 
-async function loadStats() {
-  try {
-    const duyuruSnap = await getDocs(collection(db, "duyurular"));
-    const statEl = document.getElementById("totalAnnouncements");
-    if (statEl) statEl.innerText = duyuruSnap.size;
+// Admin Yetki Kontrolü Ara Katmanı (Middleware)
+const adminKontrolu = (req, res, next) => {
+    // Normal şartlarda burada req.headers üzerinden gelen token (örn: JWT) doğrulanır
+    
+    if (aktifKullanici.rol === 'admin') {
+        // Kullanıcı admin ise işleme (route'a) devam et
+        next();
+    } else {
+        // Kullanıcı admin değilse 403 Forbidden (Erişim Reddedildi) hatası döndür
+        res.status(403).json({ hata: "Erişim reddedildi: Bu işlem için admin yetkisi gereklidir." });
+    }
+};
 
-    const usersSnap = await getDocs(collection(db, "users"));
-    let totalUsers = usersSnap.size;
-    let onlineUsers = 0;
-    let offlineUsers = 0;
-    const now = Date.now();
-    usersSnap.forEach((uDoc) => {
-      const uData = uDoc.data();
-      if (uData.lastSeen && (now - uData.lastSeen < 120000)) {
-        onlineUsers++;
-      } else {
-        offlineUsers++;
-      }
-    });
+// Sadece adminlerin erişebileceği uç nokta (endpoint)
+app.get('/api/admin-paneli', adminKontrolu, (req, res) => {
+    res.json({ mesaj: "Admin paneline hoş geldin! Sistem ayarlarına erişim sağlandı." });
+});
 
-    const tu = document.getElementById("totalUsersCount");
-    const ou = document.getElementById("onlineUsersCount");
-    const ofu = document.getElementById("offlineUsersCount");
-    if (tu) tu.innerText = totalUsers;
-    if (ou) ou.innerText = onlineUsers;
-    if (ofu) ofu.innerText = offlineUsers;
-  } catch (e) {}
-}
+app.listen(3000, () => {
+    console.log('Sun
