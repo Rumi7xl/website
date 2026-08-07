@@ -3,15 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>RUMİ7XL - Topluluk</title>
-  <link rel="stylesheet" href="style.css">
+  <title>RUMİ7XL - Topluluk[cite: 12]</title>
+  <link href="favicon.png?v=2" rel="icon" type="image/png"/>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <link rel="stylesheet" href="style.css?v=1.2">
 </head>
 <body>
 
-  <!-- NAVBAR -->
   <nav class="navbar">
     <a href="index.html" class="logo">RUMİ7XL</a>
-    
     <div class="nav-links">
       <a href="index.html">Ana Sayfa</a>
       <a href="topluluk.html" class="active">Topluluk</a>
@@ -19,7 +21,6 @@
       <a href="icerikler.html">İçerikler</a>
       <a href="duyurular.html">Duyurular</a>
     </div>
-
     <div class="account-box"></div>
   </nav>
 
@@ -31,12 +32,10 @@
       Burada herkes sohbet edebilir, fikirlerini paylaşabilir.
     </p>
 
-    <!-- CANLI SOHBET ALANI -->
     <div class="chat-container">
       <div class="chat-messages" id="chatMessages">
         <p style="color:#aaa; text-align:center;">Sohbet yükleniyor...</p>
       </div>
-
       <div class="chat-input-area">
         <input type="text" id="chatInput" placeholder="Mesajını yaz..." autocomplete="off">
         <button id="sendChatBtn">Gönder</button>
@@ -44,12 +43,10 @@
     </div>
   </div>
 
-  <!-- FOOTER -->
   <footer>
     <p>© 2026 RUMİ7XL - Tüm Hakları Saklıdır.</p>
   </footer>
 
-  <!-- MODALLAR -->
   <div id="accountModal" class="account-modal">
     <div class="account-window">
       <button class="close-account" onclick="document.getElementById('accountModal').style.display='none'">✕</button>
@@ -82,7 +79,7 @@
           <input type="file" id="photoFileInput" accept="image/*" style="display:none;">
           <img id="photoPreview" style="display:none; width:80px; height:80px; border-radius:50%; margin: 10px auto 0; object-fit:cover; border:2px solid #9146ff;">
         </label>
-        <button type="submit" class="account-submit">Yükle dan Kaydet</button>
+        <button type="submit" class="account-submit">Yükle ve Kaydet</button>
       </form>
     </div>
   </div>
@@ -99,12 +96,10 @@
   </div>
 
   <script>
-    // Klavye açılıp kapandığını algılayıp Telegram tarzı tam ekran sabitleme tetikleyen script
     const chatInput = document.getElementById('chatInput');
     if (chatInput && window.innerWidth <= 900) {
       chatInput.addEventListener('focus', () => {
         document.body.classList.add('keyboard-open');
-        // Mesajlar en alta kaydırılsın
         const chatMessages = document.getElementById('chatMessages');
         if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
       });
@@ -114,7 +109,7 @@
     }
   </script>
 
-  <script type="module" src="auth.js"></script>
-  <script type="module" src="community.js"></script>
+  <script type="module" src="auth.js?v=1.2"></script>
+  <script type="module" src="community.js?v=1.2"></script>
 </body>
 </html>
