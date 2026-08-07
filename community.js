@@ -30,15 +30,52 @@ const chatMessages = document.getElementById("chatMessages");
 
 let currentUserObj = null;
 let isFirstLoad = true;
+let muteCheckInterval = null;
 
 // SAYFA İLK AÇILDIĞINDA ANINDA YAZI KUTUSUNA ODAKLAN
 window.addEventListener("DOMContentLoaded", () => {
   if (chatInput) chatInput.focus();
 });
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
   currentUserObj = user;
+  if (user) {
+    checkMuteStatusLoop(user.uid);
+  }
 });
+
+// Susturma durumunu ve canlı sayacı saniye saniye kontrol eden döngü
+function checkMuteStatusLoop(uid) {
+  if (muteCheckInterval) clearInterval(muteCheckInterval);
+
+  muteCheckInterval = setInterval(async () => {
+    try {
+      const uDoc = await getDoc(doc(db, "users", uid));
+      if (uDoc.exists() && uDoc.data().muteUntil) {
+        const muteUntil = uDoc.data().muteUntil;
+        const remaining = muteUntil - Date.now();
+
+        if (remaining > 0) {
+          const minutes = Math.floor(remaining / 60000);
+          const seconds = Math.floor((remaining % 60000) / 1000);
+          const timeStr = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+          if (chatInput) {
+            chatInput.disabled = true;
+            chatInput.placeholder = `🔇 Susturuldun! Kalan süre: ${timeStr}`;
+          }
+          if (sendBtn) sendBtn.disabled = true;
+        } else {
+          if (chatInput && chatInput.disabled) {
+            chatInput.disabled = false;
+            chatInput.placeholder = "Mesajını yaz...";
+          }
+          if (sendBtn) sendBtn.disabled = false;
+        }
+      }
+    } catch (e) {}
+  }, 1000);
+}
 
 // MESAJ GÖNDERME
 async function sendMessage() {
@@ -50,6 +87,15 @@ async function sendMessage() {
     if (window.openAccountModal) window.openAccountModal('login');
     return;
   }
+
+  // Gönderim anında son bir kez mute kontrolü
+  try {
+    const uDoc = await getDoc(doc(db, "users", currentUserObj.uid));
+    if (uDoc.exists() && uDoc.data().muteUntil && uDoc.data().muteUntil > Date.now()) {
+      alert("Yönetici tarafından susturuldun, mesaj atamazsın!");
+      return;
+    }
+  } catch(e) {}
 
   chatInput.value = "";
 
