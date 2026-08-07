@@ -82,7 +82,7 @@
           <input type="file" id="photoFileInput" accept="image/*" style="display:none;">
           <img id="photoPreview" style="display:none; width:80px; height:80px; border-radius:50%; margin: 10px auto 0; object-fit:cover; border:2px solid #9146ff;">
         </label>
-        <button type="submit" class="account-submit">Yükle ve Kaydet</button>
+        <button type="submit" class="account-submit">Yükle dan Kaydet</button>
       </form>
     </div>
   </div>
@@ -99,18 +99,19 @@
   </div>
 
   <script>
-    // Mobilde klavye açılıp kapandığında chat yüksekliğini ekrana göre dinamik ayarlar
-    function adjustChatHeight() {
-      const chatContainer = document.querySelector('.chat-container');
-      if (!chatContainer) return;
-      if (window.innerWidth <= 900) {
-        chatContainer.style.height = (window.innerHeight * 0.42) + 'px';
-      } else {
-        chatContainer.style.height = '600px';
-      }
+    // Klavye açılıp kapandığını algılayıp Telegram tarzı tam ekran sabitleme tetikleyen script
+    const chatInput = document.getElementById('chatInput');
+    if (chatInput && window.innerWidth <= 900) {
+      chatInput.addEventListener('focus', () => {
+        document.body.classList.add('keyboard-open');
+        // Mesajlar en alta kaydırılsın
+        const chatMessages = document.getElementById('chatMessages');
+        if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
+      });
+      chatInput.addEventListener('blur', () => {
+        document.body.classList.remove('keyboard-open');
+      });
     }
-    window.addEventListener('resize', adjustChatHeight);
-    window.addEventListener('DOMContentLoaded', adjustChatHeight);
   </script>
 
   <script type="module" src="auth.js"></script>
