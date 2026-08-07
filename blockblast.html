@@ -98,7 +98,6 @@
       background: #252525;
       border-radius: 3px;
     }
-    /* Sağ Taraf Firebase Liderlik Listesi */
     .leaderboard-sidebar {
       background: #111;
       border: 1px solid #333;
@@ -132,7 +131,6 @@
       font-weight: bold;
       color: #53fc18;
     }
-
     #dragGhost {
       position: fixed;
       pointer-events: none;
@@ -165,7 +163,6 @@
       0% { transform: translate(0, 0) scale(1); opacity: 1; }
       100% { transform: translate(var(--tx), var(--ty)) scale(0.3); opacity: 0; }
     }
-
     @media (max-width: 768px) {
       .game-main-layout {
         flex-direction: column;
@@ -189,7 +186,6 @@
 
   <div class="game-main-layout">
     
-    <!-- Oyun Alanı -->
     <div class="game-wrapper" id="gameWrapper">
       <div class="score-container">
         <div class="score-board">Skor: <span id="currentScore">0</span></div>
@@ -209,7 +205,6 @@
       <div id="piecesContainer" class="pieces-container"></div>
     </div>
 
-    <!-- Sağ Taraf Liderlik Listesi -->
     <div class="leaderboard-sidebar">
       <h3>🏆 Canlı Sıralama</h3>
       <div id="leaderboardList">
@@ -225,11 +220,10 @@
     <p>© 2026 RUMİ7XL - Tüm Hakları Saklıdır.</p>
   </footer>
 
-  <!-- Firebase Modülü ve Oyun Mantığı -->
   <script type="module">
     import { db, auth } from "./auth.js";
-    import { collection, addifiable, getDocs, query, orderBy, limit, setDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { collection, getDocs, query, orderBy, limit, setDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
 
     const BOARD_SIZE = 8;
     let board = Array(BOARD_SIZE).fill(0).map(() => Array(BOARD_SIZE).fill(null));
@@ -253,24 +247,6 @@
     const dragGhost = document.getElementById("dragGhost");
     const leaderboardList = document.getElementById("leaderboardList");
 
-    // Kullanıcı oturumunu takip et ve Firestore'dan en yüksek skorunu çek
-    onAuthStateChanged(auth, async (user) => {
-      currentUser = user;
-      if (user) {
-        try {
-          const userDocRef = doc(db, "scores", user.uid);
-          const userDoc = await getDoc(userDocRef);
-          if (userDoc.exists()) {
-            highScore = userDoc.data().score || 0;
-          }
-        } catch (err) {
-          console.log("Skor çekilemedi:", err);
-        }
-      }
-      updateScoreUI();
-      fetchLeaderboard();
-    });
-
     function initBoardUI() {
       gridBoard.innerHTML = "";
       for (let r = 0; r < BOARD_SIZE; r++) {
@@ -283,6 +259,22 @@
         }
       }
     }
+
+    onAuthStateChanged(auth, async (user) => {
+      currentUser = user;
+      if (user) {
+        try {
+          const userDoc = await getDoc(doc(db, "scores", user.uid));
+          if (userDoc.exists()) {
+            highScore = userDoc.data().score || 0;
+          }
+        } catch (err) {
+          console.log("Skor çekilemedi:", err);
+        }
+      }
+      updateScoreUI();
+      fetchLeaderboard();
+    });
 
     async function saveScoreToFirebase() {
       if (!currentUser) return;
@@ -301,7 +293,6 @@
       }
     }
 
-    // Firestore'dan liderlik tablosunu çek
     async function fetchLeaderboard() {
       try {
         const q = query(collection(db, "scores"), orderBy("score", "desc"), limit(5));
@@ -322,7 +313,7 @@
           leaderboardList.innerHTML = `<div class="rank-item" style="color: #777; text-align: center;">Henüz skor yok</div>`;
         }
       } catch (err) {
-        console.log("Liderlik tablosu yüklenemedi:", err);
+        leaderboardList.innerHTML = `<div class="rank-item" style="color: #777; text-align: center;">Liste yüklenemedi</div>`;
       }
     }
 
