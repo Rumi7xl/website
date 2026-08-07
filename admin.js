@@ -231,29 +231,41 @@ async function loadAdminPanelData() {
   });
 }
 
-// SOLDAN SEÇİLEBİLEN İÇERİKLER YÖNETİM SEKMESİ ("Siteye Dön" butonunun üstüne yerleşir)
+// SOLDAN SEÇİLEBİLEN İÇERİKLER YÖNETİM SEKMESİ (DİĞER MENÜ ELEMANLARIYLA BİREBİR AYNI TASARIM)
 function injectAdminMenuTab() {
-  const linksContainer = document.querySelector(".admin-nav") || document.querySelector("aside") || document.querySelector("nav") || document.body;
+  const existingButtons = document.querySelectorAll("aside button, aside a, .admin-sidebar button, .admin-sidebar a, nav button, nav a");
+  
+  let sampleElement = null;
+  existingButtons.forEach(btn => {
+    if (btn.innerText && (btn.innerText.includes("İstatistikler") || btn.innerText.includes("Sohbet"))) {
+      sampleElement = btn;
+    }
+  });
 
   let tabBtn = document.getElementById("adminIceriklerMenuBtn");
   if (!tabBtn) {
-    tabBtn = document.createElement("a");
+    tabBtn = document.createElement(sampleElement ? sampleElement.tagName : "BUTTON");
     tabBtn.id = "adminIceriklerMenuBtn";
     tabBtn.innerHTML = "🎬 İçerikler Yönetimi";
-    tabBtn.style.cssText = `
-      display: flex; align-items: center; gap: 10px; background: #141414; color: #c084fc; 
-      border: 1px solid #333; padding: 12px 18px; border-radius: 12px; cursor: pointer; 
-      font-weight: bold; font-size: 0.95rem; margin: 10px 0; text-decoration: none; transition: all 0.2s;
-    `;
-    tabBtn.onmouseover = () => { tabBtn.style.background = "#1f1424"; tabBtn.style.borderColor = "#9146ff"; };
-    tabBtn.onmouseout = () => { tabBtn.style.background = "#141414"; tabBtn.style.borderColor = "#333"; };
     
-    // "Siteye Dön" butonunu bulup hemen üstüne ekleyelim
+    // Diğer admin butonlarının CSS sınıflarını ve stillerini birebir kopyalayalım
+    if (sampleElement) {
+      tabBtn.className = sampleElement.className;
+    } else {
+      tabBtn.style.cssText = `
+        display: block; width: 100%; background: #181818; color: #fff; border: 1px solid #333;
+        padding: 12px 16px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 0.95rem;
+        margin: 8px 0; text-align: left; text-decoration: none; transition: 0.2s; box-sizing: border-box;
+      `;
+    }
+
+    // "Siteye Dön" butonunu bulup hemen üstüne yerleştirelim
     const siteyeDonBtn = Array.from(document.querySelectorAll('a, button')).find(el => el.innerText.includes("Siteye Dön"));
     if (siteyeDonBtn && siteyeDonBtn.parentNode) {
       siteyeDonBtn.parentNode.insertBefore(tabBtn, siteyeDonBtn);
     } else {
-      linksContainer.appendChild(tabBtn);
+      const parentContainer = sampleElement ? sampleElement.parentNode : document.body;
+      parentContainer.appendChild(tabBtn);
     }
   }
 
@@ -264,7 +276,6 @@ function injectAdminMenuTab() {
 }
 
 async function renderIceriklerAdminScreen() {
-  // Ana içerik alanını (örneğin topluluk mesajlarının olduğu yer) bulup oraya yönetim panelini basalım
   const mainContentArea = document.querySelector(".admin-content") || document.querySelector("main") || document.body;
 
   let config = {
@@ -288,7 +299,6 @@ async function renderIceriklerAdminScreen() {
 
   adminYoutubeVideosCache = config.youtubeVideos || [];
 
-  // Ana alanı temizle ve içerikler yönetim formunu diğer sekmeler gibi tam boy yerleştir
   const wrapper = document.createElement("div");
   wrapper.id = "adminIceriklerScreen";
   wrapper.innerHTML = `
@@ -353,7 +363,6 @@ async function renderIceriklerAdminScreen() {
     </div>
   `;
 
-  // Mevcut admin ekranındaki panellerin yerine bunu basalım
   const targetArea = document.querySelector(".platforms") || document.querySelector("#adminChatList") || mainContentArea;
   targetArea.innerHTML = "";
   targetArea.appendChild(wrapper);
