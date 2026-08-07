@@ -17,6 +17,9 @@ const db = getFirestore(app);
 
 const ADMIN_EMAIL = "rumi7xl@gmail.com";
 
+let adminMutedUsersCache = [];
+let adminMutedInterval = null;
+
 onAuthStateChanged(auth, (user) => {
   if (!user || user.email !== ADMIN_EMAIL) {
     showToast("Yetkisiz giriş!", "error");
@@ -162,7 +165,7 @@ async function loadAdminAnnouncements() {
   }
 }
 
-// TOPLULUK MESAJLARI VE SUSTURULANLAR LİSTESİ
+// TOPLULUK MESAJLARI VE CANLI SAYACLI MUTE LİSTESİ
 async function loadAdminMessages() {
   const chatContainer = document.getElementById("adminChatList");
   if (!chatContainer) return;
@@ -170,90 +173,155 @@ async function loadAdminMessages() {
   chatContainer.innerHTML = "<p style='color:#aaa;'>Yükleniyor...</p>";
 
   try {
-    // 1. Susturulan kullanıcıları çek
+    // 1. Kullanıcıları çek ve cache'e at
     const usersSnap = await getDocs(collection(db, "users"));
-    let mutedUsersHtml = "";
-    let activeMutesCount = 0;
+    adminMutedUsersCache = [];
 
     usersSnap.forEach((uDoc) => {
       const uData = uDoc.data();
       const uid = uDoc.id;
       if (uData.muteUntil && uData.muteUntil > Date.now()) {
-        activeMutesCount++;
-        const remainingMs = uData.muteUntil - Date.now();
-        const min = Math.floor(remainingMs / 60000);
-        const sec = Math.floor((remainingMs % 60000) / 1000);
-        const uName = uData.username || "Bilinmeyen Kullanıcı";
-
-        mutedUsersHtml += `
-          <div style="display: flex; align-items: center; justify-content: space-between; background: #1f1424; padding: 10px 14px; border-radius: 8px; margin-bottom: 6px; border: 1px solid #9146ff55;">
-            <div>
-              <strong style="color: #c084fc;">${uName}</strong> 
-              <span style="color: #aaa; font-size: 0.85rem; margin-left: 10px;">⏳ Kalan: ${min} dk ${sec} sn</span>
-            </div>
-            <button style="background: #9146ff; color: #fff; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: bold;" onclick="window.removeMute('${uid}', '${uName}')">Mute Kaldır</button>
-          </div>
-        `;
+        adminMutedUsersCache.push({
+          uid,
+          username: uData.username || "Bilinmeyen Kullanıcı",
+          muteUntil: uData.muteUntil
+        });
       }
     });
 
-    let mutedSection = `
-      <div style="background: #151515; border: 1px solid #333; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
-        <h4 style="color: #c084fc; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
-          🔇 Susturulan Kullanıcılar (${activeMutesCount})
-        </h4>
-        ${activeMutesCount > 0 ? mutedUsersHtml : '<p style="color: #777; font-size: 0.85rem;">Şu an susturulmuş aktif bir kullanıcı yok.</p>'}
-      </div>
-    `;
+    renderAdminMutedSection();
+    await renderAdminMessagesList();
 
-    // 2. Mesajları çek
-    const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
-    const snap = await getDocs(q);
-
-    let messagesHtml = `
-      <div style="display: flex; gap: 10px; margin-bottom: 15px; background: #181818; padding: 12px; border-radius: 10px; align-items: center; border: 1px solid #333;">
-        <input type="checkbox" id="selectAllMsgs" style="cursor: pointer; width: 18px; height: 18px;" onclick="window.toggleSelectAll(this)">
-        <label for="selectAllMsgs" style="cursor: pointer; font-size: 0.9rem; color: #ccc; flex: 1;">Hepsini Seç</label>
-        <button class="delete-btn" style="padding: 6px 14px; font-size: 0.85rem;" onclick="window.deleteSelectedMessages()">Seçilenleri Sil</button>
-      </div>
-    `;
-
-    if (snap.empty) {
-      messagesHtml += "<p style='color:#aaa;'>Henüz toplulukta atılmış bir mesaj yok.</p>";
-    } else {
-      snap.forEach((docSnap) => {
-        const data = docSnap.data();
-        const id = docSnap.id;
-        let dateStr = "";
-        if (data.createdAt) {
-          const d = new Date(data.createdAt);
-          dateStr = d.toLocaleDateString("tr-TR") + " - " + d.toLocaleTimeString("tr-TR", {hour: '2-digit', minute:'2-digit'});
-        }
-        const username = data.username || "Anonim";
-        const messageText = data.text || "";
-        const uid = data.uid || "";
-
-        messagesHtml += `
-          <div class="mod-item" style="display: flex; align-items: center; gap: 12px; background: #141414; padding: 12px; border-radius: 10px; margin-bottom: 8px; border: 1px solid #222;">
-            <input type="checkbox" class="msg-checkbox" value="${id}" style="cursor: pointer; width: 16px; height: 16px;">
-            <div class="text" style="flex: 1;">
-              <strong style="color: #9146ff; cursor: pointer;" title="Kullanıcı Menüsü İçin Tıkla" onclick="window.openUserModeration('${uid}', '${username}')">${username} ⚙️:</strong> ${messageText}
-              <br><small style="color: #777;">📅 ${dateStr}</small>
-            </div>
-            <button class="delete-btn" style="padding: 6px 12px; font-size: 0.85rem;" onclick="window.confirmDeleteMessage('${id}')">Sil</button>
-          </div>
-        `;
-      });
-    }
-
-    chatContainer.innerHTML = mutedSection + messagesHtml;
+    // Admin panelinde sayaçların saniye saniye azalması için interval başlat
+    if (adminMutedInterval) clearInterval(adminMutedInterval);
+    adminMutedInterval = setInterval(() => {
+      updateAdminMutedCountdowns();
+    }, 1000);
 
   } catch (err) {
     chatContainer.innerHTML = "<p style='color:#ef4444;'>Yüklenirken hata oluştu.</p>";
   }
 }
 
-// Mute Kaldırma Fonksiyonu (Süreyi tamamen siler)
+// Susturulanlar bölümünü çizen fonksiyon
+function renderAdminMutedSection() {
+  let sectionContainer = document.getElementById("adminMutedSectionContainer");
+  if (!sectionContainer) {
+    sectionContainer = document.createElement("div");
+    sectionContainer.id = "adminMutedSectionContainer";
+    const chatContainer = document.getElementById("adminChatList");
+    if (chatContainer) chatContainer.prepend(sectionContainer);
+  }
+
+  const activeMutesCount = adminMutedUsersCache.length;
+  let mutedUsersHtml = "";
+
+  if (activeMutesCount > 0) {
+    adminMutedUsersCache.forEach(user => {
+      const remainingMs = user.muteUntil - Date.now();
+      const min = Math.max(0, Math.floor(remainingMs / 60000));
+      const sec = Math.max(0, Math.floor((remainingMs % 60000) / 1000));
+      const timeStr = `${min}:${sec < 10 ? '0' : ''}${sec}`;
+
+      mutedUsersHtml += `
+        <div id="admin-mute-row-${user.uid}" style="display: flex; align-items: center; justify-content: space-between; background: #1f1424; padding: 10px 14px; border-radius: 8px; margin-bottom: 6px; border: 1px solid #9146ff55;">
+          <div>
+            <strong style="color: #c084fc;">${user.username}</strong> 
+            <span class="admin-mute-timer" data-uid="${user.uid}" style="color: #aaa; font-size: 0.85rem; margin-left: 10px;">⏳ Kalan: ${timeStr}</span>
+          </div>
+          <button style="background: #9146ff; color: #fff; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: bold;" onclick="window.removeMute('${user.uid}', '${user.username}')">Mute Kaldır</button>
+        </div>
+      `;
+    });
+  }
+
+  sectionContainer.innerHTML = `
+    <div style="background: #151515; border: 1px solid #333; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
+      <h4 style="color: #c084fc; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+        🔇 Susturulan Kullanıcılar (<span id="adminMuteCountText">${activeMutesCount}</span>)
+      </h4>
+      <div id="adminMutedListInner">
+        ${activeMutesCount > 0 ? mutedUsersHtml : '<p style="color: #777; font-size: 0.85rem;">Şu an susturulmuş aktif bir kullanıcı yok.</p>'}
+      </div>
+    </div>
+  `;
+}
+
+// Saniyede bir sadece sayaç metinlerini güncelleyen hafif fonksiyon (sayfa yenilemeden)
+function updateAdminMutedCountdowns() {
+  let needsReload = false;
+  adminMutedUsersCache.forEach(user => {
+    const remainingMs = user.muteUntil - Date.now();
+    const timerEl = document.querySelector(`.admin-mute-timer[data-uid="${user.uid}"]`);
+    if (timerEl) {
+      if (remainingMs > 0) {
+        const min = Math.floor(remainingMs / 60000);
+        const sec = Math.floor((remainingMs % 60000) / 1000);
+        timerEl.innerText = `⏳ Kalan: ${min}:${sec < 10 ? '0' : ''}${sec}`;
+      } else {
+        needsReload = true;
+      }
+    }
+  });
+
+  if (needsReload) {
+    loadAdminMessages(); // Süresi biten varsa listeyi güncelle
+  }
+}
+
+// Mesajlar listesini çizen fonksiyon
+async function renderAdminMessagesList() {
+  let messagesContainer = document.getElementById("adminMessagesListContainer");
+  if (!messagesContainer) {
+    messagesContainer = document.createElement("div");
+    messagesContainer.id = "adminMessagesListContainer";
+    const chatContainer = document.getElementById("adminChatList");
+    if (chatContainer) chatContainer.appendChild(messagesContainer);
+  }
+
+  const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
+  const snap = await getDocs(q);
+
+  let messagesHtml = `
+    <div style="display: flex; gap: 10px; margin-bottom: 15px; background: #181818; padding: 12px; border-radius: 10px; align-items: center; border: 1px solid #333;">
+      <input type="checkbox" id="selectAllMsgs" style="cursor: pointer; width: 18px; height: 18px;" onclick="window.toggleSelectAll(this)">
+      <label for="selectAllMsgs" style="cursor: pointer; font-size: 0.9rem; color: #ccc; flex: 1;">Hepsini Seç</label>
+      <button class="delete-btn" style="padding: 6px 14px; font-size: 0.85rem;" onclick="window.deleteSelectedMessages()">Seçilenleri Sil</button>
+    </div>
+  `;
+
+  if (snap.empty) {
+    messagesHtml += "<p style='color:#aaa;'>Henüz toplulukta atılmış bir mesaj yok.</p>";
+  } else {
+    snap.forEach((docSnap) => {
+      const data = docSnap.data();
+      const id = docSnap.id;
+      let dateStr = "";
+      if (data.createdAt) {
+        const d = new Date(data.createdAt);
+        dateStr = d.toLocaleDateString("tr-TR") + " - " + d.toLocaleTimeString("tr-TR", {hour: '2-digit', minute:'2-digit'});
+      }
+      const username = data.username || "Anonim";
+      const messageText = data.text || "";
+      const uid = data.uid || "";
+
+      messagesHtml += `
+        <div class="mod-item" style="display: flex; align-items: center; gap: 12px; background: #141414; padding: 12px; border-radius: 10px; margin-bottom: 8px; border: 1px solid #222;">
+          <input type="checkbox" class="msg-checkbox" value="${id}" style="cursor: pointer; width: 16px; height: 16px;">
+          <div class="text" style="flex: 1;">
+            <strong style="color: #9146ff; cursor: pointer;" title="Kullanıcı Menüsü İçin Tıkla" onclick="window.openUserModeration('${uid}', '${username}')">${username} ⚙️:</strong> ${messageText}
+            <br><small style="color: #777;">📅 ${dateStr}</small>
+          </div>
+          <button class="delete-btn" style="padding: 6px 12px; font-size: 0.85rem;" onclick="window.confirmDeleteMessage('${id}')">Sil</button>
+        </div>
+      `;
+    });
+  }
+
+  messagesContainer.innerHTML = messagesHtml;
+}
+
+// Mute Kaldırma Fonksiyonu
 window.removeMute = async function(uid, username) {
   try {
     await setDoc(doc(db, "users", uid), { muteUntil: null }, { merge: true });
@@ -391,7 +459,6 @@ window.openUserModeration = function(uid, username) {
 
       const muteUntil = Date.now() + (minutes * 60 * 1000);
       try {
-        // Kullanıcı adını ve mute süresini kaydediyoruz ki panelde görünsün
         await setDoc(doc(db, "users", uid), { muteUntil: muteUntil, username: username }, { merge: true });
         showToast(`${username} ${minutes} dakika süreyle susturuldu! 🔇`);
         loadAdminMessages();
