@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>RUMİ7XL - İçerikler</title>
   <link rel="stylesheet" href="style.css?v=1.1">
   <link rel="icon" href="favicon.png?v=2">
@@ -80,7 +80,7 @@
       <a id="youtubeCardBtn" href="https://www.youtube.com/@Rumi7xl" target="_blank">VİDEOLARA GİT &gt;</a>
     </div>
 
-    <!-- 4. KÜP: TİKTOK İÇERİKLERİ (ID EKLENDİ) -->
+    <!-- 4. KÜP: TİKTOK İÇERİKLERİ -->
     <div class="box tiktok-card" style="display: flex; flex-direction: column; justify-content: space-between;">
       <div>
         <div class="platform-logo tiktok" style="border: 2px solid #fff; box-shadow: 0 0 20px rgba(255,255,255,0.3); width: 80px; height: 80px; background: #161616; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
@@ -130,7 +130,7 @@
 
   <div id="siteToast"></div>
 
-  <!-- VERİ ÇEKME SCRİPTİ (TİKTOK EKLENDİ) -->
+  <!-- VERİ ÇEKME SCRİPTİ -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
     import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
@@ -153,7 +153,6 @@
         if (docSnap.exists()) {
           const data = docSnap.data();
 
-          // 1. Canlı Durum Kartı
           const liveText = data.isLive ? "<span style='color:#22c55e; font-weight:bold; font-size:15px;'>YAYINDA!</span>" : "<span style='color:#ef4444; font-weight:bold;'>YAYINDA DEĞİL</span>";
           document.getElementById("liveCardBody").innerHTML = `
             ${liveText}
@@ -164,13 +163,11 @@
             document.getElementById("liveCardBtn").href = data.kickLink;
           }
 
-          // 2. Kick Kanalı Kartı
           document.getElementById("kickCardBody").innerText = data.kickDesc || "Açıklama girilmemiş.";
           if (data.kickLink) {
             document.getElementById("kickCardBtn").href = data.kickLink;
           }
 
-          // 3. YouTube Kartı
           const ytBody = document.getElementById("youtubeCardBody");
           if (data.youtubeVideos && data.youtubeVideos.length > 0) {
             let ytHtml = "";
@@ -185,7 +182,6 @@
             document.getElementById("youtubeCardBtn").href = data.youtubeVideos[0].url;
           }
 
-          // 4. TikTok Kartı (GÜNCELLENEN KISIM)
           const tiktokBody = document.getElementById("tiktokCardBody");
           if (tiktokBody) {
             tiktokBody.innerText = data.tiktokDesc || "En komik kesitler ve kısa videolar TikTok adresimde!";
@@ -260,7 +256,6 @@
   }
   </style>
 
-  <!-- SCRIPT BAĞLANTILARI -->
   <script type="module" src="auth.js?v=1.1"></script>
 </body>
 </html>
