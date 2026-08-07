@@ -17,7 +17,7 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 // 👑 GÜVENLİK KİLİDİ: BURAYA KENDİ YÖNETİCİ E-POSTANI YAZ
-const ADMIN_EMAIL = "senin.kendi.mailin@gmail.com";
+const ADMIN_EMAIL = "rumi7xl@gmail.com";
 
 // 1. YETKİ KONTROLÜ (Giren kişi patron mu?)
 onAuthStateChanged(auth, (user) => {
