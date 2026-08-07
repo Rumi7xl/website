@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>RUMİ7XL - İçerikler[cite: 10]</title>
+  <title>RUMİ7XL - İçerikler</title>
   <link rel="icon" href="favicon.png?v=2">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
@@ -12,20 +12,18 @@
 </head>
 <body style="background: #0b0b0b; color: #fff; font-family: sans-serif; margin: 0; padding: 0; box-sizing: border-box;">
 
-  <header class="navbar">
-    <a href="/" class="logo">RUMİ7XL</a>
-    <nav class="nav-links">
+  <nav class="navbar">
+    <a href="index.html" class="logo">RUMİ7XL</a>
+    <div class="nav-links">
       <a href="index.html">Ana Sayfa</a>
       <a href="topluluk.html">Topluluk</a>
       <a href="oneriler.html">Öneriler</a>
       <a href="icerikler.html" class="active">İçerikler</a>
+      <a href="oyunlar.html">🎮 Oyunlar</a>
       <a href="duyurular.html">Duyurular</a>
-    </nav>
-    <div class="account-box">
-      <a href="#" class="login-btn">👤 Giriş Yap</a>
-      <a href="#" class="register-btn">✨ Kayıt Ol</a>
     </div>
-  </header>
+    <div class="account-box"></div>
+  </nav>
 
   <section class="hero" style="min-height: auto; padding: 40px 20px 20px; text-align: center;">
     <div class="hero-content">
@@ -94,6 +92,7 @@
     <p>© 2026 RUMİ7XL - Tüm Hakları Saklıdır.</p>
   </footer>
 
+  <!-- Giriş / Kayıt Modal Sistemi -->
   <div class="account-modal" id="accountModal">
     <div class="account-window">
       <button class="close-account" onclick="closeAccount()">✕</button>
@@ -119,6 +118,34 @@
   </div>
 
   <div id="siteToast"></div>
+
+  <!-- Profil Fotoğrafı Modal Sistemi -->
+  <div id="photoModal" class="account-modal">
+    <div class="account-window">
+      <button class="close-account" onclick="document.getElementById('photoModal').style.display='none'">✕</button>
+      <h2 style="color:#9146ff; margin-bottom:15px; font-size:20px; text-align:center;">Profil Fotoğrafı Değiştir</h2>
+      <form id="photoSettingsForm" class="account-form">
+        <label for="photoFileInput" style="border: 2px dashed #333; padding: 20px; text-align: center; border-radius: 15px; cursor: pointer; display: block; background: #181818;">
+          <span id="uploadLabelText">📁 Galeriden Resim Seç</span>
+          <input type="file" id="photoFileInput" accept="image/*" style="display:none;">
+          <img id="photoPreview" style="display:none; width:80px; height:80px; border-radius:50%; margin: 10px auto 0; object-fit:cover; border:2px solid #9146ff;">
+        </label>
+        <button type="submit" class="account-submit">Yükle ve Kaydet</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Şifre Değiştir Modal Sistemi -->
+  <div id="passwordModal" class="account-modal">
+    <div class="account-window">
+      <button class="close-account" onclick="document.getElementById('passwordModal').style.display='none'">✕</button>
+      <h2 style="color:#9146ff; margin-bottom:15px; font-size:20px; text-align:center;">Şifre Değiştir</h2>
+      <form id="passwordSettingsForm" class="account-form">
+        <input type="password" name="changePassword" placeholder="Yeni Şifreniz" required>
+        <button type="submit" class="account-submit">Şifreyi Güncelle</button>
+      </form>
+    </div>
+  </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
