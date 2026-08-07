@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
-import { getFirestore, collection, addDoc, updateDoc, doc, serverTimestamp, getDocs, deleteDoc, query, orderBy, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, updateDoc, doc, serverTimestamp, getDocs, deleteDoc, query, orderBy, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCiuXtHu3J9Va46a4KiETO2JrSn5um2KoQ",
@@ -27,7 +27,7 @@ onAuthStateChanged(auth, (user) => {
   } else {
     loadStats();
     loadAdminAnnouncements();
-    loadAdminMessages();
+    loadAdminPanelData();
   }
 });
 
@@ -165,15 +165,76 @@ async function loadAdminAnnouncements() {
   }
 }
 
-// TOPLULUK MESAJLARI VE CANLI SAYACLI MUTE LİSTESİ
-async function loadAdminMessages() {
+// ANA PANEL YÖNETİMİ (Susturulanlar + Canlı Mesaj Dinleyicisi)
+async function loadAdminPanelData() {
   const chatContainer = document.getElementById("adminChatList");
   if (!chatContainer) return;
 
-  chatContainer.innerHTML = "<p style='color:#aaa;'>Yükleniyor...</p>";
+  chatContainer.innerHTML = `
+    <div id="adminMutedSectionContainer"></div>
+    <div id="adminMessagesListContainer"><p style='color:#aaa;'>Mesajlar yükleniyor...</p></div>
+  `;
 
+  // 1. Susturulan kullanıcıları yükle ve saniye sayacını çalıştır
+  await refreshAdminMutedUsers();
+  if (adminMutedInterval) clearInterval(adminMutedInterval);
+  adminMutedInterval = setInterval(() => {
+    updateAdminMutedCountdowns();
+  }, 1000);
+
+  // 2. Mesajları CANLI (onSnapshot ile) dinle ki anında düşsün
+  const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
+  onSnapshot(q, (snapshot) => {
+    const messagesContainer = document.getElementById("adminMessagesListContainer");
+    if (!messagesContainer) return;
+
+    let messagesHtml = `
+      <div style="display: flex; gap: 10px; margin-bottom: 15px; background: #181818; padding: 12px; border-radius: 10px; align-items: center; border: 1px solid #333;">
+        <input type="checkbox" id="selectAllMsgs" style="cursor: pointer; width: 18px; height: 18px;" onclick="window.toggleSelectAll(this)">
+        <label for="selectAllMsgs" style="cursor: pointer; font-size: 0.9rem; color: #ccc; flex: 1;">Hepsini Seç</label>
+        <button class="delete-btn" style="padding: 6px 14px; font-size: 0.85rem;" onclick="window.deleteSelectedMessages()">Seçilenleri Sil</button>
+      </div>
+    `;
+
+    if (snapshot.empty) {
+      messagesHtml += "<p style='color:#aaa;'>Henüz toplulukta atılmış bir mesaj yok.</p>";
+    } else {
+      // Admin panelinde en yeni mesajlar üstte olsun diye ters çeviriyoruz
+      const docsArr = [];
+      snapshot.forEach(docSnap => docsArr.push({ id: docSnap.id, ...docSnap.data() }));
+      docsArr.reverse();
+
+      docsArr.forEach((data) => {
+        const id = data.id;
+        let dateStr = "";
+        if (data.createdAt) {
+          const d = new Date(data.createdAt);
+          dateStr = d.toLocaleDateString("tr-TR") + " - " + d.toLocaleTimeString("tr-TR", {hour: '2-digit', minute:'2-digit'});
+        }
+        const username = data.username || "Anonim";
+        const messageText = data.text || "";
+        const uid = data.uid || "";
+
+        messagesHtml += `
+          <div class="mod-item" style="display: flex; align-items: center; gap: 12px; background: #141414; padding: 12px; border-radius: 10px; margin-bottom: 8px; border: 1px solid #222;">
+            <input type="checkbox" class="msg-checkbox" value="${id}" style="cursor: pointer; width: 16px; height: 16px;">
+            <div class="text" style="flex: 1;">
+              <strong style="color: #9146ff; cursor: pointer;" title="Kullanıcı Menüsü İçin Tıkla" onclick="window.openUserModeration('${uid}', '${username}')">${username} ⚙️:</strong> ${messageText}
+              <br><small style="color: #777;">📅 ${dateStr}</small>
+            </div>
+            <button class="delete-btn" style="padding: 6px 12px; font-size: 0.85rem;" onclick="window.confirmDeleteMessage('${id}')">Sil</button>
+          </div>
+        `;
+      });
+    }
+
+    messagesContainer.innerHTML = messagesHtml;
+  });
+}
+
+// Susturulan kullanıcıları veritabanından çekip cache'leyen fonksiyon
+async function refreshAdminMutedUsers() {
   try {
-    // 1. Kullanıcıları çek ve cache'e at
     const usersSnap = await getDocs(collection(db, "users"));
     adminMutedUsersCache = [];
 
@@ -190,28 +251,13 @@ async function loadAdminMessages() {
     });
 
     renderAdminMutedSection();
-    await renderAdminMessagesList();
-
-    // Admin panelinde sayaçların saniye saniye azalması için interval başlat
-    if (adminMutedInterval) clearInterval(adminMutedInterval);
-    adminMutedInterval = setInterval(() => {
-      updateAdminMutedCountdowns();
-    }, 1000);
-
-  } catch (err) {
-    chatContainer.innerHTML = "<p style='color:#ef4444;'>Yüklenirken hata oluştu.</p>";
-  }
+  } catch (e) {}
 }
 
-// Susturulanlar bölümünü çizen fonksiyon
+// Susturulanlar kutusunu güncelleyen fonksiyon
 function renderAdminMutedSection() {
-  let sectionContainer = document.getElementById("adminMutedSectionContainer");
-  if (!sectionContainer) {
-    sectionContainer = document.createElement("div");
-    sectionContainer.id = "adminMutedSectionContainer";
-    const chatContainer = document.getElementById("adminChatList");
-    if (chatContainer) chatContainer.prepend(sectionContainer);
-  }
+  const sectionContainer = document.getElementById("adminMutedSectionContainer");
+  if (!sectionContainer) return;
 
   const activeMutesCount = adminMutedUsersCache.length;
   let mutedUsersHtml = "";
@@ -247,9 +293,9 @@ function renderAdminMutedSection() {
   `;
 }
 
-// Saniyede bir sadece sayaç metinlerini güncelleyen hafif fonksiyon (sayfa yenilemeden)
+// Sayaçları saniye saniye düşüren fonksiyon
 function updateAdminMutedCountdowns() {
-  let needsReload = false;
+  let needsRefresh = false;
   adminMutedUsersCache.forEach(user => {
     const remainingMs = user.muteUntil - Date.now();
     const timerEl = document.querySelector(`.admin-mute-timer[data-uid="${user.uid}"]`);
@@ -259,66 +305,14 @@ function updateAdminMutedCountdowns() {
         const sec = Math.floor((remainingMs % 60000) / 1000);
         timerEl.innerText = `⏳ Kalan: ${min}:${sec < 10 ? '0' : ''}${sec}`;
       } else {
-        needsReload = true;
+        needsRefresh = true;
       }
     }
   });
 
-  if (needsReload) {
-    loadAdminMessages(); // Süresi biten varsa listeyi güncelle
+  if (needsRefresh) {
+    refreshAdminMutedUsers();
   }
-}
-
-// Mesajlar listesini çizen fonksiyon
-async function renderAdminMessagesList() {
-  let messagesContainer = document.getElementById("adminMessagesListContainer");
-  if (!messagesContainer) {
-    messagesContainer = document.createElement("div");
-    messagesContainer.id = "adminMessagesListContainer";
-    const chatContainer = document.getElementById("adminChatList");
-    if (chatContainer) chatContainer.appendChild(messagesContainer);
-  }
-
-  const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
-  const snap = await getDocs(q);
-
-  let messagesHtml = `
-    <div style="display: flex; gap: 10px; margin-bottom: 15px; background: #181818; padding: 12px; border-radius: 10px; align-items: center; border: 1px solid #333;">
-      <input type="checkbox" id="selectAllMsgs" style="cursor: pointer; width: 18px; height: 18px;" onclick="window.toggleSelectAll(this)">
-      <label for="selectAllMsgs" style="cursor: pointer; font-size: 0.9rem; color: #ccc; flex: 1;">Hepsini Seç</label>
-      <button class="delete-btn" style="padding: 6px 14px; font-size: 0.85rem;" onclick="window.deleteSelectedMessages()">Seçilenleri Sil</button>
-    </div>
-  `;
-
-  if (snap.empty) {
-    messagesHtml += "<p style='color:#aaa;'>Henüz toplulukta atılmış bir mesaj yok.</p>";
-  } else {
-    snap.forEach((docSnap) => {
-      const data = docSnap.data();
-      const id = docSnap.id;
-      let dateStr = "";
-      if (data.createdAt) {
-        const d = new Date(data.createdAt);
-        dateStr = d.toLocaleDateString("tr-TR") + " - " + d.toLocaleTimeString("tr-TR", {hour: '2-digit', minute:'2-digit'});
-      }
-      const username = data.username || "Anonim";
-      const messageText = data.text || "";
-      const uid = data.uid || "";
-
-      messagesHtml += `
-        <div class="mod-item" style="display: flex; align-items: center; gap: 12px; background: #141414; padding: 12px; border-radius: 10px; margin-bottom: 8px; border: 1px solid #222;">
-          <input type="checkbox" class="msg-checkbox" value="${id}" style="cursor: pointer; width: 16px; height: 16px;">
-          <div class="text" style="flex: 1;">
-            <strong style="color: #9146ff; cursor: pointer;" title="Kullanıcı Menüsü İçin Tıkla" onclick="window.openUserModeration('${uid}', '${username}')">${username} ⚙️:</strong> ${messageText}
-            <br><small style="color: #777;">📅 ${dateStr}</small>
-          </div>
-          <button class="delete-btn" style="padding: 6px 12px; font-size: 0.85rem;" onclick="window.confirmDeleteMessage('${id}')">Sil</button>
-        </div>
-      `;
-    });
-  }
-
-  messagesContainer.innerHTML = messagesHtml;
 }
 
 // Mute Kaldırma Fonksiyonu
@@ -326,7 +320,7 @@ window.removeMute = async function(uid, username) {
   try {
     await setDoc(doc(db, "users", uid), { muteUntil: null }, { merge: true });
     showToast(`${username} adlı kullanıcının mutesi kaldırıldı! ✨`);
-    loadAdminMessages();
+    refreshAdminMutedUsers();
   } catch (e) {
     showToast("Mute kaldırılırken hata oluştu!", "error");
   }
@@ -358,7 +352,6 @@ window.deleteSelectedMessages = async function() {
         await deleteDoc(doc(db, "messages", cb.value));
       }
       showToast("Seçilen mesajlar silindi!");
-      loadAdminMessages();
     } catch (e) {
       showToast("Silinirken hata oluştu!", "error");
     }
@@ -413,7 +406,6 @@ window.openUserModeration = function(uid, username) {
         }
       }
       showToast(`${username} kullanıcısının ${count} mesajı silindi!`);
-      loadAdminMessages();
     } catch (e) {
       showToast("Hata oluştu!", "error");
     }
@@ -461,7 +453,7 @@ window.openUserModeration = function(uid, username) {
       try {
         await setDoc(doc(db, "users", uid), { muteUntil: muteUntil, username: username }, { merge: true });
         showToast(`${username} ${minutes} dakika süreyle susturuldu! 🔇`);
-        loadAdminMessages();
+        refreshAdminMutedUsers();
       } catch (e) {
         showToast("Mute atılırken hata oluştu!", "error");
       }
@@ -507,7 +499,6 @@ window.confirmDeleteMessage = function(id) {
     try {
       await deleteDoc(doc(db, "messages", id));
       showToast("Mesaj silindi.");
-      loadAdminMessages();
     } catch (e) { showToast("Mesaj silinirken hata oluştu!", "error"); }
   };
   noBtn.onclick = () => { modal.style.display = "none"; };
