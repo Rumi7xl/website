@@ -808,12 +808,12 @@ footer{
   .account-box {
     margin-top: 5px;
   }
-  /* Klavye açılınca zoom yapmasını önleme */
+  /* Klavye açılınca zoom yapmasını önleme ve font optimizasyonu */
   .chat-input-area input {
     font-size: 16px !important;
   }
   
-  /* TELEGRAM/WHATSAPP TARZI KLAVYEYE YAPIŞAN SOHBET EKRANI */
+  /* MOBİL KLAVYE AÇILINCA SOHBETİN EKRANI KAPLAMASI VE YAPIŞMASI */
   body.keyboard-open footer {
     display: none !important;
   }
