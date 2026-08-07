@@ -29,8 +29,9 @@ const sendBtn = document.getElementById("sendChatBtn");
 const chatMessages = document.getElementById("chatMessages");
 
 let currentUserObj = null;
+let isFirstLoad = true;
 
-// SAYFA YÜKLENDİĞİ AN İNPUTA ODAKLAN (MOUSE GEREKMEDEN YAZMA)
+// SAYFA İLK AÇILDIĞINDA ANINDA YAZI KUTUSUNA ODAKLAN
 window.addEventListener("DOMContentLoaded", () => {
   if (chatInput) chatInput.focus();
 });
@@ -69,7 +70,6 @@ async function sendMessage() {
       createdAt: Date.now()
     });
 
-    // Mesaj attıktan sonra imleç kutuda kalmaya devam etsin
     if (chatInput) chatInput.focus();
 
   } catch (e) {
@@ -84,46 +84,53 @@ if (chatInput) {
   };
 }
 
-// CANLI MESAJLARI DİNLEME (SAĞ / SOL MANTIĞI)
+// CANLI MESAJLARI DİNLEME
 const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
 
 onSnapshot(q, (snapshot) => {
   if (!chatMessages) return;
-  chatMessages.innerHTML = "";
+  
+  // Ekran gidip gelmesin diye mesajları hafızada biriktirip tek hamlede basıyoruz
+  const fragment = document.createDocumentFragment();
 
   if (snapshot.empty) {
     chatMessages.innerHTML = `<p style="color:#aaa; text-align:center;">Sohbet odası henüz boş. İlk mesajı sen at! 👋</p>`;
-    if (chatInput) chatInput.focus();
-    return;
+  } else {
+    snapshot.forEach((docSnap) => {
+      const data = docSnap.data();
+      const timeStr = getTimeStr(data.createdAt);
+      
+      const isMyMsg = currentUserObj && currentUserObj.uid === data.uid;
+
+      const msgDiv = document.createElement("div");
+      msgDiv.className = `chat-msg ${isMyMsg ? 'my-msg' : 'other-msg'}`;
+
+      msgDiv.innerHTML = `
+        <img src="${data.photoURL}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(data.username)}&background=9146ff&color=fff'">
+        <div class="msg-bubble">
+          <div class="msg-header">
+            <span class="msg-username">${data.username}</span>
+            <span class="msg-time">${timeStr}</span>
+          </div>
+          <div>${escapeHtml(data.text)}</div>
+        </div>
+      `;
+
+      fragment.appendChild(msgDiv);
+    });
+
+    chatMessages.innerHTML = "";
+    chatMessages.appendChild(fragment);
   }
 
-  snapshot.forEach((docSnap) => {
-    const data = docSnap.data();
-    const timeStr = getTimeStr(data.createdAt);
-    
-    // Mesaj benim mi başkasının mı?
-    const isMyMsg = currentUserObj && currentUserObj.uid === data.uid;
-
-    const msgDiv = document.createElement("div");
-    msgDiv.className = `chat-msg ${isMyMsg ? 'my-msg' : 'other-msg'}`;
-
-    msgDiv.innerHTML = `
-      <img src="${data.photoURL}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(data.username)}&background=9146ff&color=fff'">
-      <div class="msg-bubble">
-        <div class="msg-header">
-          <span class="msg-username">${data.username}</span>
-          <span class="msg-time">${timeStr}</span>
-        </div>
-        <div>${escapeHtml(data.text)}</div>
-      </div>
-    `;
-
-    chatMessages.appendChild(msgDiv);
-  });
-
-  // Otomatik en aşağı kaydır ve odaklan
+  // Otomatik aşağı kaydır
   chatMessages.scrollTop = chatMessages.scrollHeight;
-  if (chatInput) chatInput.focus();
+
+  // Sadece ilk yüklemede tıklamaya gerek kalmadan odaklan
+  if (isFirstLoad) {
+    if (chatInput) chatInput.focus();
+    isFirstLoad = false;
+  }
 });
 
 function getTimeStr(timestamp) {
