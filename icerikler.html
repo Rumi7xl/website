@@ -47,7 +47,7 @@
       <div id="liveCardBody" class="card-body-content" style="color: #bbb; font-size: 14px; line-height: 1.6; margin-bottom: 25px; min-height: 80px; display: flex; flex-direction: column; justify-content: center;">
         Yükleniyor...
       </div>
-      <a id="liveCardBtn" href="https://kick.com/rumi7xl" target="_blank">KICK'E GİT &gt;</a>
+      <a id="liveCardBtn" href="#" target="_blank">KICK'E GİT &gt;</a>
     </div>
 
     <!-- 2. KÜP: KICK YAYINLARI -->
@@ -59,7 +59,7 @@
       <div id="kickCardBody" class="card-body-content" style="color: #bbb; font-size: 14px; line-height: 1.6; margin-bottom: 25px; min-height: 80px; display: flex; flex-direction: column; justify-content: center; white-space: pre-line; text-align: left;">
         Yükleniyor...
       </div>
-      <a id="kickCardBtn" href="https://kick.com/rumi7xl" target="_blank">KANALA GİT &gt;</a>
+      <a id="kickCardBtn" href="#" target="_blank">KANALA GİT &gt;</a>
     </div>
 
     <!-- 3. KÜP: YOUTUBE VİDEOLARI -->
@@ -83,7 +83,7 @@
       <div id="tiktokCardBody" class="card-body-content" style="color: #bbb; font-size: 14px; line-height: 1.6; margin-bottom: 25px; min-height: 80px; display: flex; flex-direction: column; justify-content: center;">
         En komik kesitler ve kısa videolar TikTok adresimde!
       </div>
-      <a id="tiktokCardBtn" href="https://www.tiktok.com/@rumi7xl" target="_blank">TIKTOK'A GİT &gt;</a>
+      <a id="tiktokCardBtn" href="#" target="_blank">TIKTOK'A GİT &gt;</a>
     </div>
 
   </section>
@@ -153,7 +153,6 @@
             <div style="margin-top:4px;">İzleyici: <b style="color:#fff;">${data.liveViewers || '0'}</b></div>
           `;
           if (data.kickLink) {
-            document.getElementById("liveCardBtn.href") // güvenli atama
             document.getElementById("liveCardBtn").href = data.kickLink;
           }
 
@@ -175,7 +174,7 @@
             ytBody.innerHTML = `<p style="color: #777; font-size: 13px; text-align: center; margin: 0;">Henüz video eklenmedi.</p>`;
           }
 
-          // 4. TikTok Kartı
+          // 4. TikTok Kartı (Dinamik Bağlantı)
           if (data.tiktokLink) {
             document.getElementById("tiktokCardBtn").href = data.tiktokLink;
           }
