@@ -201,10 +201,8 @@
           gridBoard.appendChild(cell);
         }
       }
-      updateBoardUI();
     }
 
-    // Oyun Durumunu Kaydet (localStorage)
     function saveGameState() {
       localStorage.setItem("blockBlastBoard", JSON.stringify(board));
       localStorage.setItem("blockBlastScore", score);
@@ -216,7 +214,6 @@
       updateScoreUI();
     }
 
-    // Kaydedilen Durumu Yükle
     function loadGameState() {
       const savedBoard = localStorage.getItem("blockBlastBoard");
       const savedScore = localStorage.getItem("blockBlastScore");
@@ -227,6 +224,7 @@
         score = parseInt(savedScore);
         currentPieces = JSON.parse(savedPieces);
         
+        updateBoardUI();
         renderPiecesFromMemory();
       } else {
         generatePieces();
@@ -581,6 +579,7 @@
       generatePieces();
     }
 
+    // Oyun Başlangıcı
     initBoardUI();
     loadGameState();
   </script>
