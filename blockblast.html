@@ -81,13 +81,13 @@
       background: #252525;
       border-radius: 3px;
     }
-    /* Sürüklenen blok elementinin stil kopyası (Parmağın üstünde görünmesi için offsetli) */
+    /* Sürüklenen blok hayaleti - Parmağın sol üstüne tam oturur */
     #dragGhost {
       position: fixed;
       pointer-events: none;
       z-index: 99999;
       display: none;
-      transform: translate(-50%, -120%);
+      transform: translate(-30px, -90px);
     }
     #gameOverScreen {
       display: none;
@@ -267,11 +267,8 @@
         dragGhost.style.display = "none";
         boxEl.style.opacity = "1";
 
-        // Bırakma anında parmağın/farenin 45 piksel üstündeki noktayı baz alıyoruz (Böylece blok parmağın altında kalıp görüşü kapatmıyor)
-        const checkX = clientX;
-        const checkY = clientY - 50;
-
-        const targetCell = document.elementFromPoint(checkX, checkY)?.closest(".cell");
+        // Bırakılan noktadaki hücreyi direkt tespit ediyoruz
+        const targetCell = document.elementFromPoint(clientX, clientY)?.closest(".cell");
         
         if (targetCell) {
           const r = parseInt(targetCell.dataset.row);
