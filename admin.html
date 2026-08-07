@@ -13,7 +13,7 @@
     .admin-menu { display: flex; flex-direction: column; gap: 10px; }
     .admin-menu button { background: #111; color: #ddd; border: 1px solid #333; padding: 15px; border-radius: 10px; cursor: pointer; transition: 0.3s; font-size: 16px; text-align: left; }
     .admin-menu button:hover, .admin-menu button.active { background: #9146ff; color: white; border-color: #9146ff; box-shadow: 0 0 15px rgba(145, 70, 255, 0.4); }
-    .admin-content { flex: 1; padding: 40px; overflow-y: auto; max-height: 100vh; }
+    .admin-content { flex: 1; padding: 40px; overflow-y: auto; max-height: 100vh; position: relative; }
     .admin-section { display: none; background: #111; border: 1px solid #222; border-radius: 15px; padding: 30px; margin-bottom: 30px; }
     .admin-section.active { display: block; }
     .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
@@ -36,6 +36,12 @@
     .card-actions { display: flex; gap: 10px; }
     .edit-btn { background: #3b82f6; color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; }
     .delete-btn { background: #ef4444; color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+
+    /* Modern Özel Modal / Onay Kutusu */
+    #customConfirmModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999999; justify-content: center; align-items: center; }
+    .confirm-box { background: #111; border: 1px solid #9146ff; padding: 25px; border-radius: 15px; width: 350px; text-align: center; box-shadow: 0 0 30px rgba(145,70,255,0.4); }
+    .confirm-box p { color: #fff; font-size: 1.05rem; margin-bottom: 20px; }
+    .confirm-actions { display: flex; gap: 10px; justify-content: center; }
   </style>
 </head>
 <body>
@@ -106,6 +112,17 @@
     </div>
   </div>
 
+  <!-- ÖZEL ONAY MODALI -->
+  <div id="customConfirmModal">
+    <div class="confirm-box">
+      <p id="confirmText">Bu duyuruyu silmek istediğine emin misin?</p>
+      <div class="confirm-actions">
+        <button id="confirmYesBtn" class="admin-btn" style="background: #ef4444; padding: 8px 20px;">Evet, Sil</button>
+        <button id="confirmNoBtn" class="admin-btn" style="background: #444; padding: 8px 20px;">Vazgeç</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     function switchAdminTab(tabId, btnElement) {
       document.querySelectorAll('.admin-section').forEach(el => el.classList.remove('active'));
@@ -115,11 +132,9 @@
       if (target) target.classList.add('active');
       if (btnElement) btnElement.classList.add('active');
       
-      // Hangi sekmede olduğunu hafızaya kaydet (F5 atınca sıfırlanmasın)
       localStorage.setItem("activeAdminTab", tabId);
     }
 
-    // Sayfa açıldığında hafızadaki sekmeyi getir
     window.addEventListener("DOMContentLoaded", () => {
       const savedTab = localStorage.getItem("activeAdminTab") || "dashboard";
       const targetBtn = document.getElementById("btn-" + savedTab);
