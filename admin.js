@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
-import { getFirestore, collection, addDoc, updateDoc, doc, serverTimestamp, getDocs, deleteDoc, query, orderBy, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, updateDoc, doc, serverTimestamp, getDocs, deleteDoc, query, orderBy, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCiuXtHu3J9Va46a4KiETO2JrSn5um2KoQ",
@@ -19,6 +19,7 @@ const ADMIN_EMAIL = "rumi7xl@gmail.com";
 
 let adminMutedUsersCache = [];
 let adminMutedInterval = null;
+let adminYoutubeVideosCache = [];
 
 onAuthStateChanged(auth, (user) => {
   if (!user || user.email !== ADMIN_EMAIL) {
@@ -28,6 +29,7 @@ onAuthStateChanged(auth, (user) => {
     loadStats();
     loadAdminAnnouncements();
     loadAdminPanelData();
+    loadConfigData();
   }
 });
 
@@ -54,6 +56,7 @@ function showToast(message, type = 'success') {
   }, 3000);
 }
 
+// DUYURU İŞLEMLERİ
 const sendAnnounceBtn = document.getElementById("sendAnnounceBtn");
 const cancelEditBtn = document.getElementById("cancelEditBtn");
 
@@ -165,7 +168,7 @@ async function loadAdminAnnouncements() {
   }
 }
 
-// SOHBET YÖNETİMİ & SUSTURULANLAR
+// SOHBET YÖNETİMİ
 async function loadAdminPanelData() {
   const chatContainer = document.getElementById("adminChatList");
   if (!chatContainer) return;
@@ -177,9 +180,7 @@ async function loadAdminPanelData() {
 
   await refreshAdminMutedUsers();
   if (adminMutedInterval) clearInterval(adminMutedInterval);
-  adminMutedInterval = setInterval(() => {
-    updateAdminMutedCountdowns();
-  }, 1000);
+  adminMutedInterval = setInterval(() => { updateAdminMutedCountdowns(); }, 1000);
 
   const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
   onSnapshot(q, (snapshot) => {
@@ -229,23 +230,109 @@ async function loadAdminPanelData() {
   });
 }
 
+// İÇERİKLER YÖNETİMİ MANTIĞI
+async function loadConfigData() {
+  try {
+    const docSnap = await getDoc(doc(db, "siteSettings", "iceriklerConfig"));
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      const isLiveEl = document.getElementById("admIsLive");
+      const liveGameEl = document.getElementById("admLiveGame");
+      const liveViewersEl = document.getElementById("admLiveViewers");
+      const kickLinkEl = document.getElementById("admKickLink");
+      const kickDescEl = document.getElementById("admKickDesc");
+      const tiktokLinkEl = document.getElementById("admTiktokLink");
+
+      if (isLiveEl) isLiveEl.checked = data.isLive || false;
+      if (liveGameEl) liveGameEl.value = data.liveGame || "";
+      if (liveViewersEl) liveViewersEl.value = data.liveViewers || "0";
+      if (kickLinkEl) kickLinkEl.value = data.kickLink || "";
+      if (kickDescEl) kickDescEl.value = data.kickDesc || "";
+      if (tiktokLinkEl) tiktokLinkEl.value = data.tiktokLink || "";
+      adminYoutubeVideosCache = data.youtubeVideos || [];
+    }
+    renderYtList();
+  } catch (e) {}
+}
+
+function renderYtList() {
+  const container = document.getElementById("admYtVideoListContainer");
+  if (!container) return;
+  if (adminYoutubeVideosCache.length === 0) {
+    container.innerHTML = `<p style="color: #777; font-size: 0.9rem; margin: 0; text-align: center;">Henüz video eklenmedi.</p>`;
+    return;
+  }
+  let html = "";
+  adminYoutubeVideosCache.forEach((vid, index) => {
+    html += `
+      <div style="display: flex; justify-content: space-between; align-items: center; background: #1c1c1c; padding: 8px 12px; border-radius: 6px; margin-bottom: 8px;">
+        <span style="color: #fff; font-size: 0.9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; margin-right: 15px;">▶ ${vid.title}</span>
+        <button onclick="window.removeYt(${index})" style="background: #ef4444; color: #fff; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">Sil</button>
+      </div>
+    `;
+  });
+  container.innerHTML = html;
+}
+
+const addYtBtn = document.getElementById("addYtBtn");
+if (addYtBtn) {
+  addYtBtn.onclick = () => {
+    const titleInput = document.getElementById("admNewYtTitle");
+    const urlInput = document.getElementById("admNewYtUrl");
+    const title = titleInput.value.trim();
+    const url = urlInput.value.trim();
+    if (!title || !url) {
+      showToast("Video başlığı ve linki boş olamaz kanka!", "error");
+      return;
+    }
+    adminYoutubeVideosCache.push({ title, url });
+    titleInput.value = "";
+    urlInput.value = "";
+    renderYtList();
+  };
+}
+
+window.removeYt = function(index) {
+  adminYoutubeVideosCache.splice(index, 1);
+  renderYtList();
+};
+
+const saveIceriklerBtn = document.getElementById("saveIceriklerBtn");
+if (saveIceriklerBtn) {
+  saveIceriklerBtn.onclick = async () => {
+    try {
+      const isLive = document.getElementById("admIsLive").checked;
+      const liveGame = document.getElementById("admLiveGame").value.trim();
+      const liveViewers = document.getElementById("admLiveViewers").value.trim();
+      const kickLink = document.getElementById("admKickLink").value.trim();
+      const kickDesc = document.getElementById("admKickDesc").value.trim();
+      const tiktokLink = document.getElementById("admTiktokLink").value.trim();
+
+      await setDoc(doc(db, "siteSettings", "iceriklerConfig"), {
+        isLive, liveGame, liveViewers, kickLink, kickDesc,
+        youtubeVideos: adminYoutubeVideosCache,
+        tiktokLink,
+        tiktokDesc: "En komik kesitler ve kısa videolar TikTok adresimde!"
+      }, { merge: true });
+
+      showToast("İçerikler sayfası başarıyla güncellendi! 🔥");
+    } catch (e) {
+      showToast("Kaydedilirken hata oluştu!", "error");
+    }
+  };
+}
+
 async function refreshAdminMutedUsers() {
   try {
     const usersSnap = await getDocs(collection(db, "users"));
     adminMutedUsersCache = [];
-
     usersSnap.forEach((uDoc) => {
       const uData = uDoc.data();
       const uid = uDoc.id;
       if (uData.muteUntil && uData.muteUntil > Date.now()) {
-        adminMutedUsersCache.push({
-          uid,
-          username: uData.username || "Bilinmeyen Kullanıcı",
-          muteUntil: uData.muteUntil
-        });
+        adminMutedUsersCache.push({ uid, username: uData.username || "Bilinmeyen Kullanıcı", muteUntil: uData.muteUntil });
       }
     });
-
     renderAdminMutedSection();
   } catch (e) {}
 }
@@ -253,17 +340,14 @@ async function refreshAdminMutedUsers() {
 function renderAdminMutedSection() {
   const sectionContainer = document.getElementById("adminMutedSectionContainer");
   if (!sectionContainer) return;
-
   const activeMutesCount = adminMutedUsersCache.length;
   let mutedUsersHtml = "";
-
   if (activeMutesCount > 0) {
     adminMutedUsersCache.forEach(user => {
       const remainingMs = user.muteUntil - Date.now();
       const min = Math.max(0, Math.floor(remainingMs / 60000));
       const sec = Math.max(0, Math.floor((remainingMs % 60000) / 1000));
       const timeStr = `${min}:${sec < 10 ? '0' : ''}${sec}`;
-
       mutedUsersHtml += `
         <div id="admin-mute-row-${user.uid}" style="display: flex; align-items: center; justify-content: space-between; background: #1f1424; padding: 10px 14px; border-radius: 8px; margin-bottom: 6px; border: 1px solid #9146ff55;">
           <div>
@@ -275,7 +359,6 @@ function renderAdminMutedSection() {
       `;
     });
   }
-
   sectionContainer.innerHTML = `
     <div style="background: #151515; border: 1px solid #333; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
       <h4 style="color: #c084fc; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
@@ -303,10 +386,7 @@ function updateAdminMutedCountdowns() {
       }
     }
   });
-
-  if (needsRefresh) {
-    refreshAdminMutedUsers();
-  }
+  if (needsRefresh) refreshAdminMutedUsers();
 }
 
 window.removeMute = async function(uid, username) {
@@ -330,14 +410,11 @@ window.deleteSelectedMessages = async function() {
     showToast("Hiçbir mesaj seçmedin kanka!", "error");
     return;
   }
-
   const modal = document.getElementById("customConfirmModal");
   const yesBtn = document.getElementById("confirmYesBtn");
   const noBtn = document.getElementById("confirmNoBtn");
-
   document.getElementById("confirmText").innerText = `Seçilen ${selected.length} mesajı silmek istediğine emin misin patron?`;
   modal.style.display = "flex";
-
   yesBtn.onclick = async () => {
     modal.style.display = "none";
     try {
@@ -349,7 +426,6 @@ window.deleteSelectedMessages = async function() {
       showToast("Silinirken hata oluştu!", "error");
     }
   };
-
   noBtn.onclick = () => { modal.style.display = "none"; };
 };
 
@@ -358,7 +434,6 @@ window.openUserModeration = function(uid, username) {
     showToast("Bu mesajın kullanıcısı bulunamadı.", "error");
     return;
   }
-
   let modModal = document.getElementById("customUserModModal");
   if (!modModal) {
     modModal = document.createElement("div");
@@ -369,24 +444,19 @@ window.openUserModeration = function(uid, username) {
     `;
     document.body.appendChild(modModal);
   }
-
   modModal.innerHTML = `
     <div style="background: #181818; border: 1px solid #9146ff; padding: 25px; border-radius: 16px; width: 350px; box-shadow: 0 0 30px rgba(145,70,255,0.4); color: #fff; text-align: center;">
       <h3 style="color: #9146ff; margin-bottom: 10px;">${username}</h3>
       <p style="font-size: 0.9rem; color: #aaa; margin-bottom: 20px;">Kullanıcı için yapılacak işlemi seç:</p>
-      
       <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
         <button id="modDeleteAll" style="background: #ef4444; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold;">Tüm Mesajlarını Sil</button>
         <button id="modMuteUser" style="background: #9146ff; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold;">Kullanıcıyı Sustur (Mute)</button>
       </div>
-      
       <button id="modClose" style="background: #333; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; cursor: pointer;">İptal</button>
     </div>
   `;
   modModal.style.display = "flex";
-
   document.getElementById("modClose").onclick = () => { modModal.style.display = "none"; };
-
   document.getElementById("modDeleteAll").onclick = async () => {
     modModal.style.display = "none";
     try {
@@ -399,14 +469,10 @@ window.openUserModeration = function(uid, username) {
         }
       }
       showToast(`${username} kullanıcısının ${count} mesajı silindi!`);
-    } catch (e) {
-      showToast("Hata oluştu!", "error");
-    }
+    } catch (e) { showToast("Hata oluştu!", "error"); }
   };
-
   document.getElementById("modMuteUser").onclick = () => {
     modModal.style.display = "none";
-    
     let muteModal = document.getElementById("customMuteModal");
     if (!muteModal) {
       muteModal = document.createElement("div");
@@ -417,7 +483,6 @@ window.openUserModeration = function(uid, username) {
       `;
       document.body.appendChild(muteModal);
     }
-
     muteModal.innerHTML = `
       <div style="background: #181818; border: 1px solid #9146ff; padding: 25px; border-radius: 16px; width: 320px; box-shadow: 0 0 30px rgba(145,70,255,0.4); color: #fff; text-align: center;">
         <h3 style="color: #9146ff; margin-bottom: 10px;">Susturma Süresi</h3>
@@ -430,26 +495,20 @@ window.openUserModeration = function(uid, username) {
       </div>
     `;
     muteModal.style.display = "flex";
-
     document.getElementById("muteCancelBtn").onclick = () => { muteModal.style.display = "none"; };
-
     document.getElementById("muteConfirmBtn").onclick = async () => {
       const minutes = parseInt(document.getElementById("muteMinutesInput").value);
       muteModal.style.display = "none";
-
       if (isNaN(minutes) || minutes <= 0) {
         showToast("Geçerli bir süre gir!", "error");
         return;
       }
-
       const muteUntil = Date.now() + (minutes * 60 * 1000);
       try {
         await setDoc(doc(db, "users", uid), { muteUntil: muteUntil, username: username }, { merge: true });
         showToast(`${username} ${minutes} dakika süreyle susturuldu! 🔇`);
         refreshAdminMutedUsers();
-      } catch (e) {
-        showToast("Mute atılırken hata oluştu!", "error");
-      }
+      } catch (e) { showToast("Mute atılırken hata oluştu!", "error"); }
     };
   };
 };
@@ -500,6 +559,7 @@ window.confirmDeleteMessage = function(id) {
 async function loadStats() {
   try {
     const snap = await getDocs(collection(db, "duyurular"));
-    document.getElementById("totalAnnouncements").innerText = snap.size;
-  } e {}
+    const statEl = document.getElementById("totalAnnouncements");
+    if (statEl) statEl.innerText = snap.size;
+  } catch (e) {}
 }
