@@ -15,7 +15,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// 👑 YÖNETİCİ KİLİDİ: rumim7xl@gmail.com yetkilendirildi
+// 👑 YÖNETİCİ KİLİDİ
 const ADMIN_EMAIL = "rumi7xl@gmail.com";
 
 // 1. YETKİ KONTROLÜ
