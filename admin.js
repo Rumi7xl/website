@@ -27,7 +27,6 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-// DUYURU PAYLAŞMA VEYA GÜNCELLEME
 const sendAnnounceBtn = document.getElementById("sendAnnounceBtn");
 const cancelEditBtn = document.getElementById("cancelEditBtn");
 
@@ -47,8 +46,6 @@ if (sendAnnounceBtn) {
     sendAnnounceBtn.disabled = true;
 
     let imageUrl = "";
-    
-    // Fotoğraf seçildiyse base64 formatına çevir
     if (fileInput.files && fileInput.files[0]) {
       const file = fileInput.files[0];
       imageUrl = await new Promise((resolve) => {
@@ -60,15 +57,13 @@ if (sendAnnounceBtn) {
 
     try {
       if (editingId) {
-        // Düzenleme modu
         const updateData = { title, description: desc };
-        if (imageUrl) updateData.image = imageUrl; // yeni resim seçildiyse güncelle
+        if (imageUrl) updateData.image = imageUrl;
 
         await updateDoc(doc(db, "duyurular", editingId), updateData);
         alert("Duyuru başarıyla güncellendi! 🔥");
         resetForm();
       } else {
-        // Yeni duyuru ekleme modu
         await addDoc(collection(db, "duyurular"), {
           title,
           description: desc,
@@ -92,9 +87,7 @@ if (sendAnnounceBtn) {
 }
 
 if (cancelEditBtn) {
-  cancelEditBtn.onclick = () => {
-    resetForm();
-  };
+  cancelEditBtn.onclick = () => { resetForm(); };
 }
 
 function resetForm() {
@@ -106,7 +99,6 @@ function resetForm() {
   if(cancelEditBtn) cancelEditBtn.style.display = "none";
 }
 
-// DUYURULARI ALT KISIMDA LİSTELEME (Düzenle ve Sil butonlarıyla)
 async function loadAdminAnnouncements() {
   const container = document.getElementById("adminAnnouncementList");
   if (!container) return;
@@ -159,7 +151,6 @@ async function loadAdminAnnouncements() {
   }
 }
 
-// DÜZENLEME İÇİN FORMU DOLDURMA
 window.prepareEdit = function(id, title, desc) {
   document.getElementById("editingId").value = id;
   document.getElementById("announceTitle").value = title;
@@ -169,7 +160,6 @@ window.prepareEdit = function(id, title, desc) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
-// SİLME FONKSİYONU
 window.deleteAnnounce = async function(id) {
   if (confirm("Bu duyuruyu silmek istediğine emin misin patron?")) {
     try {
