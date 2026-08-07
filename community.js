@@ -8,7 +8,6 @@ import {
   query, 
   orderBy, 
   doc,
-  onDocSnapshot,
   getDoc
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
@@ -40,20 +39,18 @@ window.addEventListener("DOMContentLoaded", () => {
 onAuthStateChanged(auth, (user) => {
   currentUserObj = user;
   if (user) {
-    // Kullanıcının mute (susturulma) durumunu gerçek zamanlı dinle
     listenToUserMuteStatus(user.uid);
   }
 });
 
 function listenToUserMuteStatus(uid) {
-  // Firestore'daki users/{uid} belgesini anlık dinliyoruz
   onSnapshot(doc(db, "users", uid), (docSnap) => {
     if (muteInterval) clearInterval(muteInterval);
 
-    if (docSnap.exists() && docSnap.data().muteUntil) {
+    // Eğer mute süresi varsa ve şimdiki zamandan büyükse
+    if (docSnap.exists() && docSnap.data().muteUntil && docSnap.data().muteUntil > Date.now()) {
       const muteUntil = docSnap.data().muteUntil;
 
-      // Her saniye kalan süreyi hesapla
       muteInterval = setInterval(() => {
         const remaining = muteUntil - Date.now();
 
@@ -78,7 +75,7 @@ function listenToUserMuteStatus(uid) {
         }
       }, 1000);
     } else {
-      // Mute yoksa normal haline getir
+      // Mute yoksa veya kaldırıldıysa inputu hemen normal moda döndür
       if (chatInput) {
         chatInput.disabled = false;
         chatInput.placeholder = "Mesajını yaz...";
@@ -99,7 +96,6 @@ async function sendMessage() {
     return;
   }
 
-  // Gönderim anında son kontrol
   try {
     const uDoc = await getDoc(doc(db, "users", currentUserObj.uid));
     if (uDoc.exists() && uDoc.data().muteUntil && uDoc.data().muteUntil > Date.now()) {
