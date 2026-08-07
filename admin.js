@@ -162,25 +162,55 @@ async function loadAdminAnnouncements() {
   }
 }
 
-// TOPLULUK MESAJLARINI VE TOPLU İŞLEMLERİ LİSTELEME
+// TOPLULUK MESAJLARI VE SUSTURULANLAR LİSTESİ
 async function loadAdminMessages() {
   const chatContainer = document.getElementById("adminChatList");
   if (!chatContainer) return;
 
-  chatContainer.innerHTML = "<p style='color:#aaa;'>Mesajlar yükleniyor...</p>";
+  chatContainer.innerHTML = "<p style='color:#aaa;'>Yükleniyor...</p>";
 
   try {
+    // 1. Susturulan (Mute yemiş) kullanıcıları çek
+    const usersSnap = await getDocs(collection(db, "users"));
+    let mutedUsersHtml = "";
+    let activeMutesCount = 0;
+
+    usersSnap.forEach((uDoc) => {
+      const uData = uDoc.data();
+      const uid = uDoc.id;
+      if (uData.muteUntil && uData.muteUntil > Date.now()) {
+        activeMutesCount++;
+        const remainingMs = uData.muteUntil - Date.now();
+        const min = Math.floor(remainingMs / 60000);
+        const sec = Math.floor((remainingMs % 60000) / 1000);
+        const uName = uData.username || uData.email || "Kullanıcı";
+
+        mutedUsersHtml += `
+          <div style="display: flex; align-items: center; justify-content: space-between; background: #1f1424; padding: 10px 14px; border-radius: 8px; margin-bottom: 6px; border: 1px solid #9146ff55;">
+            <div>
+              <strong style="color: #c084fc;">${uName}</strong> 
+              <span style="color: #aaa; font-size: 0.85rem; margin-left: 10px;">⏳ Kalan: ${min} dk ${sec} sn</span>
+            </div>
+            <button style="background: #9146ff; color: #fff; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: bold;" onclick="window.removeMute('${uid}', '${uName}')">Mute Kaldır</button>
+          </div>
+        `;
+      }
+    });
+
+    let mutedSection = `
+      <div style="background: #151515; border: 1px solid #333; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
+        <h4 style="color: #c084fc; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+          🔇 Susturulan Kullanıcılar (${activeMutesCount})
+        </h4>
+        ${activeMutesCount > 0 ? mutedUsersHtml : '<p style="color: #777; font-size: 0.85rem;">Şu an susturulmuş aktif bir kullanıcı yok.</p>'}
+      </div>
+    `;
+
+    // 2. Mesajları çek
     const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
     const snap = await getDocs(q);
 
-    chatContainer.innerHTML = "";
-
-    if (snap.empty) {
-      chatContainer.innerHTML = "<p style='color:#aaa;'>Henüz toplulukta atılmış bir mesaj yok.</p>";
-      return;
-    }
-
-    let htmlContent = `
+    let messagesHtml = `
       <div style="display: flex; gap: 10px; margin-bottom: 15px; background: #181818; padding: 12px; border-radius: 10px; align-items: center; border: 1px solid #333;">
         <input type="checkbox" id="selectAllMsgs" style="cursor: pointer; width: 18px; height: 18px;" onclick="window.toggleSelectAll(this)">
         <label for="selectAllMsgs" style="cursor: pointer; font-size: 0.9rem; color: #ccc; flex: 1;">Hepsini Seç</label>
@@ -188,43 +218,57 @@ async function loadAdminMessages() {
       </div>
     `;
 
-    snap.forEach((docSnap) => {
-      const data = docSnap.data();
-      const id = docSnap.id;
-      let dateStr = "";
-      if (data.createdAt) {
-        const d = new Date(data.createdAt);
-        dateStr = d.toLocaleDateString("tr-TR") + " - " + d.toLocaleTimeString("tr-TR", {hour: '2-digit', minute:'2-digit'});
-      }
-      const username = data.username || "Anonim";
-      const messageText = data.text || "";
-      const uid = data.uid || "";
+    if (snap.empty) {
+      messagesHtml += "<p style='color:#aaa;'>Henüz toplulukta atılmış bir mesaj yok.</p>";
+    } else {
+      snap.forEach((docSnap) => {
+        const data = docSnap.data();
+        const id = docSnap.id;
+        let dateStr = "";
+        if (data.createdAt) {
+          const d = new Date(data.createdAt);
+          dateStr = d.toLocaleDateString("tr-TR") + " - " + d.toLocaleTimeString("tr-TR", {hour: '2-digit', minute:'2-digit'});
+        }
+        const username = data.username || "Anonim";
+        const messageText = data.text || "";
+        const uid = data.uid || "";
 
-      htmlContent += `
-        <div class="mod-item" style="display: flex; align-items: center; gap: 12px; background: #141414; padding: 12px; border-radius: 10px; margin-bottom: 8px; border: 1px solid #222;">
-          <input type="checkbox" class="msg-checkbox" value="${id}" style="cursor: pointer; width: 16px; height: 16px;">
-          <div class="text" style="flex: 1;">
-            <strong style="color: #9146ff; cursor: pointer;" title="Kullanıcı Menüsü İçin Tıkla" onclick="window.openUserModeration('${uid}', '${username}')">${username} ⚙️:</strong> ${messageText}
-            <br><small style="color: #777;">📅 ${dateStr}</small>
+        messagesHtml += `
+          <div class="mod-item" style="display: flex; align-items: center; gap: 12px; background: #141414; padding: 12px; border-radius: 10px; margin-bottom: 8px; border: 1px solid #222;">
+            <input type="checkbox" class="msg-checkbox" value="${id}" style="cursor: pointer; width: 16px; height: 16px;">
+            <div class="text" style="flex: 1;">
+              <strong style="color: #9146ff; cursor: pointer;" title="Kullanıcı Menüsü İçin Tıkla" onclick="window.openUserModeration('${uid}', '${username}')">${username} ⚙️:</strong> ${messageText}
+              <br><small style="color: #777;">📅 ${dateStr}</small>
+            </div>
+            <button class="delete-btn" style="padding: 6px 12px; font-size: 0.85rem;" onclick="window.confirmDeleteMessage('${id}')">Sil</button>
           </div>
-          <button class="delete-btn" style="padding: 6px 12px; font-size: 0.85rem;" onclick="window.confirmDeleteMessage('${id}')">Sil</button>
-        </div>
-      `;
-    });
+        `;
+      });
+    }
 
-    chatContainer.innerHTML = htmlContent;
+    chatContainer.innerHTML = mutedSection + messagesHtml;
 
   } catch (err) {
-    chatContainer.innerHTML = "<p style='color:#ef4444;'>Mesajlar yüklenirken hata oluştu.</p>";
+    chatContainer.innerHTML = "<p style='color:#ef4444;'>Yüklenirken hata oluştu.</p>";
   }
 }
+
+// Mute Kaldırma Fonksiyonu
+window.removeMute = async function(uid, username) {
+  try {
+    await setDoc(doc(db, "users", uid), { muteUntil: null }, { merge: true });
+    showToast(`${username} adlı kullanıcının mutesi kaldırıldı! ✨`);
+    loadAdminMessages();
+  } catch (e) {
+    showToast("Mute kaldırılırken hata oluştu!", "error");
+  }
+};
 
 window.toggleSelectAll = function(masterCheckbox) {
   const checkboxes = document.querySelectorAll('.msg-checkbox');
   checkboxes.forEach(cb => cb.checked = masterCheckbox.checked);
 };
 
-// Seçilenleri toplu silme (Özel Modal ile)
 window.deleteSelectedMessages = async function() {
   const selected = document.querySelectorAll('.msg-checkbox:checked');
   if (selected.length === 0) {
@@ -255,14 +299,12 @@ window.deleteSelectedMessages = async function() {
   noBtn.onclick = () => { modal.style.display = "none"; };
 };
 
-// Kullanıcı Moderasyon Menüsü (Şık Popup Tasarımıyla)
 window.openUserModeration = function(uid, username) {
   if (!uid) {
     showToast("Bu mesajın kullanıcısı bulunamadı.", "error");
     return;
   }
 
-  // Varsa eski özel modalı temizle, yenisini oluştur
   let modModal = document.getElementById("customUserModModal");
   if (!modModal) {
     modModal = document.createElement("div");
@@ -291,7 +333,6 @@ window.openUserModeration = function(uid, username) {
 
   document.getElementById("modClose").onclick = () => { modModal.style.display = "none"; };
 
-  // 1. Tüm mesajlarını sil
   document.getElementById("modDeleteAll").onclick = async () => {
     modModal.style.display = "none";
     try {
@@ -310,11 +351,9 @@ window.openUserModeration = function(uid, username) {
     }
   };
 
-  // 2. Sustur (Mute)
   document.getElementById("modMuteUser").onclick = () => {
     modModal.style.display = "none";
     
-    // Süre seçtirme modalı
     let muteModal = document.getElementById("customMuteModal");
     if (!muteModal) {
       muteModal = document.createElement("div");
@@ -352,8 +391,9 @@ window.openUserModeration = function(uid, username) {
 
       const muteUntil = Date.now() + (minutes * 60 * 1000);
       try {
-        await setDoc(doc(db, "users", uid), { muteUntil: muteUntil }, { merge: true });
+        await setDoc(doc(db, "users", uid), { muteUntil: muteUntil, username: username }, { merge: true });
         showToast(`${username} ${minutes} dakika süreyle susturuldu! 🔇`);
+        loadAdminMessages();
       } catch (e) {
         showToast("Mute atılırken hata oluştu!", "error");
       }
@@ -400,7 +440,7 @@ window.confirmDeleteMessage = function(id) {
       await deleteDoc(doc(db, "messages", id));
       showToast("Mesaj silindi.");
       loadAdminMessages();
-    } catch (e) { showToast("Mesaj silinirken hata oluştu!", "error"); }
+    } catch (e) { showToast("Silinirken hata oluştu!", "error"); }
   };
   noBtn.onclick = () => { modal.style.display = "none"; };
 };
