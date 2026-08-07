@@ -98,6 +98,21 @@
     </div>
   </div>
 
+  <script>
+    // Mobilde klavye açılıp kapandığında chat yüksekliğini ekrana göre dinamik ayarlar
+    function adjustChatHeight() {
+      const chatContainer = document.querySelector('.chat-container');
+      if (!chatContainer) return;
+      if (window.innerWidth <= 900) {
+        chatContainer.style.height = (window.innerHeight * 0.42) + 'px';
+      } else {
+        chatContainer.style.height = '600px';
+      }
+    }
+    window.addEventListener('resize', adjustChatHeight);
+    window.addEventListener('DOMContentLoaded', adjustChatHeight);
+  </script>
+
   <script type="module" src="auth.js"></script>
   <script type="module" src="community.js"></script>
 </body>
