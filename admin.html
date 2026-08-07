@@ -24,7 +24,7 @@
       flex-direction: column;
       box-sizing: border-box;
     }
-    .admin-nav a, .admin-nav button {
+    .admin-nav button {
       display: flex;
       align-items: center;
       gap: 10px;
@@ -33,7 +33,6 @@
       border: 1px solid #222;
       padding: 12px 16px;
       border-radius: 10px;
-      text-decoration: none;
       font-weight: bold;
       font-size: 0.95rem;
       cursor: pointer;
@@ -42,10 +41,16 @@
       box-sizing: border-box;
       transition: 0.2s;
     }
-    .admin-nav a:hover, .admin-nav button:hover, .admin-nav a.active {
+    .admin-nav button:hover {
       background: #1f1424;
       border-color: #9146ff;
       color: #c084fc;
+    }
+    /* AKTİF SEKME MOR RENK STİLİ */
+    .admin-nav button.active {
+      background: #1f1424 !important;
+      border-color: #9146ff !important;
+      color: #c084fc !important;
     }
     main {
       flex: 1;
@@ -157,8 +162,24 @@
     <!-- 1. İSTATİSTİKLER SEKMESİ -->
     <div id="statsPanel" class="panel-section active">
       <div class="card">
-        <h2 style="color: #c084fc; margin-top: 0;">📊 Site İstatistikleri</h2>
-        <p style="color: #aaa;">Toplam Yayınlanan Duyuru Sayısı: <b id="totalAnnouncements" style="color: #22c55e;">0</b></p>
+        <h2 style="color: #c084fc; margin-top: 0; margin-bottom: 20px;">📊 Site İstatistikleri</h2>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 25px;">
+          <div style="background: #181818; border: 1px solid #333; padding: 20px; border-radius: 12px; text-align: center;">
+            <span style="color: #aaa; font-size: 0.9rem; display: block; margin-bottom: 8px;">Toplam Kayıtlı Üye</span>
+            <b id="totalUsersCount" style="color: #c084fc; font-size: 1.8rem;">0</b>
+          </div>
+          <div style="background: #181818; border: 1px solid #333; padding: 20px; border-radius: 12px; text-align: center;">
+            <span style="color: #aaa; font-size: 0.9rem; display: block; margin-bottom: 8px;">Aktif (Online) Üye</span>
+            <b id="onlineUsersCount" style="color: #22c55e; font-size: 1.8rem;">0</b>
+          </div>
+          <div style="background: #181818; border: 1px solid #333; padding: 20px; border-radius: 12px; text-align: center;">
+            <span style="color: #aaa; font-size: 0.9rem; display: block; margin-bottom: 8px;">Offline (Çevrimdışı)</span>
+            <b id="offlineUsersCount" style="color: #ef4444; font-size: 1.8rem;">0</b>
+          </div>
+        </div>
+
+        <p style="color: #aaa; margin: 0;">Toplam Yayınlanan Duyuru Sayısı: <b id="totalAnnouncements" style="color: #22c55e;">0</b></p>
       </div>
     </div>
 
@@ -281,7 +302,7 @@
 
   <div id="customToast"></div>
 
-  <!-- SEKME GEÇİŞLERİ İÇİN SCRIPT -->
+  <!-- SEKME GEÇİŞLERİ VE AKTIFLIK SCRIPTİ -->
   <script>
     function switchPanel(panelName, btnEl) {
       document.querySelectorAll('.panel-section').forEach(el => el.classList.remove('active'));
