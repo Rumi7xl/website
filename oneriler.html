@@ -3,15 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>RUMİ7XL - Öneriler</title>
-  <link rel="stylesheet" href="style.css">
+  <title>RUMİ7XL - Öneriler[cite: 8]</title>
+  <link href="favicon.png?v=2" rel="icon" type="image/png"/>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <link rel="stylesheet" href="style.css?v=1.2">
 </head>
 <body>
 
-  <!-- NAVBAR -->
   <nav class="navbar">
     <a href="index.html" class="logo">RUMİ7XL</a>
-    
     <div class="nav-links">
       <a href="index.html">Ana Sayfa</a>
       <a href="topluluk.html">Topluluk</a>
@@ -19,11 +21,9 @@
       <a href="icerikler.html">İçerikler</a>
       <a href="duyurular.html">Duyurular</a>
     </div>
-
     <div class="account-box"></div>
   </nav>
 
-  <!-- BAŞLIK & ÖNERİ FORMU -->
   <div class="suggestions" style="max-width: 800px; margin: 40px auto; padding: 0 20px;">
     <h1 style="font-size: 45px; color: #9146ff; text-align: center; text-shadow: 0 0 20px #9146ff; margin-bottom: 10px;">
       RUMİ7XL Öneriler
@@ -32,10 +32,8 @@
       İçerik, yayın ve oyun önerilerini burada paylaşabilirsin.
     </p>
 
-    <!-- KUTU -->
     <div style="background: linear-gradient(145deg, #151515, #090909); border: 1px solid #222; border-radius: 20px; padding: 20px; box-shadow: 0 0 25px rgba(145, 70, 255, 0.15); margin-bottom: 40px;">
       <textarea id="suggestInput" rows="3" placeholder="Yayıncıya bir öneri veya fikir yaz..." style="width: 100%; background: #111; border: 1px solid #333; border-radius: 12px; padding: 15px; color: white; font-family: inherit; font-size: 15px; outline: none; resize: vertical; box-sizing: border-box;"></textarea>
-      
       <div style="display: flex; justify-content: flex-end; margin-top: 15px;">
         <button id="sendSuggestBtn" style="background: #9146ff; color: white; border: none; padding: 10px 25px; border-radius: 25px; font-weight: bold; cursor: pointer; font-size: 14px; transition: 0.3s; box-shadow: 0 0 15px rgba(145,70,255,0.4);">
           Gönder
@@ -43,13 +41,11 @@
       </div>
     </div>
 
-    <!-- ÖNERİLER LİSTESİ -->
     <div class="suggestions-list" id="suggestionsList" style="display: flex; flex-direction: column; gap: 20px;">
       <p id="loadingText" style="color:#aaa; text-align:center;">Öneriler yükleniyor...</p>
     </div>
   </div>
 
-  <!-- ÖZEL DÜZENLEME MODALI -->
   <div id="editModal" class="account-modal">
     <div class="account-window">
       <button class="close-account" onclick="document.getElementById('editModal').style.display='none'">✕</button>
@@ -61,7 +57,6 @@
     </div>
   </div>
 
-  <!-- ÖZEL SİLME ONAY MODALI -->
   <div id="deleteModal" class="account-modal">
     <div class="account-window" style="text-align: center;">
       <h2 style="color:#ef4444; margin-bottom:10px; font-size:20px;">Öneriyi Sil?</h2>
@@ -73,12 +68,10 @@
     </div>
   </div>
 
-  <!-- FOOTER -->
   <footer>
     <p>© 2026 RUMİ7XL - Tüm Hakları Saklıdır.</p>
   </footer>
 
-  <!-- DİĞER MODALLAR -->
   <div id="accountModal" class="account-modal">
     <div class="account-window">
       <button class="close-account" onclick="document.getElementById('accountModal').style.display='none'">✕</button>
@@ -127,7 +120,7 @@
     </div>
   </div>
 
-  <script type="module" src="auth.js"></script>
-  <script type="module" src="suggestions.js"></script>
+  <script type="module" src="auth.js?v=1.2"></script>
+  <script type="module" src="suggestions.js?v=1.2"></script>
 </body>
 </html>
