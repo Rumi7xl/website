@@ -32,16 +32,16 @@
 <a href="/" class="logo">RUMİ7XL</a>
 
 <nav class="nav-links">
-    <a href="/">Ana Sayfa</a>
+    <a href="/" class="active">Ana Sayfa</a>
     <a href="topluluk.html">Topluluk</a>
     <a href="oneriler.html">Öneriler</a>
     <a href="icerikler.html">İçerikler</a>
     <a href="duyurular.html">Duyurular</a>
 </nav>
 
-<div class="account-box" id="accountBox">
-    <button class="login-btn" onclick="openAccountModal('login')">👤 Giriş Yap</button>
-    <button class="register-btn" onclick="openAccountModal('register')">✨ Kayıt Ol</button>
+<div class="account-box">
+    <a href="#" class="login-btn">👤 Giriş Yap</a>
+    <a href="#" class="register-btn">✨ Kayıt Ol</a>
 </div>
 </header>
 
@@ -104,8 +104,8 @@
     </div>
 
     <form id="loginForm" class="account-form" autocomplete="on">
-      <input type="email" name="email" placeholder="E-posta" autocomplete="username" required>
-      <input type="password" name="password" placeholder="Şifre" autocomplete="current-password" required>
+      <input type="email" name="email" placeholder="E-posta" autocomplete="username">
+      <input type="password" name="password" placeholder="Şifre" autocomplete="current-password">
       
       <div style="text-align: right; width: 100%; margin-top: -5px; margin-bottom: 5px;">
         <a href="#" id="forgotPasswordBtn" style="color: #a855f7; font-size: 0.85rem; text-decoration: none;">Şifremi Unuttum?</a>
@@ -115,9 +115,9 @@
     </form>
 
     <form id="registerForm" class="account-form" style="display:none;" autocomplete="on">
-      <input type="text" name="username" placeholder="Kullanıcı adı" autocomplete="username" required>
-      <input type="email" name="register-email" placeholder="E-posta" autocomplete="email" required>
-      <input type="password" name="new-password" placeholder="Şifre" autocomplete="new-password" required>
+      <input type="text" name="username" placeholder="Kullanıcı adı" autocomplete="username">
+      <input type="email" name="register-email" placeholder="E-posta" autocomplete="email">
+      <input type="password" name="new-password" placeholder="Şifre" autocomplete="new-password">
       <button type="submit" class="account-submit">Kayıt Ol</button>
     </form>
   </div>
@@ -132,7 +132,7 @@
     <form id="photoSettingsForm">
       <label for="photoFileInput" class="custom-file-upload">
         <span id="uploadLabelText" style="color:#aaa; font-size:0.9rem;">📁 Cihazdan / Galeriden Resim Seç</span>
-        <img id="photoPreview" class="preview-avatar" src="" alt="Önizleme" style="display:none;">
+        <img id="photoPreview" class="preview-avatar" src="" alt="Önizleme">
       </label>
       <input type="file" id="photoFileInput" accept="image/*" required style="display: none;">
       
@@ -172,12 +172,6 @@ function showRegister(){
   document.getElementById("loginTab").classList.remove("active");
 }
 
-function openAccountModal(tab){
-  document.getElementById("accountModal").style.display="flex";
-  if(tab === 'register') showRegister();
-  else showLogin();
-}
-
 function closeAccount(){
   document.getElementById("accountModal").style.display="none";
 }
@@ -190,23 +184,8 @@ function showToast(message){
   setTimeout(()=>{ toast.classList.remove("show"); },3000);
 }
 
-// Görsel Önizleme Scripti
-document.getElementById('photoFileInput')?.addEventListener('change', function(e) {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function(evt) {
-      const preview = document.getElementById('photoPreview');
-      preview.src = evt.target.result;
-      preview.style.display = 'block';
-    }
-    reader.readAsDataURL(file);
-  }
-});
-
 window.showLogin = showLogin;
 window.showRegister = showRegister;
-window.openAccountModal = openAccountModal;
 window.closeAccount = closeAccount;
 window.showToast = showToast;
 </script>
@@ -232,24 +211,6 @@ z-index:999999;
 #siteToast.show{
 opacity:1;
 transform:translateY(0);
-}
-.custom-file-upload {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border: 2px dashed #9146ff;
-  border-radius: 12px;
-  padding: 20px;
-  cursor: pointer;
-  margin-top: 10px;
-}
-.preview-avatar {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-top: 10px;
 }
 </style>
 </body>
