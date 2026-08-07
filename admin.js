@@ -230,8 +230,122 @@ async function loadAdminPanelData() {
   });
 }
 
-// İÇERİKLER YÖNETİMİ MANTIĞI (2x2 Grid Uyumlu)
+// İÇERİKLER YÖNETİMİ (Eğer içerikler sekmesi JS ile basılıyorsa 2x2 grid yapısını buraya entegre edelim)
 async function loadConfigData() {
+  const iceriklerSection = document.getElementById("iceriklerSection");
+  if (iceriklerSection) {
+    iceriklerSection.innerHTML = `
+      <h2 style="font-size: 1.8rem; margin-bottom: 25px; color: #fff;">🎬 İçerikler Sayfası Yönetim Paneli</h2>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+        
+        <!-- 1. SOL ÜST: CANLI YAYIN DURUMU -->
+        <div style="background: #141414; border: 1px solid #222; padding: 20px; border-radius: 14px;">
+          <h3 style="color: #22c55e; margin-bottom: 15px; font-size: 1.1rem;">🔴 Canlı Yayın Durumu</h3>
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+            <input type="checkbox" id="admIsLive" style="width: 18px; height: 18px; cursor: pointer;">
+            <label for="admIsLive" style="cursor: pointer; font-weight: 500;">Şu Anda Yayında mı?</label>
+          </div>
+          <div style="margin-bottom: 15px;">
+            <label style="display: block; font-size: 0.85rem; color: #aaa; margin-bottom: 5px;">Oynanan Oyun:</label>
+            <input type="text" id="admLiveGame" placeholder="Örn: GTA V" style="width: 100%; padding: 10px; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 8px;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85rem; color: #aaa; margin-bottom: 5px;">İzleyici Sayısı:</label>
+            <input type="text" id="admLiveViewers" placeholder="Örn: 12" style="width: 100%; padding: 10px; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 8px;">
+          </div>
+        </div>
+
+        <!-- 2. SAĞ ÜST: KİCK YÖNETİMİ -->
+        <div style="background: #141414; border: 1px solid #222; padding: 20px; border-radius: 14px;">
+          <h3 style="color: #22c55e; margin-bottom: 15px; font-size: 1.1rem;">🟢 Kick Yayın Kanalı</h3>
+          <div style="margin-bottom: 15px;">
+            <label style="display: block; font-size: 0.85rem; color: #aaa; margin-bottom: 5px;">Kanal Linki:</label>
+            <input type="text" id="admKickLink" placeholder="https://kick.com/..." style="width: 100%; padding: 10px; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 8px;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85rem; color: #aaa; margin-bottom: 5px;">Kick Oyun Listesi / Açıklama:</label>
+            <textarea id="admKickDesc" rows="3" placeholder="Oynanan oyunlar listesi..." style="width: 100%; padding: 10px; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 8px; resize: vertical;"></textarea>
+          </div>
+        </div>
+
+        <!-- 3. SOL ALT: YOUTUBE VİDEOLARI -->
+        <div style="background: #141414; border: 1px solid #222; padding: 20px; border-radius: 14px;">
+          <h3 style="color: #ef4444; margin-bottom: 15px; font-size: 1.1rem;">▶ YouTube Videoları</h3>
+          <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+            <input type="text" id="admNewYtTitle" placeholder="Video Başlığı" style="flex: 1; padding: 8px 10px; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 8px; font-size: 0.9rem;">
+            <input type="text" id="admNewYtUrl" placeholder="Video Linki" style="flex: 1; padding: 8px 10px; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 8px; font-size: 0.9rem;">
+            <button type="button" id="addYtBtn" style="background: #ef4444; color: #fff; border: none; padding: 0 15px; border-radius: 8px; font-weight: bold; cursor: pointer;">Ekle</button>
+          </div>
+          <div id="admYtVideoListContainer" style="display: flex; flex-direction: column; gap: 8px; max-height: 140px; overflow-y: auto;"></div>
+        </div>
+
+        <!-- 4. SAĞ ALT: TİKTOK YÖNETİMİ -->
+        <div style="background: #141414; border: 1px solid #222; padding: 20px; border-radius: 14px;">
+          <h3 style="color: #ec4899; margin-bottom: 15px; font-size: 1.1rem;">📱 TikTok Profil</h3>
+          <div style="margin-bottom: 15px;">
+            <label style="display: block; font-size: 0.85rem; color: #aaa; margin-bottom: 5px;">TikTok Profil Linki:</label>
+            <input type="text" id="admTiktokLink" placeholder="https://www.tiktok.com/@..." style="width: 100%; padding: 10px; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 8px;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85rem; color: #aaa; margin-bottom: 5px;">Kısa Açıklama:</label>
+            <input type="text" id="admTiktokDesc" placeholder="Örn: En komik kesitler TikTok'ta!" style="width: 100%; padding: 10px; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 8px;">
+          </div>
+        </div>
+
+      </div>
+      <button id="saveIceriklerBtn" style="width: 100%; background: linear-gradient(135deg, #9146ff, #7c3aed); color: #fff; border: none; padding: 15px; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; box-shadow: 0 0 20px rgba(145,70,255,0.4);">
+        Değişiklikleri Kaydet ve Yayınla 🚀
+      </button>
+    `;
+
+    // Yeni oluşturulan elemanlar için event listener'ları tekrar bağla
+    const newAddYtBtn = document.getElementById("addYtBtn");
+    if (newAddYtBtn) {
+      newAddYtBtn.onclick = (e) => {
+        e.preventDefault();
+        const titleInput = document.getElementById("admNewYtTitle");
+        const urlInput = document.getElementById("admNewYtUrl");
+        const title = titleInput.value.trim();
+        const url = urlInput.value.trim();
+        if (!title || !url) {
+          showToast("Video başlığı ve linki boş olamaz kanka!", "error");
+          return;
+        }
+        adminYoutubeVideosCache.push({ title, url });
+        titleInput.value = "";
+        urlInput.value = "";
+        renderYtList();
+        showToast("Video listeye eklendi! Kaydetmeyi unutma.");
+      };
+    }
+
+    const newSaveBtn = document.getElementById("saveIceriklerBtn");
+    if (newSaveBtn) {
+      newSaveBtn.onclick = async () => {
+        try {
+          const isLive = document.getElementById("admIsLive").checked;
+          const liveGame = document.getElementById("admLiveGame").value.trim();
+          const liveViewers = document.getElementById("admLiveViewers").value.trim();
+          const kickLink = document.getElementById("admKickLink").value.trim();
+          const kickDesc = document.getElementById("admKickDesc").value.trim();
+          const tiktokLink = document.getElementById("admTiktokLink").value.trim();
+          const tiktokDesc = document.getElementById("admTiktokDesc").value.trim();
+
+          await setDoc(doc(db, "siteSettings", "iceriklerConfig"), {
+            isLive, liveGame, liveViewers, kickLink, kickDesc,
+            youtubeVideos: adminYoutubeVideosCache,
+            tiktokLink,
+            tiktokDesc: tiktokDesc || "En komik kesitler ve kısa videolar TikTok adresimde!"
+          }, { merge: true });
+
+          showToast("İçerikler sayfası başarıyla güncellendi! 🔥");
+        } catch (e) {
+          showToast("Kaydedilirken hata oluştu!", "error");
+        }
+      };
+    }
+  }
+
   try {
     const docSnap = await getDoc(doc(db, "siteSettings", "iceriklerConfig"));
     if (docSnap.exists()) {
@@ -276,56 +390,10 @@ function renderYtList() {
   container.innerHTML = html;
 }
 
-const addYtBtn = document.getElementById("addYtBtn");
-if (addYtBtn) {
-  addYtBtn.onclick = (e) => {
-    e.preventDefault();
-    const titleInput = document.getElementById("admNewYtTitle");
-    const urlInput = document.getElementById("admNewYtUrl");
-    const title = titleInput.value.trim();
-    const url = urlInput.value.trim();
-    if (!title || !url) {
-      showToast("Video başlığı ve linki boş olamaz kanka!", "error");
-      return;
-    }
-    adminYoutubeVideosCache.push({ title, url });
-    titleInput.value = "";
-    urlInput.value = "";
-    renderYtList();
-    showToast("Video listeye eklendi! Kaydetmeyi unutma.");
-  };
-}
-
 window.removeYt = function(index) {
   adminYoutubeVideosCache.splice(index, 1);
   renderYtList();
 };
-
-const saveIceriklerBtn = document.getElementById("saveIceriklerBtn");
-if (saveIceriklerBtn) {
-  saveIceriklerBtn.onclick = async () => {
-    try {
-      const isLive = document.getElementById("admIsLive").checked;
-      const liveGame = document.getElementById("admLiveGame").value.trim();
-      const liveViewers = document.getElementById("admLiveViewers").value.trim();
-      const kickLink = document.getElementById("admKickLink").value.trim();
-      const kickDesc = document.getElementById("admKickDesc").value.trim();
-      const tiktokLink = document.getElementById("admTiktokLink").value.trim();
-      const tiktokDesc = document.getElementById("admTiktokDesc").value.trim();
-
-      await setDoc(doc(db, "siteSettings", "iceriklerConfig"), {
-        isLive, liveGame, liveViewers, kickLink, kickDesc,
-        youtubeVideos: adminYoutubeVideosCache,
-        tiktokLink,
-        tiktokDesc: tiktokDesc || "En komik kesitler ve kısa videolar TikTok adresimde!"
-      }, { merge: true });
-
-      showToast("İçerikler sayfası başarıyla güncellendi! 🔥");
-    } catch (e) {
-      showToast("Kaydedilirken hata oluştu!", "error");
-    }
-  };
-}
 
 async function refreshAdminMutedUsers() {
   try {
