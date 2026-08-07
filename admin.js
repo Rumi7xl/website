@@ -28,6 +28,7 @@ onAuthStateChanged(auth, (user) => {
     loadStats();
     loadAdminAnnouncements();
     loadAdminPanelData();
+    injectAdminMenuTab();
   }
 });
 
@@ -52,6 +53,29 @@ function showToast(message, type = 'success') {
     toast.style.opacity = "0";
     toast.style.transform = "translateX(-50%) translateY(-20px)";
   }, 3000);
+}
+
+// SOL MENÜYE İÇERİKLER YÖNETİMİ BUTONUNU JS İLE EKLEME
+function injectAdminMenuTab() {
+  const siteyeDonBtn = Array.from(document.querySelectorAll('a, button')).find(el => el.innerText.includes("Siteye Dön"));
+  if (!siteyeDonBtn) return;
+
+  let tabBtn = document.getElementById("adminIceriklerMenuBtn");
+  if (!tabBtn) {
+    tabBtn = document.createElement("a");
+    tabBtn.id = "adminIceriklerMenuBtn";
+    tabBtn.href = "admin-icerikler.html";
+    tabBtn.innerHTML = "🎬 İçerikler Yönetimi";
+    tabBtn.style.cssText = `
+      display: flex; align-items: center; gap: 10px; background: #141414; color: #ccc; 
+      border: 1px solid #222; padding: 12px 16px; border-radius: 10px; text-decoration: none; 
+      font-weight: bold; font-size: 0.95rem; margin: 8px 0; transition: 0.2s; box-sizing: border-box;
+    `;
+    tabBtn.onmouseover = () => { tabBtn.style.background = "#1f1424"; tabBtn.style.borderColor = "#9146ff"; tabBtn.style.color = "#c084fc"; };
+    tabBtn.onmouseout = () => { tabBtn.style.background = "#141414"; tabBtn.style.borderColor = "#222"; tabBtn.style.color = "#ccc"; };
+
+    siteyeDonBtn.parentNode.insertBefore(tabBtn, siteyeDonBtn);
+  }
 }
 
 const sendAnnounceBtn = document.getElementById("sendAnnounceBtn");
