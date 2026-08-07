@@ -81,13 +81,13 @@
       background: #252525;
       border-radius: 3px;
     }
-    /* Sürüklenen blok elementinin stil kopyası */
+    /* Sürüklenen blok elementinin stil kopyası (Parmağın üstünde görünmesi için offsetli) */
     #dragGhost {
       position: fixed;
       pointer-events: none;
       z-index: 99999;
       display: none;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%, -120%);
     }
     #gameOverScreen {
       display: none;
@@ -101,7 +101,6 @@
       border-radius: 12px;
       z-index: 10;
     }
-    /* Konfeti Parçacıkları */
     .confetti {
       position: absolute;
       width: 8px;
@@ -147,7 +146,6 @@
 
   </div>
 
-  <!-- Sürüklenen Blok Hayaleti -->
   <div id="dragGhost"></div>
 
   <footer>
@@ -179,9 +177,6 @@
     const gameOverScreen = document.getElementById("gameOverScreen");
     const finalScoreEl = document.getElementById("finalScore");
     const dragGhost = document.getElementById("dragGhost");
-    const gameWrapper = document.getElementById("gameWrapper");
-
-    let activeDrag = null; // { shapeIndex, shape, color }
 
     function initBoardUI() {
       gridBoard.innerHTML = "";
@@ -237,25 +232,24 @@
       checkGameOver();
     }
 
-    // Sürükle Bırak Mantığı (Mouse & Dokunmatik Uyumlu)
     function initDragAndDrop(boxEl, index, shape, color) {
+      let isDragging = false;
+
       function startDrag(e) {
         if (!currentPieces[index]) return;
         e.preventDefault();
+        isDragging = true;
         
         const clientX = e.clientX || (e.touches ? e.touches[0].clientX : 0);
         const clientY = e.clientY || (e.touches ? e.touches[0].clientY : 0);
 
-        activeDrag = { index, shape, color };
         boxEl.style.opacity = "0.3";
-
-        // Hayalet kutuyu oluştur
         createGhost(shape, color);
         moveGhost(clientX, clientY);
       }
 
       function onMove(e) {
-        if (!activeDrag) return;
+        if (!isDragging) return;
         e.preventDefault();
         const clientX = e.clientX || (e.touches ? e.touches[0].clientX : 0);
         const clientY = e.clientY || (e.touches ? e.touches[0].clientY : 0);
@@ -263,8 +257,9 @@
       }
 
       function endDrag(e) {
-        if (!activeDrag) return;
+        if (!isDragging) return;
         e.preventDefault();
+        isDragging = false;
 
         const clientX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
         const clientY = e.changedTouches ? e.changedTouches[0].clientY : e.clientY;
@@ -272,8 +267,11 @@
         dragGhost.style.display = "none";
         boxEl.style.opacity = "1";
 
-        // Bırakılan konumun tahtaya denk gelip gelmediğini bul
-        const targetCell = document.elementFromPoint(clientX, clientY)?.closest(".cell");
+        // Bırakma anında parmağın/farenin 45 piksel üstündeki noktayı baz alıyoruz (Böylece blok parmağın altında kalıp görüşü kapatmıyor)
+        const checkX = clientX;
+        const checkY = clientY - 50;
+
+        const targetCell = document.elementFromPoint(checkX, checkY)?.closest(".cell");
         
         if (targetCell) {
           const r = parseInt(targetCell.dataset.row);
@@ -293,8 +291,6 @@
             }
           }
         }
-
-        activeDrag = null;
       }
 
       boxEl.addEventListener("mousedown", startDrag);
@@ -313,19 +309,19 @@
       
       const ghostGrid = document.createElement("div");
       ghostGrid.style.display = "grid";
-      ghostGrid.style.gridTemplateColumns = `repeat(${cols}, 38px)`;
-      ghostGrid.style.gridTemplateRows = `repeat(${rows}, 38px)`;
-      ghostGrid.style.gap = "2px";
+      ghostGrid.style.gridTemplateColumns = `repeat(${cols}, 42px)`;
+      ghostGrid.style.gridTemplateRows = `repeat(${rows}, 42px)`;
+      ghostGrid.style.gap = "3px";
 
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
           const div = document.createElement("div");
-          div.style.width = "38px";
-          div.style.height = "38px";
-          div.style.borderRadius = "5px";
+          div.style.width = "42px";
+          div.style.height = "42px";
+          div.style.borderRadius = "6px";
           if (shape[r][c] === 1) {
             div.style.background = color;
-            div.style.boxShadow = `0 0 10px ${color}`;
+            div.style.boxShadow = `0 0 12px ${color}`;
           }
           ghostGrid.appendChild(div);
         }
@@ -336,7 +332,7 @@
 
     function moveGhost(x, y) {
       dragGhost.style.left = x + "px";
-      dragGhost.style.top = (y - 40) + "px";
+      dragGhost.style.top = y + "px";
     }
 
     function canPlace(shape, r, c) {
@@ -389,7 +385,6 @@
       }
     }
 
-    // Satır ve Sütun Patlatma & Konfeti Efekti
     function checkLines() {
       let rowsToClear = [];
       let colsToClear = [];
@@ -425,13 +420,12 @@
       }
     }
 
-    // Konfeti Fırlatma Motoru
     function triggerConfetti() {
       const rect = gridBoard.getBoundingClientRect();
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
 
-      for (let i = 0; i < 30; i++) {
+      for (let i = 0; i < 35; i++) {
         const confetti = document.createElement("div");
         confetti.classList.add("confetti");
         confetti.style.background = COLORS[Math.floor(Math.random() * COLORS.length)];
@@ -439,7 +433,7 @@
         confetti.style.top = centerY + "px";
 
         const angle = Math.random() * Math.PI * 2;
-        const distance = 60 + Math.random() * 100;
+        const distance = 70 + Math.random() * 110;
         const tx = Math.cos(angle) * distance;
         const ty = Math.sin(angle) * distance;
 
