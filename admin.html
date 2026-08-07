@@ -20,7 +20,7 @@
     .stat-card { background: linear-gradient(145deg, #181818, #0a0a0a); border: 1px solid #333; padding: 20px; border-radius: 15px; text-align: center; }
     .stat-card h3 { color: #aaa; font-size: 16px; margin-bottom: 10px; }
     .stat-card p { color: #9146ff; font-size: 36px; font-weight: bold; margin: 0; }
-    .admin-form input, .admin-form textarea { width: 100%; background: #0a0a0a; border: 1px solid #333; color: white; padding: 15px; border-radius: 10px; margin-bottom: 15px; font-family: inherit; resize: vertical; box-sizing: border-box; }
+    .admin-form input[type="text"], .admin-form textarea { width: 100%; background: #0a0a0a; border: 1px solid #333; color: white; padding: 15px; border-radius: 10px; margin-bottom: 15px; font-family: inherit; resize: vertical; box-sizing: border-box; }
     .admin-btn { background: #9146ff; color: white; border: none; padding: 12px 25px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; }
     .admin-btn:hover { background: #7a35e6; box-shadow: 0 0 15px rgba(145, 70, 255, 0.5); }
     
@@ -28,6 +28,14 @@
     .emoji-btn { background: #1a1a1a; border: 1px solid #333; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 1.1rem; transition: 0.2s; }
     .emoji-btn:hover { background: #9146ff; border-color: #9146ff; }
     
+    /* Modern Özel Dosya Yükleme Alanı */
+    .file-upload-box { border: 2px dashed #333; background: #0a0a0a; padding: 20px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.3s; margin-bottom: 20px; }
+    .file-upload-box:hover { border-color: #9146ff; background: #111; }
+    .file-upload-box p { color: #aaa; font-size: 0.95rem; margin: 0; }
+    #announceImageFile { display: none; }
+    #imagePreviewContainer { margin-top: 10px; display: none; text-align: center; }
+    #imagePreviewContainer img { max-height: 100px; border-radius: 8px; border: 1px solid #444; }
+
     .announcement-card { background: #181818; border: 1px solid #333; border-radius: 12px; padding: 20px; margin-bottom: 15px; display: flex; gap: 20px; align-items: flex-start; }
     .announcement-card img { width: 120px; height: 120px; object-fit: cover; border-radius: 8px; border: 1px solid #444; }
     .announcement-info { flex: 1; }
@@ -37,7 +45,7 @@
     .edit-btn { background: #3b82f6; color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; }
     .delete-btn { background: #ef4444; color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; }
 
-    /* Modern Özel Modal / Onay Kutusu */
+    /* Özel Onay Modalı */
     #customConfirmModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999999; justify-content: center; align-items: center; }
     .confirm-box { background: #111; border: 1px solid #9146ff; padding: 25px; border-radius: 15px; width: 350px; text-align: center; box-shadow: 0 0 30px rgba(145,70,255,0.4); }
     .confirm-box p { color: #fff; font-size: 1.05rem; margin-bottom: 20px; }
@@ -88,8 +96,15 @@
 
           <textarea id="announceDesc" rows="4" placeholder="Duyuru İçeriğini Buraya Yaz..."></textarea>
           
-          <label style="display:block; margin-bottom:8px; font-size:0.9rem; color:#aaa;">📷 Duyuru Fotoğrafı Seç (İsteğe bağlı):</label>
-          <input type="file" id="announceImageFile" accept="image/*" style="padding: 10px; background: #050505;">
+          <!-- Şık Tasarımlı Dosya Yükleme Alanı -->
+          <label style="display:block; margin-bottom:8px; font-size:0.9rem; color:#aaa;">📷 Duyuru Fotoğrafı (İsteğe bağlı):</label>
+          <div class="file-upload-box" onclick="document.getElementById('announceImageFile').click()">
+            <p id="uploadLabelText">📁 Fotoğraf seçmek için tıkla veya buraya yükle</p>
+            <input type="file" id="announceImageFile" accept="image/*">
+            <div id="imagePreviewContainer">
+              <img id="imagePreview" src="" alt="Önizleme">
+            </div>
+          </div>
           
           <button class="admin-btn" id="sendAnnounceBtn">Duyuruyu Yayınla</button>
           <button class="admin-btn" id="cancelEditBtn" style="background:#444; display:none; margin-left:10px;">İptal</button>
@@ -150,6 +165,23 @@
       descInput.value += emoji;
       descInput.focus();
     }
+
+    // Dosya seçilince önizleme metnini ve görselini güncelle
+    document.addEventListener("change", (e) => {
+      if (e.target.id === "announceImageFile") {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(evt) {
+            document.getElementById("uploadLabelText").innerText = "📸 Fotoğraf Seçildi: " + file.name;
+            const preview = document.getElementById("imagePreview");
+            preview.src = evt.target.result;
+            document.getElementById("imagePreviewContainer").style.display = "block";
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+    });
   </script>
   <script type="module" src="admin.js"></script>
 </body>
