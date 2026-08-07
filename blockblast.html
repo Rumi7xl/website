@@ -228,7 +228,7 @@
     const BOARD_SIZE = 8;
     let board = Array(BOARD_SIZE).fill(0).map(() => Array(BOARD_SIZE).fill(null));
     let score = 0;
-    let highScore = 0;
+    let highScore = localStorage.getItem("blockBlastHighScore") ? parseInt(localStorage.getItem("blockBlastHighScore")) : 0;
     let currentPieces = [null, null, null];
     let currentUser = null;
 
@@ -247,6 +247,7 @@
     const dragGhost = document.getElementById("dragGhost");
     const leaderboardList = document.getElementById("leaderboardList");
 
+    // 1. OYUNU HEMEN BAŞLAT (Firebase'i beklemeden arayüzü çiz)
     function initBoardUI() {
       gridBoard.innerHTML = "";
       for (let r = 0; r < BOARD_SIZE; r++) {
@@ -260,19 +261,27 @@
       }
     }
 
+    initBoardUI();
+    loadGameState();
+
+    // 2. FIREBASE İŞLEMLERİNİ ARKA PLANDA YÜRÜT
     onAuthStateChanged(auth, async (user) => {
       currentUser = user;
       if (user) {
         try {
           const userDoc = await getDoc(doc(db, "scores", user.uid));
           if (userDoc.exists()) {
-            highScore = userDoc.data().score || 0;
+            const fbScore = userDoc.data().score || 0;
+            if (fbScore > highScore) {
+              highScore = fbScore;
+              localStorage.setItem("blockBlastHighScore", highScore);
+              updateScoreUI();
+            }
           }
         } catch (err) {
           console.log("Skor çekilemedi:", err);
         }
       }
-      updateScoreUI();
       fetchLeaderboard();
     });
 
@@ -280,6 +289,7 @@
       if (!currentUser) return;
       if (score > highScore) {
         highScore = score;
+        localStorage.setItem("blockBlastHighScore", highScore);
         try {
           await setDoc(doc(db, "scores", currentUser.uid), {
             username: currentUser.displayName || currentUser.email.split('@')[0],
@@ -321,6 +331,10 @@
       localStorage.setItem("blockBlastBoard", JSON.stringify(board));
       localStorage.setItem("blockBlastScore", score);
       localStorage.setItem("blockBlastPieces", JSON.stringify(currentPieces));
+      if (score > highScore) {
+        highScore = score;
+        localStorage.setItem("blockBlastHighScore", highScore);
+      }
       saveScoreToFirebase();
       updateScoreUI();
     }
@@ -689,9 +703,6 @@
       updateBoardUI();
       generatePieces();
     }
-
-    initBoardUI();
-    loadGameState();
   </script>
 </body>
 </html>
