@@ -3,87 +3,136 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>İçerikler - RUMI7XL</title>
+  <title>RUMİ7XL - İçerikler</title>
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="favicon.png">
 </head>
-<body style="background-color: #0b0b0b; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding-top: 100px;">
+<body>
 
-  <!-- ÜST MENÜ -->
-  <header style="position: fixed; top: 0; left: 0; width: 100%; background: rgba(11,11,11,0.85); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; padding: 15px 40px; box-sizing: border-box;">
-    <div style="font-size: 1.5rem; font-weight: bold; color: #9146ff; letter-spacing: 2px;">RUMİ7XL</div>
-    <nav style="display: flex; gap: 25px; align-items: center;">
-      <a href="index.html" style="color: #ccc; text-decoration: none; font-weight: 500;">Ana Sayfa</a>
-      <a href="topluluk.html" style="color: #ccc; text-decoration: none; font-weight: 500;">Topluluk</a>
-      <a href="oneriler.html" style="color: #ccc; text-decoration: none; font-weight: 500;">Öneriler</a>
-      <a href="icerikler.html" style="color: #9146ff; text-decoration: none; font-weight: bold;">İçerikler</a>
-      <a href="duyurular.html" style="color: #ccc; text-decoration: none; font-weight: 500;">Duyurular</a>
-    </nav>
-    <div id="userProfileArea"></div>
-  </header>
-
-  <!-- ANA İÇERİK ALANI -->
-  <main style="max-width: 1200px; margin: 0 auto; padding: 40px 20px; text-align: center;">
-    <h1 style="font-size: 2.8rem; color: #c084fc; margin-bottom: 10px;">RUMI7XL İçerikler</h1>
-    <p style="color: #888; font-size: 1.1rem; margin-bottom: 50px;">Canlı yayınlarım, videolarım ve sosyal medya içeriklerim burada.</p>
-
-    <!-- BÜYÜK KÜPLER (KARTLAR) GRID YAPISI -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 30px; align-items: start;">
-
-      <!-- 1. KÜP: CANLI YAYIN DURUMU -->
-      <div style="background: #141414; border: 1px solid #222; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: left; transition: transform 0.3s;">
-        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
-          <div style="width: 50px; height: 50px; background: #1f1424; border-radius: 12px; display: flex; align-items: center; justify-content: center; border: 1px solid #9146ff55;">
-            <span style="font-size: 1.5rem;">🔴</span>
-          </div>
-          <h2 style="font-size: 1.4rem; color: #fff; margin: 0;">Yayın Durumu</h2>
-        </div>
-        <div id="liveStatusBox" style="background: #1a1a1a; padding: 20px; border-radius: 12px; border: 1px solid #333;">
-          <p style="color: #aaa; margin: 0 0 10px 0;">Yükleniyor...</p>
-        </div>
-      </div>
-
-      <!-- 2. KÜP: KİCK KANALI -->
-      <div style="background: #141414; border: 1px solid #222; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: left;">
-        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
-          <img src="kick-logo.png" alt="Kick" style="width: 50px; height: 50px; object-fit: contain; border-radius: 12px; background: #1f2937; padding: 5px;">
-          <h2 style="font-size: 1.4rem; color: #22c55e; margin: 0;">Kick Yayınları</h2>
-        </div>
-        <div id="kickContentBox" style="background: #1a1a1a; padding: 20px; border-radius: 12px; border: 1px solid #333;">
-          <p style="color: #aaa; margin: 0 0 15px 0;">Yükleniyor...</p>
-        </div>
-      </div>
-
-      <!-- 3. KÜP: YOUTUBE VİDEOLARI (LİSTE HALİNDE) -->
-      <div style="background: #141414; border: 1px solid #222; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: left;">
-        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
-          <img src="youtube-logo.png" alt="YouTube" style="width: 50px; height: 50px; object-fit: contain; border-radius: 12px; background: #261111; padding: 5px;">
-          <h2 style="font-size: 1.4rem; color: #ef4444; margin: 0;">YouTube Videoları</h2>
-        </div>
-        <div id="youtubeListBox" style="background: #1a1a1a; padding: 15px; border-radius: 12px; border: 1px solid #333; max-height: 250px; overflow-y: auto;">
-          <p style="color: #aaa; margin: 0;">Videolar yükleniyor...</p>
-        </div>
-      </div>
-
-      <!-- 4. KÜP: TİKTOK İÇERİKLERİ -->
-      <div style="background: #141414; border: 1px solid #222; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: left;">
-        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
-          <img src="tiktok-logo.png" alt="TikTok" style="width: 50px; height: 50px; object-fit: contain; border-radius: 12px; background: #111; padding: 5px;">
-          <h2 style="font-size: 1.4rem; color: #fff; margin: 0;">TikTok Paylaşımları</h2>
-        </div>
-        <div id="tiktokContentBox" style="background: #1a1a1a; padding: 20px; border-radius: 12px; border: 1px solid #333;">
-          <p style="color: #aaa; margin: 0 0 15px 0;">Yükleniyor...</p>
-        </div>
-      </div>
-
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="index.html" class="logo">RUMİ7XL</a>
+    
+    <div class="nav-links">
+      <a href="index.html">Ana Sayfa</a>
+      <a href="topluluk.html">Topluluk</a>
+      <a href="oneriler.html">Öneriler</a>
+      <a href="icerikler.html" class="active">İçerikler</a>
+      <a href="duyurular.html">Duyurular</a>
     </div>
-  </main>
 
-  <footer style="text-align: center; padding: 40px; color: #666; font-size: 0.9rem; border-top: 1px solid #222; margin-top: 60px;">
-    © 2026 RUMI7XL - Tüm Hakları Saklıdır.
+    <div class="account-box"></div>
+  </nav>
+
+  <!-- BAŞLIK -->
+  <div class="hero" style="min-height: auto; padding: 40px 20px 10px;">
+    <div class="hero-content">
+      <h1 style="font-size: 55px;">RUMİ7XL İçerikler</h1>
+      <p style="font-size: 18px; color: #aaa; margin-top: 10px;">Canlı yayınlarım, videolarım ve özel içeriklerim burada.</p>
+    </div>
+  </div>
+
+  <!-- İÇERİK KARTLARI (KÜPLER) -->
+  <div class="platforms">
+    
+    <!-- 1. KÜP: CANLI DURUM -->
+    <div class="box live-card">
+      <div class="platform-logo kick">
+        <span style="font-size: 35px;">🔴</span>
+      </div>
+      <h2>CANLI DURUM</h2>
+      <p>Yükleniyor...</p>
+      <a href="https://kick.com/rumi7xl" target="_blank">KICK'E GİT →</a>
+    </div>
+
+    <!-- 2. KÜP: KICK YAYINLARI -->
+    <div class="box kick-card">
+      <div class="platform-logo kick" style="display:flex; align-items:center; justify-content:center;">
+        <img src="kick-logo.png" alt="Kick" style="width: 40px; height: 40px; object-fit: contain;">
+      </div>
+      <h2>KICK YAYINLARI</h2>
+      <p>Yükleniyor...</p>
+      <a href="https://kick.com/rumi7xl" target="_blank">KANALA GİT →</a>
+    </div>
+
+    <!-- 3. KÜP: YOUTUBE İÇERİKLERİ -->
+    <div class="box youtube-card">
+      <div class="platform-logo youtube" style="display:flex; align-items:center; justify-content:center;">
+        <img src="youtube-logo.png" alt="YouTube" style="width: 40px; height: 40px; object-fit: contain;">
+      </div>
+      <h2>YOUTUBE</h2>
+      <p>Yükleniyor...</p>
+      <a href="https://youtube.com" target="_blank">VİDEOLARA GİT →</a>
+    </div>
+
+    <!-- 4. KÜP: TIKTOK İÇERİKLERİ -->
+    <div class="box tiktok-card">
+      <div class="platform-logo tiktok" style="display:flex; align-items:center; justify-content:center;">
+        <img src="tiktok-logo.png" alt="TikTok" style="width: 40px; height: 40px; object-fit: contain;">
+      </div>
+      <h2>TIKTOK</h2>
+      <p>Yükleniyor...</p>
+      <a href="https://tiktok.com" target="_blank">TIKTOK'A GİT →</a>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 RUMİ7XL - Tüm Hakları Saklıdır.</p>
   </footer>
 
-  <!-- İÇERİK JS DOSYASI -->
+  <!-- MODALLAR -->
+  <div id="accountModal" class="account-modal">
+    <div class="account-window">
+      <button class="close-account" onclick="document.getElementById('accountModal').style.display='none'">✕</button>
+      <div class="account-tabs">
+        <button id="loginTabBtn" class="active" onclick="switchTab('login')">Giriş Yap</button>
+        <button id="registerTabBtn" onclick="switchTab('register')">Kayıt Ol</button>
+      </div>
+      <form id="loginForm" class="account-form">
+        <input type="email" name="email" placeholder="E-posta" required>
+        <input type="password" name="password" placeholder="Şifre" required>
+        <button type="submit" class="account-submit">Giriş Yap</button>
+        <a href="#" id="forgotPasswordBtn" style="color:#aaa; font-size:12px; text-align:center; margin-top:10px; display:block;">Şifremi Unuttum</a>
+      </form>
+      <form id="registerForm" class="account-form" style="display:none;">
+        <input type="text" name="username" placeholder="Kullanıcı Adı" required>
+        <input type="email" name="register-email" placeholder="E-posta" required>
+        <input type="password" name="new-password" placeholder="Şifre" required>
+        <button type="submit" class="account-submit">Kayıt Ol</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="photoModal" class="account-modal">
+    <div class="account-window">
+      <button class="close-account" onclick="document.getElementById('photoModal').style.display='none'">✕</button>
+      <h2 style="color:#9146ff; margin-bottom:15px; font-size:20px; text-align:center;">Profil Fotoğrafı Değiştir</h2>
+      <form id="photoSettingsForm" class="account-form">
+        <label for="photoFileInput" style="border: 2px dashed #333; padding: 20px; text-align: center; border-radius: 15px; cursor: pointer; display: block; background: #181818;">
+          <span id="uploadLabelText">📁 Galeriden Resim Seç</span>
+          <input type="file" id="photoFileInput" accept="image/*" style="display:none;">
+          <img id="photoPreview" style="display:none; width:80px; height:80px; border-radius:50%; margin: 10px auto 0; object-fit:cover; border:2px solid #9146ff;">
+        </label>
+        <button type="submit" class="account-submit">Yükle ve Kaydet</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="passwordModal" class="account-modal">
+    <div class="account-window">
+      <button class="close-account" onclick="document.getElementById('passwordModal').style.display='none'">✕</button>
+      <h2 style="color:#9146ff; margin-bottom:15px; font-size:20px; text-align:center;">Şifre Değiştir</h2>
+      <form id="passwordSettingsForm" class="account-form">
+        <input type="password" name="changePassword" placeholder="Yeni Şifreniz" required>
+        <button type="submit" class="account-submit">Şifreyi Güncelle</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- SCRIPT BAGLANTILARI -->
+  <script type="module" src="auth.js"></script>
   <script type="module" src="icerikler.js"></script>
 </body>
 </html>
