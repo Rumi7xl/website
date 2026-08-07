@@ -52,7 +52,7 @@
       <a id="liveCardBtn" href="#" target="_blank">KICK'E GİT &gt;</a>
     </div>
 
-    <!-- 2. KÜP: KICK KANALI (Çok az küçültüldü) -->
+    <!-- 2. KÜP: KICK KANALI -->
     <div class="box kick-card" style="display: flex; flex-direction: column; justify-content: space-between;">
       <div>
         <div class="platform-logo kick" style="border: 2px solid #22c55e; box-shadow: 0 0 20px rgba(34,197,94,0.4); width: 80px; height: 80px; background: #161616; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
@@ -80,14 +80,14 @@
       <a id="youtubeCardBtn" href="https://www.youtube.com/@Rumi7xl" target="_blank">VİDEOLARA GİT &gt;</a>
     </div>
 
-    <!-- 4. KÜP: TİKTOK İÇERİKLERİ -->
+    <!-- 4. KÜP: TİKTOK İÇERİKLERİ (ID EKLENDİ) -->
     <div class="box tiktok-card" style="display: flex; flex-direction: column; justify-content: space-between;">
       <div>
         <div class="platform-logo tiktok" style="border: 2px solid #fff; box-shadow: 0 0 20px rgba(255,255,255,0.3); width: 80px; height: 80px; background: #161616; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
           <img src="tiktok-logo.png" alt="TikTok" style="width: 76px; height: 76px; object-fit: contain;">
         </div>
         <h2>TIKTOK</h2>
-        <div style="color: #bbb; font-size: 14px; line-height: 1.6; margin-bottom: 25px; min-height: 90px; display: flex; flex-direction: column; justify-content: center;">
+        <div id="tiktokCardBody" style="color: #bbb; font-size: 14px; line-height: 1.6; margin-bottom: 25px; min-height: 90px; display: flex; flex-direction: column; justify-content: center;">
           En komik kesitler ve kısa videolar TikTok adresimde!
         </div>
       </div>
@@ -97,7 +97,7 @@
   </section>
 
   <!-- FOOTER -->
-  <footer style="text-align: center; padding: 20px; color: #777; font-size: 0.9rem;">© 2026 RUMİ7XL[cite: 1]</footer>
+  <footer style="text-align: center; padding: 20px; color: #777; font-size: 0.9rem;">© 2026 RUMİ7XL</footer>
 
   <!-- HESAP POPUP -->
   <div class="account-modal" id="accountModal">
@@ -130,7 +130,7 @@
 
   <div id="siteToast"></div>
 
-  <!-- VERİ ÇEKME SCRİPTİ -->
+  <!-- VERİ ÇEKME SCRİPTİ (TİKTOK EKLENDİ) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
     import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
@@ -185,11 +185,20 @@
             document.getElementById("youtubeCardBtn").href = data.youtubeVideos[0].url;
           }
 
-          // 4. TikTok Kartı
-          document.getElementById("tiktokCardBtn").href = "https://www.tiktok.com/@rumi7xl";
+          // 4. TikTok Kartı (GÜNCELLENEN KISIM)
+          const tiktokBody = document.getElementById("tiktokCardBody");
+          if (tiktokBody) {
+            tiktokBody.innerText = data.tiktokDesc || "En komik kesitler ve kısa videolar TikTok adresimde!";
+          }
+          
+          if (data.tiktokLink) {
+            document.getElementById("tiktokCardBtn").href = data.tiktokLink;
+          } else {
+            document.getElementById("tiktokCardBtn").href = "https://www.tiktok.com/@rumi7xl";
+          }
         }
       } catch (e) {
-        console.error(e);
+        console.error("Hata:", e);
       }
     }
 
