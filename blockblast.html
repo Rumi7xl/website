@@ -7,12 +7,21 @@
   <link href="favicon.png?v=2" rel="icon" type="image/png"/>
   <link rel="stylesheet" href="style.css?v=1.2">
   <style>
+    .game-main-layout {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 30px;
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 0 20px;
+      box-sizing: border-box;
+    }
     .game-wrapper {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 15px;
-      margin-top: 10px;
       position: relative;
     }
     .score-container {
@@ -89,6 +98,41 @@
       background: #252525;
       border-radius: 3px;
     }
+    /* Sağ Taraf Liderlik Listesi */
+    .leaderboard-sidebar {
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 15px;
+      padding: 20px;
+      width: 240px;
+      box-sizing: border-box;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+    .leaderboard-sidebar h3 {
+      color: #fbbf24;
+      font-size: 16px;
+      margin-top: 0;
+      margin-bottom: 15px;
+      text-align: center;
+      text-shadow: 0 0 8px rgba(251, 191, 36, 0.4);
+    }
+    .rank-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 10px;
+      border-bottom: 1px solid #222;
+      font-size: 14px;
+      color: #ccc;
+    }
+    .rank-item:last-child {
+      border-bottom: none;
+    }
+    .rank-num {
+      font-weight: bold;
+      color: #53fc18;
+    }
+
     #dragGhost {
       position: fixed;
       pointer-events: none;
@@ -121,6 +165,17 @@
       0% { transform: translate(0, 0) scale(1); opacity: 1; }
       100% { transform: translate(var(--tx), var(--ty)) scale(0.3); opacity: 0; }
     }
+
+    /* Mobilde alt alta durması için duyarlı tasarım */
+    @media (max-width: 768px) {
+      .game-main-layout {
+        flex-direction: column;
+        align-items: center;
+      }
+      .leaderboard-sidebar {
+        width: 360px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -133,8 +188,9 @@
     <div class="account-box"></div>
   </nav>
 
-  <div style="max-width: 500px; margin: 15px auto; padding: 0 20px; text-align: center;">
+  <div class="game-main-layout">
     
+    <!-- Sol/Orta Oyun Alanı -->
     <div class="game-wrapper" id="gameWrapper">
       <div class="score-container">
         <div class="score-board">Skor: <span id="currentScore">0</span></div>
@@ -152,6 +208,16 @@
       </div>
 
       <div id="piecesContainer" class="pieces-container"></div>
+    </div>
+
+    <!-- Sağ Taraf Liderlik Listesi -->
+    <div class="leaderboard-sidebar">
+      <h3>🏆 Topluluk Sıralaması</h3>
+      <div class="rank-item"><span class="rank-num">1. RUMİ7XL</span> <span style="color:#fbbf24; font-weight:bold;">420</span></div>
+      <div class="rank-item"><span class="rank-num">2. Oyuncu</span> <span style="color:#aaa;">350</span></div>
+      <div class="rank-item"><span class="rank-num">3. ProGamer</span> <span style="color:#aaa;">280</span></div>
+      <div class="rank-item"><span class="rank-num">4. Ziyaretçi</span> <span style="color:#aaa;">190</span></div>
+      <div class="rank-item"><span class="rank-num">5. HızlıParmak</span> <span style="color:#aaa;">120</span></div>
     </div>
 
   </div>
@@ -579,7 +645,6 @@
       generatePieces();
     }
 
-    // Oyun Başlangıcı
     initBoardUI();
     loadGameState();
   </script>
