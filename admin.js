@@ -230,7 +230,7 @@ async function loadAdminPanelData() {
   });
 }
 
-// İÇERİKLER YÖNETİMİ MANTIĞI (TikTok Alanı Eklendi)
+// İÇERİKLER YÖNETİMİ MANTIĞI (2x2 Grid Uyumlu)
 async function loadConfigData() {
   try {
     const docSnap = await getDoc(doc(db, "siteSettings", "iceriklerConfig"));
@@ -242,6 +242,7 @@ async function loadConfigData() {
       const kickLinkEl = document.getElementById("admKickLink");
       const kickDescEl = document.getElementById("admKickDesc");
       const tiktokLinkEl = document.getElementById("admTiktokLink");
+      const tiktokDescEl = document.getElementById("admTiktokDesc");
 
       if (isLiveEl) isLiveEl.checked = data.isLive || false;
       if (liveGameEl) liveGameEl.value = data.liveGame || "";
@@ -249,6 +250,7 @@ async function loadConfigData() {
       if (kickLinkEl) kickLinkEl.value = data.kickLink || "";
       if (kickDescEl) kickDescEl.value = data.kickDesc || "";
       if (tiktokLinkEl) tiktokLinkEl.value = data.tiktokLink || "";
+      if (tiktokDescEl) tiktokDescEl.value = data.tiktokDesc || "";
       adminYoutubeVideosCache = data.youtubeVideos || [];
     }
     renderYtList();
@@ -309,12 +311,13 @@ if (saveIceriklerBtn) {
       const kickLink = document.getElementById("admKickLink").value.trim();
       const kickDesc = document.getElementById("admKickDesc").value.trim();
       const tiktokLink = document.getElementById("admTiktokLink").value.trim();
+      const tiktokDesc = document.getElementById("admTiktokDesc").value.trim();
 
       await setDoc(doc(db, "siteSettings", "iceriklerConfig"), {
         isLive, liveGame, liveViewers, kickLink, kickDesc,
         youtubeVideos: adminYoutubeVideosCache,
         tiktokLink,
-        tiktokDesc: "En komik kesitler ve kısa videolar TikTok adresimde!"
+        tiktokDesc: tiktokDesc || "En komik kesitler ve kısa videolar TikTok adresimde!"
       }, { merge: true });
 
       showToast("İçerikler sayfası başarıyla güncellendi! 🔥");
