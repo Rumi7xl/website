@@ -4,143 +4,181 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RUMİ7XL - İçerikler</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="favicon.png">
+  <link rel="stylesheet" href="style.css?v=1.1">
+  <link rel="icon" href="favicon.png?v=2">
 </head>
 <body>
 
   <!-- NAVBAR -->
-  <nav class="navbar">
-    <a href="index.html" class="logo">RUMİ7XL</a>
+  <header class="navbar">
+    <a href="/" class="logo">RUMİ7XL</a>
     
-    <div class="nav-links">
+    <nav class="nav-links">
       <a href="index.html">Ana Sayfa</a>
       <a href="topluluk.html">Topluluk</a>
       <a href="oneriler.html">Öneriler</a>
       <a href="icerikler.html" class="active">İçerikler</a>
       <a href="duyurular.html">Duyurular</a>
-    </div>
+    </nav>
 
-    <div class="account-box"></div>
-  </nav>
+    <div class="account-box">
+      <a href="#" class="login-btn">👤 Giriş Yap</a>
+      <a href="#" class="register-btn">✨ Kayıt Ol</a>
+    </div>
+  </header>
 
   <!-- BAŞLIK -->
-  <div class="hero" style="min-height: auto; padding: 40px 20px 10px; text-align: center;">
+  <section class="hero" style="min-height: auto; padding: 50px 20px 20px; text-align: center;">
     <div class="hero-content">
-      <h1 style="font-size: 45px; color: #c084fc; text-shadow: 0 0 20px rgba(192,132,252,0.4);">RUMİ7XL İçerikler</h1>
+      <h1 style="font-size: 42px; color: #fff; text-shadow: 0 0 20px rgba(145,70,255,0.4);">RUMİ7XL İçerikler</h1>
       <p style="font-size: 16px; color: #aaa; margin-top: 10px;">Canlı yayınlarım, videolarım ve özel içeriklerim burada.</p>
     </div>
-  </div>
+  </section>
 
-  <!-- İÇERİK KARTLARI (KÜPLER) - ANA SAYFA TARZI -->
-  <div class="platforms" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; padding: 30px 20px 60px; max-width: 1300px; margin: 0 auto;">
+  <!-- İÇERİK KARTLARI (KÜPLER) - ANA SAYFA STİLİNDE -->
+  <section class="platforms">
     
     <!-- 1. KÜP: CANLI DURUM -->
-    <div class="box live-card" style="background: #111; border: 1px solid #222; border-radius: 20px; padding: 35px 25px; width: 260px; display: flex; flex-direction: column; align-items: center; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.6); transition: transform 0.3s;">
-      <div style="width: 80px; height: 80px; background: #161616; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #22c55e; margin-bottom: 20px; box-shadow: 0 0 20px rgba(34,197,94,0.4);">
+    <div class="box live-card">
+      <div class="platform-logo" style="border: 2px solid #22c55e; box-shadow: 0 0 20px rgba(34,197,94,0.4); width: 80px; height: 80px; background: #161616; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
         <span style="font-size: 38px;">🔴</span>
       </div>
-      <h2 style="font-size: 22px; color: #fff; margin-bottom: 15px; letter-spacing: 1px;">CANLI DURUM</h2>
-      <div class="card-body-content" style="color: #bbb; font-size: 14px; line-height: 1.6; flex: 1; margin-bottom: 25px; width: 100%;">
+      <h2>CANLI DURUM</h2>
+      <div class="card-body-content" style="color: #bbb; font-size: 14px; line-height: 1.6; margin-bottom: 25px; min-height: 80px; display: flex; flex-direction: column; justify-content: center;">
         Yükleniyor...
       </div>
-      <a href="https://kick.com/rumi7xl" target="_blank" style="background: transparent; color: #22c55e; border: 2px solid #22c55e; padding: 10px 0; border-radius: 25px; text-decoration: none; font-weight: bold; font-size: 13px; width: 100%; display: inline-block; box-shadow: 0 0 10px rgba(34,197,94,0.2); transition: all 0.3s;">KICK'E GİT →</a>
+      <a href="https://kick.com/rumi7xl" target="_blank">KICK'E GİT &gt;</a>
     </div>
 
     <!-- 2. KÜP: KICK YAYINLARI -->
-    <div class="box kick-card" style="background: #111; border: 1px solid #222; border-radius: 20px; padding: 35px 25px; width: 260px; display: flex; flex-direction: column; align-items: center; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.6); transition: transform 0.3s;">
-      <div style="width: 80px; height: 80px; background: #161616; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #22c55e; margin-bottom: 20px; box-shadow: 0 0 20px rgba(34,197,94,0.4);">
+    <div class="box kick-card">
+      <div class="platform-logo kick" style="border: 2px solid #22c55e; box-shadow: 0 0 20px rgba(34,197,94,0.4); width: 80px; height: 80px; background: #161616; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
         <img src="kick-logo.png" alt="Kick" style="width: 44px; height: 44px; object-fit: contain;">
       </div>
-      <h2 style="font-size: 22px; color: #22c55e; margin-bottom: 15px; letter-spacing: 1px; text-shadow: 0 0 10px rgba(34,197,94,0.5);">KICK KANALI</h2>
-      <div class="card-body-content" style="color: #bbb; font-size: 14px; line-height: 1.6; flex: 1; margin-bottom: 25px; width: 100%;">
+      <h2>KICK KANALI</h2>
+      <div class="card-body-content" style="color: #bbb; font-size: 14px; line-height: 1.6; margin-bottom: 25px; min-height: 80px; display: flex; flex-direction: column; justify-content: center;">
         Yükleniyor...
       </div>
-      <a href="https://kick.com/rumi7xl" target="_blank" style="background: transparent; color: #22c55e; border: 2px solid #22c55e; padding: 10px 0; border-radius: 25px; text-decoration: none; font-weight: bold; font-size: 13px; width: 100%; display: inline-block; box-shadow: 0 0 10px rgba(34,197,94,0.2); transition: all 0.3s;">KANALA GİT →</a>
+      <a href="https://kick.com/rumi7xl" target="_blank">KANALA GİT &gt;</a>
     </div>
 
     <!-- 3. KÜP: YOUTUBE VİDEOLARI -->
-    <div class="box youtube-card" style="background: #111; border: 1px solid #222; border-radius: 20px; padding: 35px 25px; width: 260px; display: flex; flex-direction: column; align-items: center; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.6); transition: transform 0.3s;">
-      <div style="width: 80px; height: 80px; background: #161616; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #ef4444; margin-bottom: 20px; box-shadow: 0 0 20px rgba(239,68,68,0.4);">
+    <div class="box youtube-card">
+      <div class="platform-logo youtube" style="border: 2px solid #ef4444; box-shadow: 0 0 20px rgba(239,68,68,0.4); width: 80px; height: 80px; background: #161616; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
         <img src="youtube-logo.png" alt="YouTube" style="width: 44px; height: 44px; object-fit: contain;">
       </div>
-      <h2 style="font-size: 22px; color: #ef4444; margin-bottom: 15px; letter-spacing: 1px; text-shadow: 0 0 10px rgba(239,68,68,0.5);">YOUTUBE</h2>
-      <div class="card-body-content" style="color: #bbb; font-size: 14px; line-height: 1.6; flex: 1; margin-bottom: 25px; width: 100%; max-height: 130px; overflow-y: auto; text-align: left; padding: 0 5px;">
+      <h2>YOUTUBE</h2>
+      <div class="card-body-content" style="color: #bbb; font-size: 14px; line-height: 1.6; margin-bottom: 25px; min-height: 80px; max-height: 130px; overflow-y: auto; text-align: left; padding: 0 5px;">
         Yükleniyor...
       </div>
-      <a href="https://youtube.com" target="_blank" style="background: transparent; color: #ef4444; border: 2px solid #ef4444; padding: 10px 0; border-radius: 25px; text-decoration: none; font-weight: bold; font-size: 13px; width: 100%; display: inline-block; box-shadow: 0 0 10px rgba(239,68,68,0.2); transition: all 0.3s;">VİDEOLARA GİT →</a>
+      <a href="https://www.youtube.com/@Rumi7xl" target="_blank">VİDEOLARA GİT &gt;</a>
     </div>
 
     <!-- 4. KÜP: TİKTOK İÇERİKLERİ -->
-    <div class="box tiktok-card" style="background: #111; border: 1px solid #222; border-radius: 20px; padding: 35px 25px; width: 260px; display: flex; flex-direction: column; align-items: center; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.6); transition: transform 0.3s;">
-      <div style="width: 80px; height: 80px; background: #161616; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; margin-bottom: 20px; box-shadow: 0 0 20px rgba(255,255,255,0.3);">
+    <div class="box tiktok-card">
+      <div class="platform-logo tiktok" style="border: 2px solid #fff; box-shadow: 0 0 20px rgba(255,255,255,0.3); width: 80px; height: 80px; background: #161616; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
         <img src="tiktok-logo.png" alt="TikTok" style="width: 42px; height: 42px; object-fit: contain;">
       </div>
-      <h2 style="font-size: 22px; color: #fff; margin-bottom: 15px; letter-spacing: 1px; text-shadow: 0 0 10px rgba(255,255,255,0.4);">TİKTOK</h2>
-      <div class="card-body-content" style="color: #bbb; font-size: 14px; line-height: 1.6; flex: 1; margin-bottom: 25px; width: 100%;">
+      <h2>TIKTOK</h2>
+      <div class="card-body-content" style="color: #bbb; font-size: 14px; line-height: 1.6; margin-bottom: 25px; min-height: 80px; display: flex; flex-direction: column; justify-content: center;">
         Yükleniyor...
       </div>
-      <a href="https://tiktok.com" target="_blank" style="background: transparent; color: #fff; border: 2px solid #fff; padding: 10px 0; border-radius: 25px; text-decoration: none; font-weight: bold; font-size: 13px; width: 100%; display: inline-block; box-shadow: 0 0 10px rgba(255,255,255,0.2); transition: all 0.3s;">TIKTOK'A GİT →</a>
+      <a href="https://www.tiktok.com/@rumi7xl" target="_blank">TIKTOK'A GİT &gt;</a>
     </div>
 
-  </div>
+  </section>
 
   <!-- FOOTER -->
-  <footer>
-    <p>© 2026 RUMİ7XL - Tüm Hakları Saklıdır.</p>
-  </footer>
+  <footer>© 2026 RUMİ7XL</footer>
 
-  <!-- MODALLAR -->
-  <div id="accountModal" class="account-modal">
+  <!-- HESAP POPUP -->
+  <div class="account-modal" id="accountModal">
     <div class="account-window">
-      <button class="close-account" onclick="document.getElementById('accountModal').style.display='none'">✕</button>
+      <button class="close-account" onclick="closeAccount()">✕</button>
       <div class="account-tabs">
-        <button id="loginTabBtn" class="active" onclick="switchTab('login')">Giriş Yap</button>
-        <button id="registerTabBtn" onclick="switchTab('register')">Kayıt Ol</button>
+        <button id="loginTab" class="active" onclick="showLogin()">Giriş Yap</button>
+        <button id="registerTab" onclick="showRegister()">Kayıt Ol</button>
       </div>
-      <form id="loginForm" class="account-form">
-        <input type="email" name="email" placeholder="E-posta" required>
-        <input type="password" name="password" placeholder="Şifre" required>
+
+      <form id="loginForm" class="account-form" autocomplete="on">
+        <input type="email" name="email" placeholder="E-posta" autocomplete="username">
+        <input type="password" name="password" placeholder="Şifre" autocomplete="current-password">
+        
+        <div style="text-align: right; width: 100%; margin-top: -5px; margin-bottom: 5px;">
+          <a href="#" id="forgotPasswordBtn" style="color: #a855f7; font-size: 0.85rem; text-decoration: none;">Şifremi Unuttum?</a>
+        </div>
+
         <button type="submit" class="account-submit">Giriş Yap</button>
-        <a href="#" id="forgotPasswordBtn" style="color:#aaa; font-size:12px; text-align:center; margin-top:10px; display:block;">Şifremi Unuttum</a>
       </form>
-      <form id="registerForm" class="account-form" style="display:none;">
-        <input type="text" name="username" placeholder="Kullanıcı Adı" required>
-        <input type="email" name="register-email" placeholder="E-posta" required>
-        <input type="password" name="new-password" placeholder="Şifre" required>
+
+      <form id="registerForm" class="account-form" style="display:none;" autocomplete="on">
+        <input type="text" name="username" placeholder="Kullanıcı adı" autocomplete="username">
+        <input type="email" name="register-email" placeholder="E-posta" autocomplete="email">
+        <input type="password" name="new-password" placeholder="Şifre" autocomplete="new-password">
         <button type="submit" class="account-submit">Kayıt Ol</button>
       </form>
     </div>
   </div>
 
-  <div id="photoModal" class="account-modal">
-    <div class="account-window">
-      <button class="close-account" onclick="document.getElementById('photoModal').style.display='none'">✕</button>
-      <h2 style="color:#9146ff; margin-bottom:15px; font-size:20px; text-align:center;">Profil Fotoğrafı Değiştir</h2>
-      <form id="photoSettingsForm" class="account-form">
-        <label for="photoFileInput" style="border: 2px dashed #333; padding: 20px; text-align: center; border-radius: 15px; cursor: pointer; display: block; background: #181818;">
-          <span id="uploadLabelText">📁 Galeriden Resim Seç</span>
-          <input type="file" id="photoFileInput" accept="image/*" style="display:none;">
-          <img id="photoPreview" style="display:none; width:80px; height:80px; border-radius:50%; margin: 10px auto 0; object-fit:cover; border:2px solid #9146ff;">
-        </label>
-        <button type="submit" class="account-submit">Yükle dan Kaydet</button>
-      </form>
-    </div>
-  </div>
+  <div id="siteToast"></div>
 
-  <div id="passwordModal" class="account-modal">
-    <div class="account-window">
-      <button class="close-account" onclick="document.getElementById('passwordModal').style.display='none'">✕</button>
-      <h2 style="color:#9146ff; margin-bottom:15px; font-size:20px; text-align:center;">Şifre Değiştir</h2>
-      <form id="passwordSettingsForm" class="account-form">
-        <input type="password" name="changePassword" placeholder="Yeni Şifreniz" required>
-        <button type="submit" class="account-submit">Şifreyi Güncelle</button>
-      </form>
-    </div>
-  </div>
+  <script>
+  function showLogin(){
+    document.getElementById("loginForm").style.display="flex";
+    document.getElementById("registerForm").style.display="none";
+    document.getElementById("loginTab").classList.add("active");
+    document.getElementById("registerTab").classList.remove("active");
+  }
+
+  function showRegister(){
+    document.getElementById("loginForm").style.display="none";
+    document.getElementById("registerForm").style.display="flex";
+    document.getElementById("registerTab").classList.add("active");
+    document.getElementById("loginTab").classList.remove("active");
+  }
+
+  function closeAccount(){
+    document.getElementById("accountModal").style.display="none";
+  }
+
+  function showToast(message){
+    const toast=document.getElementById("siteToast");
+    if(!toast) return;
+    toast.innerText=message;
+    toast.classList.add("show");
+    setTimeout(()=>{ toast.classList.remove("show"); },3000);
+  }
+
+  window.showLogin = showLogin;
+  window.showRegister = showRegister;
+  window.closeAccount = closeAccount;
+  window.showToast = showToast;
+  </script>
+
+  <style>
+  #siteToast{
+    position:fixed;
+    top:25px;
+    right:25px;
+    background:#9146ff;
+    color:white;
+    padding:14px 22px;
+    border-radius:20px;
+    font-weight:bold;
+    box-shadow:0 0 25px rgba(145,70,255,.5);
+    opacity:0;
+    transform:translateY(-20px);
+    transition:.3s;
+    z-index:999999;
+  }
+  #siteToast.show{
+    opacity:1;
+    transform:translateY(0);
+  }
+  </style>
 
   <!-- SCRIPT BAGLANTILARI -->
-  <script type="module" src="auth.js"></script>
+  <script type="module" src="auth.js?v=1.1"></script>
   <script type="module" src="icerikler.js"></script>
 </body>
 </html>
