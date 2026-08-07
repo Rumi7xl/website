@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
-import { getFirestore, collection, addDoc, updateDoc, doc, serverTimestamp, getDocs, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, updateDoc, doc, serverTimestamp, getDocs, deleteDoc, query, orderBy, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCiuXtHu3J9Va46a4KiETO2JrSn5um2KoQ",
@@ -24,43 +24,27 @@ onAuthStateChanged(auth, (user) => {
   } else {
     loadStats();
     loadAdminAnnouncements();
-    loadAdminMessages(); // Mesajları doğru koleksiyondan çekiyoruz
+    loadAdminMessages();
   }
 });
 
-// BİLDİRİMİ ORTA ÜST KISMA KONUMLANDIRAN FONKSİYON
 function showToast(message, type = 'success') {
   let toast = document.getElementById("customToast");
   if (!toast) {
     toast = document.createElement("div");
     toast.id = "customToast";
     toast.style.cssText = `
-      position: fixed;
-      top: 25px;
-      left: 50%;
-      transform: translateX(-50%) translateY(-20px);
-      background: #111;
-      color: #fff;
-      border: 1px solid ${type === 'error' ? '#ef4444' : '#9146ff'};
-      padding: 14px 28px;
-      border-radius: 14px;
-      box-shadow: 0 0 30px rgba(145, 70, 255, 0.5);
-      z-index: 999999;
-      font-size: 1rem;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      transition: all 0.3s ease;
-      opacity: 0;
+      position: fixed; top: 25px; left: 50%; transform: translateX(-50%) translateY(-20px);
+      background: #111; color: #fff; border: 1px solid ${type === 'error' ? '#ef4444' : '#9146ff'};
+      padding: 14px 28px; border-radius: 14px; box-shadow: 0 0 30px rgba(145, 70, 255, 0.5);
+      z-index: 999999; font-size: 1rem; font-weight: bold; display: flex; align-items: center; gap: 12px;
+      transition: all 0.3s ease; opacity: 0;
     `;
     document.body.appendChild(toast);
   }
-
   toast.innerHTML = (type === 'error' ? '❌ ' : '✨ ') + message;
   toast.style.opacity = "1";
   toast.style.transform = "translateX(-50%) translateY(0)";
-
   setTimeout(() => {
     toast.style.opacity = "0";
     toast.style.transform = "translateX(-50%) translateY(-20px)";
@@ -99,25 +83,19 @@ if (sendAnnounceBtn) {
       if (editingId) {
         const updateData = { title, description: desc };
         if (imageUrl) updateData.image = imageUrl;
-
         await updateDoc(doc(db, "duyurular", editingId), updateData);
         showToast("Duyuru başarıyla güncellendi! 🔥");
         resetForm();
       } else {
         await addDoc(collection(db, "duyurular"), {
-          title,
-          description: desc,
-          image: imageUrl || "",
-          date: serverTimestamp()
+          title, description: desc, image: imageUrl || "", date: serverTimestamp()
         });
         showToast("Duyuru başarıyla yayınlandı! 🚀");
         resetForm();
       }
-
       loadAdminAnnouncements();
       loadStats();
     } catch (error) {
-      console.error("Hata:", error);
       showToast("Bir hata oluştu!", "error");
     } finally {
       sendAnnounceBtn.innerText = "Duyuruyu Yayınla";
@@ -145,32 +123,24 @@ function resetForm() {
 async function loadAdminAnnouncements() {
   const container = document.getElementById("adminAnnouncementList");
   if (!container) return;
-
   container.innerHTML = "<p style='color:#aaa;'>Duyurular yükleniyor...</p>";
-
   try {
     const q = query(collection(db, "duyurular"), orderBy("date", "desc"));
     const snap = await getDocs(q);
-
     container.innerHTML = "";
-
     if (snap.empty) {
       container.innerHTML = "<p style='color:#aaa;'>Henüz yayınlanmış bir duyuru yok.</p>";
       return;
     }
-
     snap.forEach((docSnap) => {
       const data = docSnap.data();
       const id = docSnap.id;
-
       let dateStr = "Tarih Yok";
       if (data.date) {
         const d = data.date.toDate();
         dateStr = d.toLocaleDateString("tr-TR") + " - " + d.toLocaleTimeString("tr-TR", {hour: '2-digit', minute:'2-digit'});
       }
-
       const imgHtml = data.image ? `<img src="${data.image}" alt="Duyuru Görseli">` : "";
-
       const card = document.createElement("div");
       card.className = "announcement-card";
       card.innerHTML = `
@@ -187,14 +157,12 @@ async function loadAdminAnnouncements() {
       `;
       container.appendChild(card);
     });
-
   } catch (err) {
-    console.error("Yükleme hatası:", err);
     container.innerHTML = "<p style='color:#ef4444;'>Duyurular yüklenirken hata oluştu.</p>";
   }
 }
 
-// DOĞRU KOLEKSİYON ('messages') ÜZERİNDEN MESAJLARI ÇEKME
+// TOPLULUK MESAJLARINI VE TOPLU İŞLEMLERİ LİSTELEME
 async function loadAdminMessages() {
   const chatContainer = document.getElementById("adminChatList");
   if (!chatContainer) return;
@@ -212,36 +180,118 @@ async function loadAdminMessages() {
       return;
     }
 
+    // Toplu işlem butonları ve Hepsini Seç çubuğu
+    let htmlContent = `
+      <div style="display: flex; gap: 10px; margin-bottom: 15px; background: #181818; padding: 12px; border-radius: 10px; align-items: center; border: 1px solid #333;">
+        <input type="checkbox" id="selectAllMsgs" style="cursor: pointer; width: 18px; height: 18px;" onclick="window.toggleSelectAll(this)">
+        <label for="selectAllMsgs" style="cursor: pointer; font-size: 0.9rem; color: #ccc; flex: 1;">Hepsini Seç</label>
+        <button class="delete-btn" style="padding: 6px 14px; font-size: 0.85rem;" onclick="window.deleteSelectedMessages()">Seçilenleri Sil</button>
+      </div>
+    `;
+
     snap.forEach((docSnap) => {
       const data = docSnap.data();
       const id = docSnap.id;
-
       let dateStr = "";
       if (data.createdAt) {
         const d = new Date(data.createdAt);
         dateStr = d.toLocaleDateString("tr-TR") + " - " + d.toLocaleTimeString("tr-TR", {hour: '2-digit', minute:'2-digit'});
       }
-
       const username = data.username || "Anonim";
       const messageText = data.text || "";
+      const uid = data.uid || "";
 
-      const item = document.createElement("div");
-      item.className = "mod-item";
-      item.innerHTML = `
-        <div class="text">
-          <strong style="color: #9146ff;">${username}:</strong> ${messageText}
-          <br><small style="color: #777;">📅 ${dateStr}</small>
+      htmlContent += `
+        <div class="mod-item" style="display: flex; align-items: center; gap: 12px; background: #141414; padding: 12px; border-radius: 10px; margin-bottom: 8px; border: 1px solid #222;">
+          <input type="checkbox" class="msg-checkbox" value="${id}" style="cursor: pointer; width: 16px; height: 16px;">
+          <div class="text" style="flex: 1;">
+            <strong style="color: #9146ff; cursor: pointer;" title="Kullanıcı Menüsü İçin Tıkla" onclick="window.openUserModeration('${uid}', '${username}')">${username} ⚙️:</strong> ${messageText}
+            <br><small style="color: #777;">📅 ${dateStr}</small>
+          </div>
+          <button class="delete-btn" style="padding: 6px 12px; font-size: 0.85rem;" onclick="window.confirmDeleteMessage('${id}')">Sil</button>
         </div>
-        <button class="delete-btn" onclick="window.confirmDeleteMessage('${id}')">Sil</button>
       `;
-      chatContainer.appendChild(item);
     });
 
+    chatContainer.innerHTML = htmlContent;
+
   } catch (err) {
-    console.error("Mesajlar yüklenirken hata:", err);
     chatContainer.innerHTML = "<p style='color:#ef4444;'>Mesajlar yüklenirken hata oluştu.</p>";
   }
 }
+
+// Hepsini seç/kaldır fonksiyonu
+window.toggleSelectAll = function(masterCheckbox) {
+  const checkboxes = document.querySelectorAll('.msg-checkbox');
+  checkboxes.forEach(cb => cb.checked = masterCheckbox.checked);
+};
+
+// Seçilenleri toplu silme
+window.deleteSelectedMessages = async function() {
+  const selected = document.querySelectorAll('.msg-checkbox:checked');
+  if (selected.length === 0) {
+    showToast("Hiçbir mesaj seçmedin kanka!", "error");
+    return;
+  }
+
+  if (confirm(`Seçilen ${selected.length} mesajı silmek istediğine emin misin?`)) {
+    try {
+      for (const cb of selected) {
+        await deleteDoc(doc(db, "messages", cb.value));
+      }
+      showToast("Seçilen mesajlar silindi!");
+      loadAdminMessages();
+    } catch (e) {
+      showToast("Silinirken hata oluştu!", "error");
+    }
+  }
+};
+
+// Kullanıcıya Tıklayınca Yönetim Menüsü (Tüm mesajlarını sil veya Mute at)
+window.openUserModeration = async function(uid, username) {
+  if (!uid) {
+    showToast("Bu mesajın kullanıcısı bulunamadı.", "error");
+    return;
+  }
+
+  const action = prompt(`[ ${username} ] adlı kullanıcı için ne yapmak istiyorsun?\n\n1 - Kullanıcının TÜM mesajlarını sil\n2 - Kullanıcıyı Sustur (Mute at)\n\nİşlem seç (1 veya 2):`);
+
+  if (action === "1") {
+    if (confirm(`${username} adlı kullanıcının platformdaki TÜM mesajlarını silmek istediğine emin misin?`)) {
+      try {
+        const q = query(collection(db, "messages"));
+        const snap = await getDocs(q);
+        let count = 0;
+        for (const docSnap of snap.docs) {
+          if (docSnap.data().uid === uid) {
+            await deleteDoc(doc(db, "messages", docSnap.id));
+            count++;
+          }
+        }
+        showToast(`${username} kullanıcısının ${count} mesajı silindi!`);
+        loadAdminMessages();
+      } catch (e) {
+        showToast("Hata oluştu!", "error");
+      }
+    }
+  } else if (action === "2") {
+    const minutesStr = prompt(`${username} kaç dakika süreyle susturulsun? (Örn: 10)`);
+    const minutes = parseInt(minutesStr);
+    if (isNaN(minutes) || minutes <= 0) {
+      showToast("Geçerli bir süre girilmedi!", "error");
+      return;
+    }
+
+    const muteUntil = Date.now() + (minutes * 60 * 1000);
+    try {
+      // Kullanıcının susturma bilgisini users koleksiyonuna kaydediyoruz
+      await setDoc(doc(db, "users", uid), { muteUntil: muteUntil }, { merge: true });
+      showToast(`${username} ${minutes} dakika süreyle susturuldu! 🔇`);
+    } catch (e) {
+      showToast("Mute atılırken hata oluştu!", "error");
+    }
+  }
+};
 
 window.prepareEdit = function(id, title, desc) {
   document.getElementById("editingId").value = id;
@@ -252,15 +302,12 @@ window.prepareEdit = function(id, title, desc) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
-// DUYURU SİLME ONAYI
 window.confirmDeleteAnnounce = function(id) {
   const modal = document.getElementById("customConfirmModal");
   const yesBtn = document.getElementById("confirmYesBtn");
   const noBtn = document.getElementById("confirmNoBtn");
-
   document.getElementById("confirmText").innerText = "Bu duyuruyu silmek istediğine emin misin?";
   modal.style.display = "flex";
-
   yesBtn.onclick = async () => {
     modal.style.display = "none";
     try {
@@ -268,34 +315,25 @@ window.confirmDeleteAnnounce = function(id) {
       showToast("Duyuru silindi.");
       loadAdminAnnouncements();
       loadStats();
-    } catch (e) {
-      showToast("Silinirken hata oluştu!", "error");
-    }
+    } catch (e) { showToast("Silinirken hata oluştu!", "error"); }
   };
-
   noBtn.onclick = () => { modal.style.display = "none"; };
 };
 
-// MESAJ SİLME ONAYI (doğru koleksiyondan siler)
 window.confirmDeleteMessage = function(id) {
   const modal = document.getElementById("customConfirmModal");
   const yesBtn = document.getElementById("confirmYesBtn");
   const noBtn = document.getElementById("confirmNoBtn");
-
   document.getElementById("confirmText").innerText = "Bu mesajı silmek istediğine emin misin patron?";
   modal.style.display = "flex";
-
   yesBtn.onclick = async () => {
     modal.style.display = "none";
     try {
       await deleteDoc(doc(db, "messages", id));
       showToast("Mesaj silindi.");
       loadAdminMessages();
-    } catch (e) {
-      showToast("Mesaj silinirken hata oluştu!", "error");
-    }
+    } catch (e) { showToast("Silinirken hata oluştu!", "error"); }
   };
-
   noBtn.onclick = () => { modal.style.display = "none"; };
 };
 
