@@ -322,3 +322,5 @@ document.addEventListener("submit", async (e) => {
     }
   }
 });
+
+export { auth, db };
