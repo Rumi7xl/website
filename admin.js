@@ -27,7 +27,7 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-// ŞIK TOAST BİLDİRİM FONKSİYONU
+// BİLDİRİMİ ORTA ÜST KISMA KONUMLANDIRAN FONKSİYON
 function showToast(message, type = 'success') {
   let toast = document.getElementById("customToast");
   if (!toast) {
@@ -35,33 +35,34 @@ function showToast(message, type = 'success') {
     toast.id = "customToast";
     toast.style.cssText = `
       position: fixed;
-      top: 20px;
-      right: 20px;
+      top: 25px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
       background: #111;
       color: #fff;
       border: 1px solid ${type === 'error' ? '#ef4444' : '#9146ff'};
-      padding: 12px 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 25px rgba(145, 70, 255, 0.4);
+      padding: 14px 28px;
+      border-radius: 14px;
+      box-shadow: 0 0 30px rgba(145, 70, 255, 0.5);
       z-index: 999999;
-      font-size: 0.95rem;
+      font-size: 1rem;
+      font-weight: bold;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       transition: all 0.3s ease;
       opacity: 0;
-      transform: translateY(-20px);
     `;
     document.body.appendChild(toast);
   }
 
   toast.innerHTML = (type === 'error' ? '❌ ' : '✨ ') + message;
   toast.style.opacity = "1";
-  toast.style.transform = "translateY(0)";
+  toast.style.transform = "translateX(-50%) translateY(0)";
 
   setTimeout(() => {
     toast.style.opacity = "0";
-    toast.style.transform = "translateY(-20px)";
+    toast.style.transform = "translateX(-50%) translateY(-20px)";
   }, 3000);
 }
 
@@ -132,6 +133,9 @@ function resetForm() {
   document.getElementById("announceTitle").value = "";
   document.getElementById("announceDesc").value = "";
   document.getElementById("announceImageFile").value = "";
+  document.getElementById("uploadLabelText").innerText = "📁 Fotoğraf seçmek için tıkla veya buraya yükle";
+  document.getElementById("imagePreviewContainer").style.display = "none";
+  document.getElementById("imagePreview").src = "";
   document.getElementById("editingId").value = "";
   document.getElementById("sendAnnounceBtn").innerText = "Duyuruyu Yayınla";
   if(cancelEditBtn) cancelEditBtn.style.display = "none";
@@ -198,7 +202,6 @@ window.prepareEdit = function(id, title, desc) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
-// ÖZEL ONAY MODALI İLE SİLME İŞLEMİ
 window.confirmDelete = function(id) {
   const modal = document.getElementById("customConfirmModal");
   const yesBtn = document.getElementById("confirmYesBtn");
