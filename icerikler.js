@@ -21,52 +21,81 @@ window.addEventListener("DOMContentLoaded", async () => {
     if (docSnap.exists()) {
       const data = docSnap.data();
 
-      // 1. Canlı Durum
-      document.getElementById("liveStatusBox").innerHTML = `
-        <p style="margin: 0 0 8px 0; font-size: 1.05rem; font-weight: bold; color: ${data.isLive ? '#22c55e' : '#ef4444'};">
-          ${data.isLive ? '🟢 RUMI7XL şu anda yayında!' : '🔴 Şu anda yayında değil'}
-        </p>
-        <p style="margin: 0 0 5px 0; color: #ccc; font-size: 0.95rem;">🎮 Oyun: <strong>${data.liveGame || 'Belirtilmedi'}</strong></p>
-        <p style="margin: 0 0 15px 0; color: #ccc; font-size: 0.95rem;">👥 İzleyici: <strong>${data.liveViewers || '0'}</strong></p>
-        <a href="${data.kickLink || '#'}" target="_blank" style="display: inline-block; background: #22c55e; color: #000; padding: 8px 18px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 0.9rem;">Yayına Git →</a>
-      `;
-
-      // 2. Kick Kanalı Bilgisi
-      document.getElementById("kickContentBox").innerHTML = `
-        <p style="margin: 0 0 10px 0; color: #ccc; font-size: 0.95rem; line-height: 1.4;">${data.kickDesc || 'Kick yayınları, oyun serileri ve eğlenceli anlar için kanalı takip et!'}</p>
-        <a href="${data.kickLink || '#'}" target="_blank" style="display: inline-block; background: #22c55e; color: #000; padding: 8px 18px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 0.9rem;">Kick Kanalına Git →</a>
-      `;
-
-      // 3. YouTube Videoları Listesi
-      const ytBox = document.getElementById("youtubeListBox");
-      if (data.youtubeVideos && data.youtubeVideos.length > 0) {
-        let ytHtml = "";
-        data.youtubeVideos.forEach(vid => {
-          ytHtml += `
-            <div style="padding: 10px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; gap: 10px;">
-              <span style="color: #fff; font-size: 0.9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;">▶ ${vid.title}</span>
-              <a href="${vid.url}" target="_blank" style="background: #ef4444; color: #fff; padding: 5px 12px; border-radius: 6px; text-decoration: none; font-size: 0.8rem; font-weight: bold; white-space: nowrap;">İzle</a>
-            </div>
-          `;
-        });
-        ytBox.innerHTML = ytHtml;
-      } else {
-        ytBox.innerHTML = `<p style="color: #777; font-size: 0.9rem; margin: 0;">Henüz eklenmiş YouTube videosu yok.</p>`;
+      // 1. Canlı Durum Küpü
+      const liveCard = document.querySelector(".live-card");
+      if (liveCard) {
+        const isLive = data.isLive || false;
+        liveCard.innerHTML = `
+          <div class="platform-logo kick">
+            <span style="font-size: 35px;">${isLive ? '🟢' : '🔴'}</span>
+          </div>
+          <h2>CANLI DURUM</h2>
+          <p style="line-height: 1.6;">
+            ${isLive ? 'RUMI7XL şu anda yayında!' : 'RUMI7XL şu anda yayında değil.'}<br>
+            <b>Oyun:</b> ${data.liveGame || 'Belirtilmedi'}<br>
+            <b>İzleyici:</b> ${data.liveViewers || '0'}
+          </p>
+          <a href="${data.kickLink || 'https://kick.com/rumi7xl'}" target="_blank">KICK'E GİT →</a>
+        `;
       }
 
-      // 4. TikTok Bilgisi
-      document.getElementById("tiktokContentBox").innerHTML = `
-        <p style="margin: 0 0 10px 0; color: #ccc; font-size: 0.95rem; line-height: 1.4;">${data.tiktokDesc || 'En komik kesitler ve kısa videolar TikTok adresimde!'}</p>
-        <a href="${data.tiktokLink || '#'}" target="_blank" style="display: inline-block; background: #333; color: #fff; border: 1px solid #555; padding: 8px 18px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 0.9rem;">TikTok'a Git →</a>
-      `;
+      // 2. Kick Yayınları Küpü
+      const kickCard = document.querySelectorAll(".box")[1];
+      if (kickCard) {
+        kickCard.innerHTML = `
+          <div class="platform-logo kick" style="display:flex; align-items:center; justify-content:center;">
+            <img src="kick-logo.png" alt="Kick" style="width: 40px; height: 40px; object-fit: contain;">
+          </div>
+          <h2>KICK YAYINLARI</h2>
+          <p style="line-height: 1.6;">${data.kickDesc || '• Minecraft<br>• Valorant<br>• GTA V<br>• Simülasyon Oyunları'}</p>
+          <a href="${data.kickLink || 'https://kick.com/rumi7xl'}" target="_blank">KANALA GİT →</a>
+        `;
+      }
 
-    } else {
-      document.getElementById("liveStatusBox").innerHTML = "<p style='color:#777;'>Panelden henüz ayar yapılmadı.</p>";
-      document.getElementById("kickContentBox").innerHTML = "<p style='color:#777;'>Ayar bulunamadı.</p>";
-      document.getElementById("youtubeListBox").innerHTML = "<p style='color:#777;'>Video bulunamadı.</p>";
-      document.getElementById("tiktokContentBox").innerHTML = "<p style='color:#777;'>Ayar bulunamadı.</p>";
+      // 3. YouTube Küpü (Dinamik Liste)
+      const youtubeCard = document.querySelectorAll(".box")[2];
+      if (youtubeCard) {
+        let ytLinksHtml = "";
+        if (data.youtubeVideos && data.youtubeVideos.length > 0) {
+          data.youtubeVideos.forEach(vid => {
+            ytLinksHtml += `<a href="${vid.url}" target="_blank" style="display:block; color:#ccc; text-decoration:none; margin-bottom:6px; font-size:14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">▶ ${vid.title}</a>`;
+          });
+        } else {
+          ytLinksHtml = `<p style="color:#777; font-size:14px;">Henüz video eklenmedi.</p>`;
+        }
+
+        youtubeCard.innerHTML = `
+          <div class="platform-logo youtube" style="display:flex; align-items:center; justify-content:center;">
+            <img src="youtube-logo.png" alt="YouTube" style="width: 40px; height: 40px; object-fit: contain;">
+          </div>
+          <h2>YOUTUBE</h2>
+          <div style="margin: 15px 0; max-height: 140px; overflow-y: auto; text-align: left; padding-right: 5px;">
+            ${ytLinksHtml}
+          </div>
+          <a href="${data.youtubeChannelLink || 'https://youtube.com'}" target="_blank" style="margin-top:auto;">KANALA GİT →</a>
+        `;
+      }
+
+      // 4. TikTok Küpü (Eğer eklemek istersen 4. kutu olarak sayfaya otomatik ekler veya günceller)
+      let tiktokCard = document.querySelector(".tiktok-card");
+      if (!tiktokCard && document.querySelector(".platforms")) {
+        tiktokCard = document.createElement("div");
+        tiktokCard.className = "box tiktok-card";
+        document.querySelector(".platforms").appendChild(tiktokCard);
+      }
+      if (tiktokCard) {
+        tiktokCard.innerHTML = `
+          <div class="platform-logo tiktok" style="display:flex; align-items:center; justify-content:center;">
+            <img src="tiktok-logo.png" alt="TikTok" style="width: 40px; height: 40px; object-fit: contain;">
+          </div>
+          <h2>TİKTOK</h2>
+          <p style="line-height: 1.6;">${data.tiktokDesc || 'En komik kesitler ve kısa videolar TikTok adresimde!'}</p>
+          <a href="${data.tiktokLink || 'https://tiktok.com'}" target="_blank">TIKTOK'A GİT →</a>
+        `;
+      }
+
     }
   } catch (e) {
-    console.error(e);
+    console.error("İçerikler yüklenirken hata:", e);
   }
 });
