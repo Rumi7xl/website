@@ -1,238 +1,208 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>RUMİ7XL - İçerikler</title>
-  <link rel="icon" href="favicon.png?v=2">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-  <link rel="stylesheet" href="style.css?v=1.2">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RUMİ7XL</title>
+<meta content="RUMİ7XL resmi web sitesi. Kick canlı yayınları, YouTube videoları, TikTok içerikleri ve mini oyunlar." name="description"/>
+
+<meta property="og:site_name" content="RUMİ7XL">
+<meta name="application-name" content="RUMİ7XL">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "RUMİ7XL",
+  "alternateName": "Rumi7xl",
+  "url": "https://rumi7xl.com/"
+}
+</script>
+
+<link href="favicon.png?v=2" rel="icon" type="image/png"/>
+
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<link href="style.css?v=1.2" rel="stylesheet"/>
 </head>
-<body style="background: #0b0b0b; color: #fff; font-family: sans-serif; margin: 0; padding: 0; box-sizing: border-box;">
+<body>
 
-  <nav class="navbar">
-    <a href="index.html" class="logo">RUMİ7XL</a>
-    <div class="nav-links">
-      <a href="index.html">Ana Sayfa</a>
-      <a href="topluluk.html">Topluluk</a>
-      <a href="oneriler.html">Öneriler</a>
-      <a href="icerikler.html" class="active">İçerikler</a>
-      <a href="oyunlar.html">🎮 Oyunlar</a>
-      <a href="duyurular.html">Duyurular</a>
+<header class="navbar">
+<a href="index.html" class="logo">RUMİ7XL</a>
+
+<nav class="nav-links">
+    <a href="index.html" class="active">Ana Sayfa</a>
+    <a href="topluluk.html">Topluluk</a>
+    <a href="oneriler.html">Öneriler</a>
+    <a href="icerikler.html">İçerikler</a>
+    <a href="oyunlar.html">🎮 Oyunlar</a>
+    <a href="duyurular.html">Duyurular</a>
+</nav>
+
+<div class="account-box">
+    <a href="#" class="login-btn">👤 Giriş Yap</a>
+    <a href="#" class="register-btn">✨ Kayıt Ol</a>
+</div>
+</header>
+
+<section class="hero">
+<div class="hero-content">
+<img alt="RUMİ7XL" class="banner" src="hero-banner.png"/>
+<h1>RUMİ7XL</h1>
+<h2>Resmi Web Sitesi</h2>
+<p>Canlı Yayınlar • Oyun İçerikleri • Mini Oyunlar</p>
+<div class="live-box">🟢 İçeriklerime ve Oyunlara buradan ulaşabilirsin</div>
+<div class="arrow">↓</div>
+</div>
+</section>
+
+<section class="platforms">
+<div class="box kick-card">
+<div class="platform-logo kick"><img src="kick-logo.png"/></div>
+<h2>KICK</h2>
+<p>RUMİ7XL Kick kanalından canlı yayınları takip edebilirsin.</p>
+<a href="https://kick.com/rumi7xl" target="_blank">KICK'E GİT &gt;</a>
+</div>
+
+<div class="box youtube-card">
+<div class="platform-logo youtube"><img src="youtube-logo.png"/></div>
+<h2>YOUTUBE</h2>
+<p>Videolar ve yayın içerikleri için takip edebilirsin.</p>
+<a href="https://www.youtube.com/@Rumi7xl" target="_blank">KANALA GİT &gt;</a>
+</div>
+
+<div class="box tiktok-card">
+<div class="platform-logo tiktok"><img src="tiktok-logo.png"/></div>
+<h2>TIKTOK</h2>
+<p>RUMİ7XL TikTok hesabından kısa videoları takip edebilirsin.</p>
+<a href="https://www.tiktok.com/@rumi7xl" target="_blank">TIKTOK'A GİT &gt;</a>
+</div>
+
+<div class="box instagram-card">
+<div class="platform-logo instagram"><img src="instagram-logo.png"/></div>
+<h2>INSTAGRAM</h2>
+<p>RUMİ7VIP Instagram hesabından güncel paylaşımları takip edebilirsin.</p>
+<a href="https://www.instagram.com/rumi7vip" target="_blank">TAKİP ET &gt;</a>
+</div>
+</section>
+
+<section class="about">
+<h2>Ben Kimim?</h2>
+<p>Merhaba, ben Bercan Yakar. İnternette RUMİ7XL adıyla içerik üretiyorum. Kick canlı yayınları, YouTube videoları ve sosyal medya içerikleri hazırlıyorum.</p>
+<p>Canlı yayınlar, oyun içerikleri ve eğlenceli yayınlarla topluluğumla vakit geçiriyorum.</p>
+</section>
+
+<footer>
+  <p>© 2026 RUMİ7XL - Tüm Hakları Saklıdır.</p>
+</footer>
+
+<div class="account-modal" id="accountModal">
+  <div class="account-window">
+    <button class="close-account" onclick="closeAccount()">✕</button>
+    <div class="account-tabs">
+      <button id="loginTab" class="active" onclick="showLogin()">Giriş Yap</button>
+      <button id="registerTab" onclick="showRegister()">Kayıt Ol</button>
     </div>
-    <div class="account-box"></div>
-  </nav>
 
-  <section class="hero" style="min-height: auto; padding: 40px 20px 20px; text-align: center;">
-    <div class="hero-content">
-      <h1 style="font-size: 42px; color: #fff; text-shadow: 0 0 20px rgba(145,70,255,0.4); margin-bottom: 5px;">RUMİ7XL İçerikler</h1>
-      <p style="font-size: 16px; color: #aaa;">Canlı yayınlarım, videolarım ve özel içeriklerim burada.</p>
-    </div>
-  </section>
-
-  <section class="platforms" style="max-width: 1350px; margin: 20px auto 50px; padding: 0 20px;">
-    
-    <div class="box live-card" style="display: flex; flex-direction: column; justify-content: space-between;">
-      <div>
-        <div class="platform-logo" style="border: 2px solid #22c55e; box-shadow: 0 0 20px rgba(34,197,94,0.4); width: 80px; height: 80px; background: #161616; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
-          <span style="font-size: 48px; line-height: 1;">🔴</span>
-        </div>
-        <h2>CANLI DURUM</h2>
-        <div id="liveCardBody" style="color: #bbb; font-size: 14px; line-height: 1.6; margin-bottom: 25px; min-height: 90px; display: flex; flex-direction: column; justify-content: center;">
-          Yükleniyor...
-        </div>
+    <form id="loginForm" class="account-form" autocomplete="on">
+      <input type="email" name="email" placeholder="E-posta" autocomplete="username">
+      <input type="password" name="password" placeholder="Şifre" autocomplete="current-password">
+      <div style="text-align: right; width: 100%; margin-top: -5px; margin-bottom: 5px;">
+        <a href="#" id="forgotPasswordBtn" style="color: #a855f7; font-size: 0.85rem; text-decoration: none;">Şifremi Unuttum?</a>
       </div>
-      <a id="liveCardBtn" href="#" target="_blank">KICK'E GİT &gt;</a>
-    </div>
+      <button type="submit" class="account-submit">Giriş Yap</button>
+    </form>
 
-    <div class="box kick-card" style="display: flex; flex-direction: column; justify-content: space-between;">
-      <div>
-        <div class="platform-logo kick" style="border: 2px solid #22c55e; box-shadow: 0 0 20px rgba(34,197,94,0.4); width: 80px; height: 80px; background: #161616; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
-          <img src="kick-logo.png" alt="Kick" style="width: 96px; height: 96px; object-fit: contain;">
-        </div>
-        <h2>KICK KANALI</h2>
-        <div id="kickCardBody" style="color: #bbb; font-size: 14px; line-height: 1.6; margin-bottom: 25px; min-height: 90px; display: flex; flex-direction: column; justify-content: flex-start; white-space: pre-line; text-align: left; background: #111; padding: 12px; border-radius: 10px; border: 1px solid #222;">
-          Yükleniyor...
-        </div>
-      </div>
-      <a id="kickCardBtn" href="#" target="_blank">KANALA GİT &gt;</a>
-    </div>
-
-    <div class="box youtube-card" style="display: flex; flex-direction: column; justify-content: space-between;">
-      <div>
-        <div class="platform-logo youtube" style="border: 2px solid #ef4444; box-shadow: 0 0 20px rgba(239,68,68,0.4); width: 80px; height: 80px; background: #161616; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
-          <img src="youtube-logo.png" alt="YouTube" style="width: 102px; height: 102px; object-fit: contain;">
-        </div>
-        <h2>YOUTUBE</h2>
-        <div id="youtubeCardBody" style="color: #bbb; font-size: 14px; line-height: 1.6; margin-bottom: 25px; min-height: 90px; max-height: 160px; overflow-y: auto; text-align: left; background: #111; padding: 12px; border-radius: 10px; border: 1px solid #222;">
-          <p style="color: #777; font-size: 13px; text-align: center; margin: 0;">Henüz video eklenmedi.</p>
-        </div>
-      </div>
-      <a id="youtubeCardBtn" href="https://www.youtube.com/@Rumi7xl" target="_blank">VİDEOLARA GİT &gt;</a>
-    </div>
-
-    <div class="box tiktok-card" style="display: flex; flex-direction: column; justify-content: space-between;">
-      <div>
-        <div class="platform-logo tiktok" style="border: 2px solid #fff; box-shadow: 0 0 20px rgba(255,255,255,0.3); width: 80px; height: 80px; background: #161616; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
-          <img src="tiktok-logo.png" alt="TikTok" style="width: 76px; height: 76px; object-fit: contain;">
-        </div>
-        <h2>TIKTOK</h2>
-        <div id="tiktokCardBody" style="color: #bbb; font-size: 14px; line-height: 1.6; margin-bottom: 25px; min-height: 90px; display: flex; flex-direction: column; justify-content: center;">
-          En komik kesitler ve kısa videolar TikTok adresimde!
-        </div>
-      </div>
-      <a id="tiktokCardBtn" href="https://www.tiktok.com/@rumi7xl" target="_blank">TIKTOK'A GİT &gt;</a>
-    </div>
-
-  </section>
-
-  <footer>
-    <p>© 2026 RUMİ7XL - Tüm Hakları Saklıdır.</p>
-  </footer>
-
-  <div class="account-modal" id="accountModal">
-    <div class="account-window">
-      <button class="close-account" onclick="closeAccount()">✕</button>
-      <div class="account-tabs">
-        <button id="loginTab" class="active" onclick="showLogin()">Giriş Yap</button>
-        <button id="registerTab" onclick="showRegister()">Kayıt Ol</button>
-      </div>
-      <form id="loginForm" class="account-form" autocomplete="on">
-        <input type="email" name="email" placeholder="E-posta" autocomplete="username">
-        <input type="password" name="password" placeholder="Şifre" autocomplete="current-password">
-        <div style="text-align: right; width: 100%; margin-top: -5px; margin-bottom: 5px;">
-          <a href="#" id="forgotPasswordBtn" style="color: #a855f7; font-size: 0.85rem; text-decoration: none;">Şifremi Unuttum?</a>
-        </div>
-        <button type="submit" class="account-submit">Giriş Yap</button>
-      </form>
-      <form id="registerForm" class="account-form" style="display:none;" autocomplete="on">
-        <input type="text" name="username" placeholder="Kullanıcı adı" autocomplete="username">
-        <input type="email" name="register-email" placeholder="E-posta" autocomplete="email">
-        <input type="password" name="new-password" placeholder="Şifre" autocomplete="new-password">
-        <button type="submit" class="account-submit">Kayıt Ol</button>
-      </form>
-    </div>
+    <form id="registerForm" class="account-form" style="display:none;" autocomplete="on">
+      <input type="text" name="username" placeholder="Kullanıcı adı" autocomplete="username">
+      <input type="email" name="register-email" placeholder="E-posta" autocomplete="email">
+      <input type="password" name="new-password" placeholder="Şifre" autocomplete="new-password">
+      <button type="submit" class="account-submit">Kayıt Ol</button>
+    </form>
   </div>
+</div>
 
-  <div id="siteToast"></div>
+<div class="settings-modal" id="photoModal">
+  <div class="settings-window">
+    <button class="close-account" onclick="document.getElementById('photoModal').style.display='none'">✕</button>
+    <h2>🖼️ Profil Fotoğrafı</h2>
+    <form id="photoSettingsForm">
+      <label for="photoFileInput" class="custom-file-upload">
+        <span id="uploadLabelText" style="color:#aaa; font-size:0.9rem;">📁 Cihazdan / Galeriden Resim Seç</span>
+        <img id="photoPreview" class="preview-avatar" src="" alt="Önizleme">
+      </label>
+      <input type="file" id="photoFileInput" accept="image/*" required style="display: none;">
+      <button type="submit" class="settings-btn" style="margin-top: 15px;">Fotoğrafı Yükle ve Kaydet</button>
+    </form>
+  </div>
+</div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+<div class="settings-modal" id="passwordModal">
+  <div class="settings-window">
+    <button class="close-account" onclick="document.getElementById('passwordModal').style.display='none'">✕</button>
+    <h2>🔑 Şifre Değiştir</h2>
+    <form id="passwordSettingsForm" autocomplete="off">
+      <label style="color:#aaa; font-size:0.85rem; display:block; text-align:left; margin-bottom:5px;">Yeni Şifreniz:</label>
+      <input type="password" name="changePassword" placeholder="Yeni Şifreniz" required autocomplete="new-password">
+      <button type="submit" class="settings-btn">Şifreyi Güncelle</button>
+    </form>
+  </div>
+</div>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCiuXtHu3J9Va46a4KiETO2JrSn5um2KoQ",
-      authDomain: "rumi7xl-web.firebaseapp.com",
-      projectId: "rumi7xl-web",
-      storageBucket: "rumi7xl-web.firebasestorage.app",
-      messagingSenderId: "1077565304835",
-      appId: "1:1077565304835:web:a672a4440797b76f42de36"
-    };
+<div id="siteToast"></div>
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+<script>
+function showLogin(){
+  document.getElementById("loginForm").style.display="flex";
+  document.getElementById("registerForm").style.display="none";
+  document.getElementById("loginTab").classList.add("active");
+  document.getElementById("registerTab").classList.remove("active");
+}
+function showRegister(){
+  document.getElementById("loginForm").style.display="none";
+  document.getElementById("registerForm").style.display="flex";
+  document.getElementById("registerTab").classList.add("active");
+  document.getElementById("loginTab").classList.remove("active");
+}
+function closeAccount(){
+  document.getElementById("accountModal").style.display="none";
+}
+function showToast(message){
+  const toast=document.getElementById("siteToast");
+  if(!toast) return;
+  toast.innerText=message;
+  toast.classList.add("show");
+  setTimeout(()=>{ toast.classList.remove("show"); },3000);
+}
+window.showLogin = showLogin;
+window.showRegister = showRegister;
+window.closeAccount = closeAccount;
+window.showToast = showToast;
+</script>
 
-    async function loadPublicContent() {
-      try {
-        const docSnap = await getDoc(doc(db, "siteSettings", "iceriklerConfig"));
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          const liveText = data.isLive ? "<span style='color:#22c55e; font-weight:bold; font-size:15px;'>YAYINDA!</span>" : "<span style='color:#ef4444; font-weight:bold;'>YAYINDA DEĞİL</span>";
-          document.getElementById("liveCardBody").innerHTML = `
-            ${liveText}
-            <div style="margin-top:8px;">Oyun: <b style="color:#fff;">${data.liveGame || '-'}</b></div>
-            <div style="margin-top:4px;">İzleyici: <b style="color:#fff;">${data.liveViewers || '0'}</b></div>
-          `;
-          if (data.kickLink) {
-            document.getElementById("liveCardBtn").href = data.kickLink;
-          }
-          document.getElementById("kickCardBody").innerText = data.kickDesc || "Açıklama girilmemiş.";
-          if (data.kickLink) {
-            document.getElementById("kickCardBtn").href = data.kickLink;
-          }
-          const ytBody = document.getElementById("youtubeCardBody");
-          if (data.youtubeVideos && data.youtubeVideos.length > 0) {
-            let ytHtml = "";
-            data.youtubeVideos.forEach(vid => {
-              ytHtml += `<div style="margin-bottom:8px; border-bottom:1px solid #222; padding-bottom:6px;"><a href="${vid.url}" target="_blank" style="color:#ef4444; text-decoration:none; font-size:13px; display:block; word-break:break-word; font-weight:500;">▶ ${vid.title}</a></div>`;
-            });
-            ytBody.innerHTML = ytHtml;
-          } else {
-            ytBody.innerHTML = `<p style="color: #777; font-size: 13px; text-align: center; margin: 0;">Henüz video eklenmedi.</p>`;
-          }
-          if (data.youtubeVideos && data.youtubeVideos.length > 0 && data.youtubeVideos[0].url) {
-            document.getElementById("youtubeCardBtn").href = data.youtubeVideos[0].url;
-          }
-          const tiktokBody = document.getElementById("tiktokCardBody");
-          if (tiktokBody) {
-            tiktokBody.innerText = data.tiktokDesc || "En komik kesitler ve kısa videolar TikTok adresimde!";
-          }
-          if (data.tiktokLink) {
-            document.getElementById("tiktokCardBtn").href = data.tiktokLink;
-          } else {
-            document.getElementById("tiktokCardBtn").href = "https://www.tiktok.com/@rumi7xl";
-          }
-        }
-      } catch (e) {
-        console.error("Hata:", e);
-      }
-    }
-    loadPublicContent();
-  </script>
+<script type="module" src="auth.js?v=1.2"></script>
 
-  <script>
-  function showLogin(){
-    document.getElementById("loginForm").style.display="flex";
-    document.getElementById("registerForm").style.display="none";
-    document.getElementById("loginTab").classList.add("active");
-    document.getElementById("registerTab").classList.remove("active");
-  }
-  function showRegister(){
-    document.getElementById("loginForm").style.display="none";
-    document.getElementById("registerForm").style.display="flex";
-    document.getElementById("registerTab").classList.add("active");
-    document.getElementById("loginTab").classList.remove("active");
-  }
-  function closeAccount(){
-    document.getElementById("accountModal").style.display="none";
-  }
-  function showToast(message){
-    const toast=document.getElementById("siteToast");
-    if(!toast) return;
-    toast.innerText=message;
-    toast.classList.add("show");
-    setTimeout(()=>{ toast.classList.remove("show"); },3000);
-  }
-  window.showLogin = showLogin;
-  window.showRegister = showRegister;
-  window.closeAccount = closeAccount;
-  window.showToast = showToast;
-  </script>
-
-  <style>
-  #siteToast{
-    position:fixed;
-    top:25px;
-    right:25px;
-    background:#9146ff;
-    color:white;
-    padding:14px 22px;
-    border-radius:20px;
-    font-weight:bold;
-    box-shadow:0 0 25px rgba(145,70,255,.5);
-    opacity:0;
-    transform:translateY(-20px);
-    transition:.3s;
-    z-index:999999;
-  }
-  #siteToast.show{
-    opacity:1;
-    transform:translateY(0);
-  }
-  </style>
-
-  <script type="module" src="auth.js?v=1.2"></script>
+<style>
+#siteToast{
+position:fixed;
+top:25px;
+right:25px;
+background:#9146ff;
+color:white;
+padding:14px 22px;
+border-radius:20px;
+font-weight:bold;
+box-shadow:0 0 25px rgba(145,70,255,.5);
+opacity:0;
+transform:translateY(-20px);
+transition:.3s;
+z-index:999999;
+}
+#siteToast.show{
+opacity:1;
+transform:translateY(0);
+}
+</style>
 </body>
 </html>
