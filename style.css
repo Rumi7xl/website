@@ -812,4 +812,9 @@ footer{
   .chat-input-area input {
     font-size: 16px !important;
   }
+  /* TELEFONDA CHAT ALANINI EKRANA GÖRE KÜÇÜLTME */
+  .chat-container {
+    height: 42vh !important;
+    margin: 10px auto !important;
+  }
 }
