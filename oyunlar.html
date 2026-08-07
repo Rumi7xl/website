@@ -22,33 +22,46 @@
       <a href="oyunlar.html" class="active">🎮 Oyunlar</a>
       <a href="duyurular.html">Duyurular</a>
     </div>
-    <div class="account-box">
-      <!-- Ana sayfa mantığıyla eklendi, JS dosyanla otomatik dolabilir -->
-    </div>
+    <div class="account-box"></div>
   </nav>
 
-  <div class="suggestions" style="max-width: 900px; margin: 40px auto; padding: 0 20px;">
-    <h1 style="font-size: 45px; color: #9146ff; text-align: center; text-shadow: 0 0 20px #9146ff; margin-bottom: 10px;">
-      RUMİ7XL Oyunlar
-    </h1>
-    <p style="color: #aaa; text-align: center; font-size: 16px; margin-bottom: 30px;">
-      Yayınları beklerken vakit geçirebileceğin mini oyun alanı.
-    </p>
-
-    <!-- Oyun Alanı (Buraya Block Blast tarzı oyunu gömeceğiz) -->
-    <div style="background: linear-gradient(145deg, #151515, #090909); border: 1px solid #222; border-radius: 20px; padding: 40px; box-shadow: 0 0 25px rgba(145, 70, 255, 0.15); margin-bottom: 40px; min-height: 500px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-      
-      <h2 style="color: #53fc18; margin-bottom: 15px; text-shadow: 0 0 10px #53fc18;">🚧 Oyun Yapım Aşamasında 🚧</h2>
-      <p style="color: #aaa; text-align: center;">Tasarım iskeleti oturdu, oyun motoru kodları buraya eklenecek.</p>
-
+  <div class="hero" style="min-height: auto; padding: 40px 20px 10px;">
+    <div class="hero-content">
+      <h1 style="font-size: 45px; color: #9146ff; text-shadow: 0 0 20px #9146ff;">RUMİ7XL Oyun Salonu</h1>
+      <p style="font-size: 16px; color: #aaa; margin-top: 10px;">Yayın aralarında veya vakit geçirmek istediğinde oynayabileceğin mini oyunlar!</p>
     </div>
   </div>
+
+  <!-- OYUN KUTULARI (LOBİ) -->
+  <section class="platforms" style="margin: 40px auto;">
+    
+    <!-- 1. Oyun: Block Blast -->
+    <div class="box" style="border-color: #53fc18;">
+      <div class="platform-logo" style="border-color: #53fc18; font-size: 40px; background: #111;">
+        🧩
+      </div>
+      <h2 style="color: #53fc18; text-shadow: 0 0 10px #53fc18;">Block Blast</h2>
+      <p>Blokları yerleştir, puanları topla ve rekorunu kır!</p>
+      <a href="blockblast.html" style="border-color: #53fc18; color: #53fc18;">OYNA &gt;</a>
+    </div>
+
+    <!-- 2. Oyun (İleride eklenecekler için şablon) -->
+    <div class="box" style="border-color: #9146ff;">
+      <div class="platform-logo" style="border-color: #9146ff; font-size: 40px; background: #111;">
+        🚀
+      </div>
+      <h2 style="color: #9146ff; text-shadow: 0 0 10px #9146ff;">Çok Yakında</h2>
+      <p>Yeni ve eğlenceli mini oyunlar çok yakında burada olacak.</p>
+      <a href="#" style="border-color: #53fc18; opacity: 0.5; pointer-events: none;">YAKINDA &gt;</a>
+    </div>
+
+  </section>
 
   <footer>
     <p>© 2026 RUMİ7XL - Tüm Hakları Saklıdır.</p>
   </footer>
 
-  <!-- Giriş / Kayıt Modal Sistemi -->
+  <!-- Giriş / Kayıt Modal Sistemleri -->
   <div id="accountModal" class="account-modal">
     <div class="account-window">
       <button class="close-account" onclick="document.getElementById('accountModal').style.display='none'">✕</button>
@@ -71,7 +84,6 @@
     </div>
   </div>
 
-  <!-- Profil Fotoğrafı Modal Sistemi -->
   <div id="photoModal" class="account-modal">
     <div class="account-window">
       <button class="close-account" onclick="document.getElementById('photoModal').style.display='none'">✕</button>
@@ -87,7 +99,6 @@
     </div>
   </div>
 
-  <!-- Şifre Değiştir Modal Sistemi -->
   <div id="passwordModal" class="account-modal">
     <div class="account-window">
       <button class="close-account" onclick="document.getElementById('passwordModal').style.display='none'">✕</button>
@@ -99,7 +110,6 @@
     </div>
   </div>
 
-  <!-- Ortak Auth ve Topluluk Dosyaları -->
   <script type="module" src="auth.js?v=1.2"></script>
 </body>
 </html>
