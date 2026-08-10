@@ -30,6 +30,7 @@ onAuthStateChanged(auth, (user) => {
     loadAdminAnnouncements();
     loadAdminPanelData();
     loadConfigData();
+    loadAdminGiveaways();
   }
 });
 
@@ -61,8 +62,6 @@ async function loadStats() {
   try {
     const usersSnap = await getDocs(collection(db, "users"));
     document.getElementById("totalUsersCount").innerText = usersSnap.size;
-    
-    // Basit bir aktif/pasif mantığı (Geliştirilebilir)
     document.getElementById("offlineUsersCount").innerText = usersSnap.size; 
     
     const annSnap = await getDocs(collection(db, "duyurular"));
@@ -245,6 +244,75 @@ async function loadAdminPanelData() {
     messagesContainer.innerHTML = messagesHtml;
   });
 }
+
+// ÇEKİLİŞ YÖNETİMİ (YENİ)
+const createGiveawayBtn = document.getElementById("createGiveawayBtn");
+if (createGiveawayBtn) {
+  createGiveawayBtn.onclick = async () => {
+    const title = document.getElementById("admGiveawayTitle").value.trim();
+    const reward = document.getElementById("admGiveawayReward").value.trim();
+    const hours = parseInt(document.getElementById("admGiveawayHours").value);
+
+    if (!title || !reward || isNaN(hours)) {
+      showToast("Lütfen tüm alanları eksiksiz doldur kanka!", "error");
+      return;
+    }
+
+    const endTime = Date.now() + (hours * 60 * 60 * 1000);
+
+    try {
+      await addDoc(collection(db, "giveaways"), {
+        title,
+        reward,
+        endTime,
+        status: "active",
+        createdAt: serverTimestamp()
+      });
+      showToast("Çekiliş başarıyla başlatıldı! 🎉");
+      document.getElementById("admGiveawayTitle").value = "";
+      document.getElementById("admGiveawayReward").value = "";
+      loadAdminGiveaways();
+    } catch (e) {
+      showToast("Çekiliş oluşturulurken hata oluştu!", "error");
+    }
+  };
+}
+
+async function loadAdminGiveaways() {
+  const container = document.getElementById("adminGiveawayListContainer");
+  if (!container) return;
+  try {
+    const snap = await getDocs(collection(db, "giveaways"));
+    container.innerHTML = "";
+    if (snap.empty) {
+      container.innerHTML = "<p style='color:#aaa;'>Aktif çekiliş yok.</p>";
+      return;
+    }
+    snap.forEach(docSnap => {
+      const data = docSnap.data();
+      const id = docSnap.id;
+      container.innerHTML += `
+        <div style="background: #181818; border: 1px solid #333; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <h4 style="color: #c084fc; margin: 0 0 5px 0;">${data.title}</h4>
+            <p style="color: #aaa; margin: 0; font-size: 0.85rem;">Ödül: ${data.reward} | Durum: ${data.status === 'active' ? '🟢 Aktif' : '🔴 Sonuçlandı'}</p>
+          </div>
+          <button class="delete-btn" onclick="window.deleteGiveaway('${id}')">Sil</button>
+        </div>
+      `;
+    });
+  } catch (e) {}
+}
+
+window.deleteGiveaway = async function(id) {
+  try {
+    await deleteDoc(doc(db, "giveaways", id));
+    showToast("Çekiliş silindi.");
+    loadAdminGiveaways();
+  } catch (e) {
+    showToast("Silinirken hata oluştu!", "error");
+  }
+};
 
 // İÇERİKLER YÖNETİMİ
 async function loadConfigData() {
@@ -575,7 +643,6 @@ window.confirmDeleteMessage = function(id) {
   const noBtn = document.getElementById("confirmNoBtn");
   document.getElementById("confirmText").innerText = "Bu mesajı silmek istediğine emin misin?";
   modal.style.display = "flex";
-  
   yesBtn.onclick = async () => {
     modal.style.display = "none";
     try {
@@ -585,6 +652,5 @@ window.confirmDeleteMessage = function(id) {
       showToast("Silinirken hata oluştu!", "error");
     }
   };
-  
   noBtn.onclick = () => { modal.style.display = "none"; };
 };
