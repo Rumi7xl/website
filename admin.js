@@ -251,11 +251,19 @@ if (createGiveawayBtn) {
   createGiveawayBtn.onclick = async () => {
     const title = document.getElementById("admGiveawayTitle").value.trim();
     const reward = document.getElementById("admGiveawayReward").value.trim();
-    const durationVal = parseFloat(document.getElementById("admGiveawayDuration").value);
-    const unit = document.getElementById("admGiveawayUnit").value;
+    const durationInput = document.getElementById("admGiveawayDuration");
+    const unitSelect = document.getElementById("admGiveawayUnit");
 
-    if (!title || !reward || isNaN(durationVal) || durationVal <= 0) {
-      showToast("Lütfen tüm alanları eksiksiz ve geçerli doldur kanka!", "error");
+    if (!title || !reward || !durationInput || !unitSelect) {
+      showToast("Lütfen tüm alanları eksiksiz doldur kanka!", "error");
+      return;
+    }
+
+    const durationVal = parseFloat(durationInput.value);
+    const unit = unitSelect.value;
+
+    if (isNaN(durationVal) || durationVal <= 0) {
+      showToast("Lütfen geçerli bir süre gir kanka!", "error");
       return;
     }
 
@@ -281,7 +289,7 @@ if (createGiveawayBtn) {
       showToast("Çekiliş başarıyla başlatıldı! 🎉");
       document.getElementById("admGiveawayTitle").value = "";
       document.getElementById("admGiveawayReward").value = "";
-      document.getElementById("admGiveawayDuration").value = "20";
+      durationInput.value = "20";
       loadAdminGiveaways();
     } catch (e) {
       showToast("Çekiliş oluşturulurken hata oluştu!", "error");
