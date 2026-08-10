@@ -104,9 +104,12 @@
   </footer>
 
   <script type="module" src="auth.js?v=1.2"></script>
+  
+  <!-- YENİ VE DÜZELTİLMİŞ SCRIPT BÖLÜMÜ -->
   <script type="module">
     import { auth, db } from "./auth.js";
-    import { collection, onSnapshot, addDoc, serverTimestamp, getDocs, query, where } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+    // YENİ: Firebase Firestore'dan veriyi güncellemek için doc ve updateDoc eklendi
+    import { collection, onSnapshot, addDoc, serverTimestamp, getDocs, query, where, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
     const giveawayGrid = document.getElementById("giveawayGrid");
     let activeGiveawayIdForTask = null;
@@ -152,6 +155,38 @@
       }
     };
 
+    // YENİ: Firebase üzerinden rastgele kazananı seçip kaydeden fonksiyon
+    async function pickWinner(giveawayId) {
+      try {
+        const partRef = collection(db, `giveaways_${giveawayId}_participants`);
+        const partSnap = await getDocs(partRef);
+        const giveawayRef = doc(db, "giveaways", giveawayId);
+        
+        if (!partSnap.empty) {
+          const participants = [];
+          partSnap.forEach(d => participants.push(d.data().username));
+          
+          // Rastgele bir katılımcı seç
+          const randomIndex = Math.floor(Math.random() * participants.length);
+          const winnerName = participants[randomIndex];
+          
+          // Firebase'e kazananı kaydet ve çekilişi sonlandır
+          await updateDoc(giveawayRef, {
+            winner: winnerName,
+            isFinished: true
+          });
+        } else {
+          // Katılımcı yoksa hata vermemesi için
+          await updateDoc(giveawayRef, {
+            winner: "Katılımcı Bulunamadı",
+            isFinished: true
+          });
+        }
+      } catch (error) {
+        console.error("Kazanan seçilirken hata oluştu:", error);
+      }
+    }
+
     onSnapshot(collection(db, "giveaways"), async (snapshot) => {
       if (snapshot.empty) {
         giveawayGrid.innerHTML = `<p style="color: #aaa; text-align: center; grid-column: 1/-1;">Şu an aktif bir çekiliş bulunmuyor.</p>`;
@@ -180,6 +215,7 @@
           }
         }
 
+        // Verileri map'e ekliyoruz ki kazananı vb. kolayca okuyabilelim
         giveawaysMap.set(id, { ...data, participantCount, hasJoined });
 
         const card = document.createElement("div");
@@ -252,10 +288,20 @@
         }
 
         const btnEl = document.getElementById(`btn-${id}`);
-        if (btnEl && timeLeft <= 0 && !data.hasJoined) {
-          btnEl.innerText = "Sonuçlandı";
-          btnEl.style.background = "#374151";
-          btnEl.disabled = true;
+        
+        // YENİ: Süre 0'a ulaştığında kazanan çekiliş tetikleyicisi
+        if (timeLeft <= 0) {
+          if (btnEl) {
+            btnEl.innerText = "Sonuçlandı";
+            btnEl.style.background = "#374151";
+            btnEl.disabled = true;
+          }
+
+          // Eğer süre bitmişse ve henüz kazanan seçilmemişse Firebase'i güncelle
+          if (!data.isFinished) {
+            data.isFinished = true; // Fonksiyonun art arda çalışmasını engellemek için
+            pickWinner(id);
+          }
         }
       });
     }
@@ -300,12 +346,22 @@
       }
     };
 
+    // YENİ: Detaylara tıklandığında kazananı ekranda gösterme mantığı eklendi
     window.openDetails = async function(giveawayId, title) {
       document.getElementById("modalGiveawayTitle").innerText = title;
       const listContainer = document.getElementById("modalParticipantsList");
+      const winnerArea = document.getElementById("modalWinnerArea");
+      
       listContainer.innerHTML = "Yükleniyor...";
-
       document.getElementById("detailModal").style.display = "flex";
+
+      // Firebase'den gelen kazanan bilgisini kontrol edip ekrana yazıyoruz
+      const gData = giveawaysMap.get(giveawayId);
+      if (gData && gData.winner) {
+        winnerArea.innerHTML = `<span style="color:#22c55e; font-size:1.1rem; font-weight:bold;">🎉 KAZANAN: ${gData.winner} 🎉</span>`;
+      } else {
+        winnerArea.innerHTML = "Kazanan henüz açıklanmadı.";
+      }
 
       try {
         const snap = await getDocs(collection(db, `giveaways_${giveawayId}_participants`));
@@ -316,7 +372,11 @@
         }
         snap.forEach(d => {
           const pData = d.data();
-          listContainer.innerHTML += `<div style="padding: 6px 0; border-bottom: 1px solid #222;">👤 ${pData.username}</div>`;
+          // Eğer katılımcı kazanansa, isminin yanına kupa koy
+          const isWinner = (gData && gData.winner === pData.username);
+          listContainer.innerHTML += `<div style="padding: 6px 0; border-bottom: 1px solid #222; ${isWinner ? 'color:#22c55e; font-weight:bold;' : ''}">
+            ${isWinner ? '🏆' : '👤'} ${pData.username}
+          </div>`;
         });
       } catch (e) {
         listContainer.innerHTML = "<p style='color:#ef4444;'>Yüklenirken hata oluştu.</p>";
