@@ -7,11 +7,9 @@
   <link href="favicon.png?v=2" rel="icon" type="image/png"/>
   <link rel="stylesheet" href="style.css?v=1.2">
   <style>
-    /* Kartların ekranı kaplamasını engellemek için genişliği sabitledik ve ortaladık */
     .giveaway-container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
     .giveaway-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 350px)); gap: 20px; justify-content: center; }
     
-    /* Kompakt ve şık kart tasarımı */
     .giveaway-card { 
       background: #141418; 
       border: 1px solid rgba(145,70,255,0.3); 
@@ -109,100 +107,83 @@
   <script type="module" src="auth.js?v=1.2"></script>
   <script type="module">
     import { auth, db } from "./auth.js";
-    import { collection, getDocs, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+    import { collection, onSnapshot, addDoc, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
     const giveawayGrid = document.getElementById("giveawayGrid");
     let activeGiveawayIdForTask = null;
-    let giveawaysDataCache = [];
+    let giveawaysMap = new Map();
 
-    async function fetchGiveaways() {
-      try {
-        const snap = await getDocs(collection(db, "giveaways"));
-        giveawaysDataCache = [];
-
-        if (snap.empty) {
-          giveawayGrid.innerHTML = `<p style="color: #aaa; text-align: center; grid-column: 1/-1;">Şu an aktif bir çekiliş bulunmuyor.</p>";
-          return;
-        }
-
-        for (const docSnap of snap.docs) {
-          const data = docSnap.data();
-          const id = docSnap.id;
-          
-          const partSnap = await getDocs(collection(db, `giveaways_${id}_participants`));
-          giveawaysDataCache.push({
-            id,
-            title: data.title,
-            reward: data.reward,
-            endTime: data.endTime,
-            participantCount: partSnap.size
-          });
-        }
-        renderGiveaways();
-      } catch (e) {
-        console.error(e);
-      }
-    }
-
-    function renderGiveaways() {
-      if (giveawaysDataCache.length === 0) return;
-      
-      // Eğer grid boşsa veya kart sayısı değiştiyse komple yeniden çiz
-      if (giveawayGrid.children.length !== giveawaysDataCache.length) {
-        giveawayGrid.innerHTML = "";
-        giveawaysDataCache.forEach(item => {
-          const card = document.createElement("div");
-          card.className = "giveaway-card";
-          card.id = `card-${item.id}`;
-          card.innerHTML = `
-            <div class="card-header-box">
-              <div class="streamer-info">
-                <img src="favicon.png" class="streamer-avatar" alt="Avatar">
-                <div>
-                  <p class="streamer-name">RUMİ7XL</p>
-                  <p class="streamer-sub">176315 Takipçi</p>
-                </div>
-              </div>
-              <button class="profile-btn">Profil</button>
-            </div>
-
-            <div style="text-align: center; margin-bottom: 12px;">
-              <h4 style="color: #fff; font-size: 0.95rem; margin: 0 0 5px 0;">${item.title}</h4>
-            </div>
-
-            <div class="stats-row">
-              <div class="stat-box">
-                <span class="stat-title">Katılımcı</span>
-                <span class="stat-value" id="count-${item.id}">${item.participantCount} kişi</span>
-              </div>
-              <div class="stat-box">
-                <span class="stat-title">Katılımcı Limiti</span>
-                <span class="stat-value">Yok</span>
-              </div>
-              <div class="stat-box">
-                <span class="stat-title">Toplam Ödül</span>
-                <span class="stat-value" style="color:#22c55e;">${item.reward}</span>
-              </div>
-            </div>
-
-            <div class="timer-row" id="timer-${item.id}">
-              <!-- Sayaç buraya dinamik dolacak -->
-            </div>
-
-            <div class="card-buttons">
-              <button class="btn-detay" onclick="window.openDetails('${item.id}', '${item.title}')">Detaylar</button>
-              <button class="btn-status" id="btn-${item.id}" onclick="window.openTaskModal('${item.id}')">Çekilişe Katıl</button>
-            </div>
-            <button class="btn-share" onclick="alert('Çekiliş bağlantısı kopyalandı!')">Çekilişi Paylaş</button>
-          `;
-          giveawayGrid.appendChild(card);
-        });
+    onSnapshot(collection(db, "giveaways"), async (snapshot) => {
+      if (snapshot.empty) {
+        giveawayGrid.innerHTML = `<p style="color: #aaa; text-align: center; grid-column: 1/-1;">Şu an aktif bir çekiliş bulunmuyor.</p>`;
+        return;
       }
 
-      // Sadece sayaçları ve süreleri her saniye akıcı bir şekilde güncelle (Ekranın gidip gelmesini önler)
-      giveawaysDataCache.forEach(item => {
+      giveawayGrid.innerHTML = "";
+      giveawaysMap.clear();
+
+      for (const docSnap of snapshot.docs) {
+        const data = docSnap.data();
+        const id = docSnap.id;
+
+        const partSnap = await getDocs(collection(db, `giveaways_${id}_participants`));
+        const participantCount = partSnap.size;
+
+        giveawaysMap.set(id, { ...data, participantCount });
+
+        const card = document.createElement("div");
+        card.className = "giveaway-card";
+        card.id = `card-${id}`;
+        card.innerHTML = `
+          <div class="card-header-box">
+            <div class="streamer-info">
+              <img src="favicon.png" class="streamer-avatar" alt="Avatar">
+              <div>
+                <p class="streamer-name">RUMİ7XL</p>
+                <p class="streamer-sub">176315 Takipçi</p>
+              </div>
+            </div>
+            <button class="profile-btn">Profil</button>
+          </div>
+
+          <div style="text-align: center; margin-bottom: 12px;">
+            <h4 style="color: #fff; font-size: 0.95rem; margin: 0 0 5px 0;">${data.title}</h4>
+          </div>
+
+          <div class="stats-row">
+            <div class="stat-box">
+              <span class="stat-title">Katılımcı</span>
+              <span class="stat-value" id="count-${id}">${participantCount} kişi</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-title">Katılımcı Limiti</span>
+              <span class="stat-value">Yok</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-title">Toplam Ödül</span>
+              <span class="stat-value" style="color:#22c55e;">${data.reward}</span>
+            </div>
+          </div>
+
+          <div class="timer-row" id="timer-${id}">
+            <!-- Sayaç buraya dolacak -->
+          </div>
+
+          <div class="card-buttons">
+            <button class="btn-detay" onclick="window.openDetails('${id}', '${data.title}')">Detaylar</button>
+            <button class="btn-status" id="btn-${id}" onclick="window.openTaskModal('${id}')">Çekilişe Katıl</button>
+          </div>
+          <button class="btn-share" onclick="alert('Çekiliş bağlantısı kopyalandı!')">Çekilişi Paylaş</button>
+        `;
+        giveawayGrid.appendChild(card);
+      }
+      updateTimers();
+    });
+
+    function updateTimers() {
+      giveawaysMap.forEach((data, id) => {
         const now = Date.now();
-        const timeLeft = item.endTime - now;
+        const timeLeft = data.endTime - now;
         
         let days = 0, hours = 0, minutes = 0, seconds = 0;
         if (timeLeft > 0) {
@@ -212,7 +193,7 @@
           seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
         }
 
-        const timerEl = document.getElementById(`timer-${item.id}`);
+        const timerEl = document.getElementById(`timer-${id}`);
         if (timerEl) {
           timerEl.innerHTML = `
             <div class="timer-box"><span class="timer-num">${days}</span><span class="timer-lbl">Gün</span></div>
@@ -222,19 +203,16 @@
           `;
         }
 
-        const btnEl = document.getElementById(`btn-${item.id}`);
-        if (btnEl) {
-          if (timeLeft <= 0) {
-            btnEl.innerText = "Sonuçlandı";
-            btnEl.style.background = "#374151";
-            btnEl.disabled = true;
-          }
+        const btnEl = document.getElementById(`btn-${id}`);
+        if (btnEl && timeLeft <= 0) {
+          btnEl.innerText = "Sonuçlandı";
+          btnEl.style.background = "#374151";
+          btnEl.disabled = true;
         }
       });
     }
 
-    fetchGiveaways();
-    setInterval(renderGiveaways, 1000); // Sadece sayaç akar, ekran titreme yapmaz
+    setInterval(updateTimers, 1000);
 
     window.openTaskModal = function(giveawayId) {
       const user = auth.currentUser;
@@ -258,7 +236,6 @@
           joinedAt: serverTimestamp()
         });
         alert("Tebrikler kanka! Çekilişe başarıyla katıldın 🚀");
-        fetchGiveaways();
       } catch (e) {
         alert("Zaten katılmışsın veya bir hata oluştu!");
       }
