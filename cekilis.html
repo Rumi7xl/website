@@ -319,38 +319,45 @@
       document.getElementById("taskModal").style.display = "flex";
     };
 
-    // IP KONTROLÜNÜN EKLENDİĞİ GÜNCEL BÖLÜM
+    // ÇİFT KALKANLI (TARAYICI + IP) KATILIM KONTROLÜ
     document.getElementById("confirmTaskBtn").onclick = async () => {
       const user = auth.currentUser;
       document.getElementById("taskModal").style.display = "none";
 
       try {
-        // 1. Kullanıcının IP adresini anlık olarak çekiyoruz
-        const ipRes = await fetch('https://api.ipify.org?format=json');
+        // KALKAN 1: Tarayıcı Hafızası Kontrolü
+        const localCheck = localStorage.getItem(`joined_${activeGiveawayIdForTask}`);
+        if (localCheck) {
+          showToast("Bu cihazdan zaten katılım sağlanmış kanka! Uyanıklık yok 🚫", "error");
+          return;
+        }
+
+        // KALKAN 2: IP Kontrolü
+        const ipRes = await fetch('https://api64.ipify.org?format=json');
         const ipData = await ipRes.json();
         const userIP = ipData.ip;
 
         const partRef = collection(db, `giveaways_${activeGiveawayIdForTask}_participants`);
         
-        // 2. Firebase'de bu IP adresi daha önce bu çekilişe kaydedilmiş mi diye bakıyoruz
         const ipQuery = query(partRef, where("ip", "==", userIP));
         const ipSnap = await getDocs(ipQuery);
 
         if (!ipSnap.empty) {
-          // Eğer IP veritabanında çıkarsa engeli basıyoruz
-          showToast("Bu internet ağından (IP) çekilişe zaten katılınmış! Adaletli olalım kanka 🚫", "error");
+          showToast("Bu internet ağından (IP) zaten katılım var! Herkese tek hak 🚫", "error");
           return; 
         }
 
-        // 3. Her şey temizse kullanıcıyı IP adresiyle beraber Firebase'e kaydediyoruz
         const username = user.displayName || user.email.split("@")[0];
         await addDoc(partRef, {
           uid: user.uid,
           username: username,
           joinedAt: serverTimestamp(),
-          ip: userIP // IP Adresini buraya ekledik
+          ip: userIP
         });
         
+        // Cihaz hafızasına damga vuruyoruz
+        localStorage.setItem(`joined_${activeGiveawayIdForTask}`, "true");
+
         showToast("Tebrikler kanka! Çekilişe başarıyla katıldın 🚀");
         setTimeout(() => location.reload(), 1500);
         
