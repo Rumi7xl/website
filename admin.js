@@ -245,38 +245,28 @@ async function loadAdminPanelData() {
   });
 }
 
-// ÇEKİLİŞ YÖNETİMİ (GÜNCELLENDİ: Dakika, Saat, Gün Desteği)
+// ÇEKİLİŞ YÖNETİMİ (Saat ve Dakika Destekli)
 const createGiveawayBtn = document.getElementById("createGiveawayBtn");
 if (createGiveawayBtn) {
   createGiveawayBtn.onclick = async () => {
     const title = document.getElementById("admGiveawayTitle").value.trim();
     const reward = document.getElementById("admGiveawayReward").value.trim();
-    const durationInput = document.getElementById("admGiveawayDuration");
-    const unitSelect = document.getElementById("admGiveawayUnit");
+    const hours = parseFloat(document.getElementById("admGiveawayHours").value) || 0;
+    const minutes = parseFloat(document.getElementById("admGiveawayMinutes").value) || 0;
 
-    if (!title || !reward || !durationInput || !unitSelect) {
-      showToast("Lütfen tüm alanları eksiksiz doldur kanka!", "error");
+    if (!title || !reward) {
+      showToast("Lütfen başlık ve ödülü boş bırakma kanka!", "error");
       return;
     }
 
-    const durationVal = parseFloat(durationInput.value);
-    const unit = unitSelect.value;
+    const totalMs = (hours * 60 * 60 * 1000) + (minutes * 60 * 1000);
 
-    if (isNaN(durationVal) || durationVal <= 0) {
-      showToast("Lütfen geçerli bir süre gir kanka!", "error");
+    if (totalMs <= 0) {
+      showToast("Lütfen geçerli bir süre (saat veya dakika) gir kanka!", "error");
       return;
     }
 
-    let durationMs = 0;
-    if (unit === "minutes") {
-      durationMs = durationVal * 60 * 1000;
-    } else if (unit === "hours") {
-      durationMs = durationVal * 60 * 60 * 1000;
-    } else if (unit === "days") {
-      durationMs = durationVal * 24 * 60 * 60 * 1000;
-    }
-
-    const endTime = Date.now() + durationMs;
+    const endTime = Date.now() + totalMs;
 
     try {
       await addDoc(collection(db, "giveaways"), {
@@ -289,7 +279,8 @@ if (createGiveawayBtn) {
       showToast("Çekiliş başarıyla başlatıldı! 🎉");
       document.getElementById("admGiveawayTitle").value = "";
       document.getElementById("admGiveawayReward").value = "";
-      durationInput.value = "20";
+      document.getElementById("admGiveawayHours").value = "0";
+      document.getElementById("admGiveawayMinutes").value = "2";
       loadAdminGiveaways();
     } catch (e) {
       showToast("Çekiliş oluşturulurken hata oluştu!", "error");
