@@ -297,7 +297,7 @@
       </div>
     </div>
 
-    <!-- 5. ÇEKİLİŞ YÖNETİMİ SEKMESİ -->
+    <!-- 5. ÇEKİLİŞ YÖNETİMİ SEKMESİ (GÜNCELLENDİ: Saat ve Dakika Kutuları) -->
     <div id="giveawayAdminPanel" class="panel-section">
       <div class="card">
         <h2 style="color: #c084fc; margin-top: 0;">🎁 Yeni Çekiliş Başlat</h2>
@@ -308,10 +308,18 @@
         <label style="color: #aaa; font-size: 0.85rem; display: block; margin-bottom: 5px;">Toplam Ödül Değeri / Açıklama:</label>
         <input type="text" id="admGiveawayReward" placeholder="Örn: 12884.43 TL">
 
-        <label style="color: #aaa; font-size: 0.85rem; display: block; margin-bottom: 5px;">Süre (Saat cinsinden):</label>
-        <input type="number" id="admGiveawayHours" placeholder="20" value="20">
+        <div style="display: flex; gap: 15px;">
+          <div style="flex: 1;">
+            <label style="color: #aaa; font-size: 0.85rem; display: block; margin-bottom: 5px;">Süre (Saat):</label>
+            <input type="number" id="admGiveawayHours" placeholder="0" value="0" min="0">
+          </div>
+          <div style="flex: 1;">
+            <label style="color: #aaa; font-size: 0.85rem; display: block; margin-bottom: 5px;">Süre (Dakika):</label>
+            <input type="number" id="admGiveawayMinutes" placeholder="2" value="2" min="0">
+          </div>
+        </div>
         
-        <button id="createGiveawayBtn" class="primary-btn" style="margin-top: 10px;">Çekilişi Başlat 🚀</button>
+        <button id="createGiveawayBtn" class="primary-btn" style="margin-top: 5px;">Çekilişi Başlat 🚀</button>
       </div>
 
       <div class="card">
