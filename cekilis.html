@@ -77,14 +77,14 @@
   <div id="taskModal" class="modal-overlay">
     <div class="modal-content">
       <h3 style="color: #c084fc; margin-bottom: 10px;">📌 Katılım Görevleri</h3>
-      <p style="font-size: 0.9rem; color: #aaa; margin-bottom: 20px;">Çekilişe katılmak için aşağıdaki sosyal medya hesaplarını takip etmelisin:</p>
+      <p style="font-size: 0.9rem; color: #aaa; margin-bottom: 20px;">Çekilişe katılmak için önce aşağıdaki hesapları açıp takip etmelisin:</p>
       
       <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
-        <a href="https://www.instagram.com/rumi7vip" target="_blank" style="background: #222; color: #fff; padding: 10px; border-radius: 8px; text-decoration: none; font-weight: bold; border: 1px solid #444;">1️⃣ Instagram'ı Takip Et</a>
-        <a href="https://kick.com/rumi7xl" target="_blank" style="background: #222; color: #22c55e; padding: 10px; border-radius: 8px; text-decoration: none; font-weight: bold; border: 1px solid #444;">2️⃣ Kick Kanalını Takip Et</a>
+        <a href="https://www.instagram.com/rumi7vip" target="_blank" id="linkInsta" onclick="window.unlockTask('insta')" style="background: #222; color: #fff; padding: 10px; border-radius: 8px; text-decoration: none; font-weight: bold; border: 1px solid #444;">1️⃣ Instagram'ı Takip Et (Tıkla)</a>
+        <a href="https://kick.com/rumi7xl" target="_blank" id="linkKick" onclick="window.unlockTask('kick')" style="background: #222; color: #22c55e; padding: 10px; border-radius: 8px; text-decoration: none; font-weight: bold; border: 1px solid #444;">2️⃣ Kick Kanalını Takip Et (Tıkla)</a>
       </div>
 
-      <button id="confirmTaskBtn" style="background: #22c55e; color: #fff; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer;">Görevleri Yaptım, Katıl ✅</button>
+      <button id="confirmTaskBtn" disabled style="background: #374151; color: #888; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; cursor: not-allowed;">Önce Linklere Tıkla 🔒</button>
       <button onclick="document.getElementById('taskModal').style.display='none'" style="background: transparent; color: #aaa; border: none; margin-top: 10px; cursor: pointer;">İptal</button>
     </div>
   </div>
@@ -107,11 +107,28 @@
   <script type="module" src="auth.js?v=1.2"></script>
   <script type="module">
     import { auth, db } from "./auth.js";
-    import { collection, onSnapshot, addDoc, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+    import { collection, onSnapshot, addDoc, serverTimestamp, getDocs, query, where } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
     const giveawayGrid = document.getElementById("giveawayGrid");
     let activeGiveawayIdForTask = null;
     let giveawaysMap = new Map();
+    
+    let clickedInsta = false;
+    let clickedKick = false;
+
+    window.unlockTask = function(platform) {
+      if (platform === 'insta') clickedInsta = true;
+      if (platform === 'kick') clickedKick = true;
+
+      if (clickedInsta && clickedKick) {
+        const btn = document.getElementById("confirmTaskBtn");
+        btn.disabled = false;
+        btn.style.background = "#22c55e";
+        btn.style.color = "#fff";
+        btn.style.cursor = "pointer";
+        btn.innerText = "Görevleri Yaptım, Katıl ✅";
+      }
+    };
 
     onSnapshot(collection(db, "giveaways"), async (snapshot) => {
       if (snapshot.empty) {
@@ -122,14 +139,26 @@
       giveawayGrid.innerHTML = "";
       giveawaysMap.clear();
 
+      const currentUser = auth.currentUser;
+
       for (const docSnap of snapshot.docs) {
         const data = docSnap.data();
         const id = docSnap.id;
 
-        const partSnap = await getDocs(collection(db, `giveaways_${id}_participants`));
+        const partRef = collection(db, `giveaways_${id}_participants`);
+        const partSnap = await getDocs(partRef);
         const participantCount = partSnap.size;
 
-        giveawaysMap.set(id, { ...data, participantCount });
+        let hasJoined = false;
+        if (currentUser) {
+          const q = query(partRef, where("uid", "==", currentUser.uid));
+          const userPartSnap = await getDocs(q);
+          if (!userPartSnap.empty) {
+            hasJoined = true;
+          }
+        }
+
+        giveawaysMap.set(id, { ...data, participantCount, hasJoined });
 
         const card = document.createElement("div");
         card.className = "giveaway-card";
@@ -165,13 +194,11 @@
             </div>
           </div>
 
-          <div class="timer-row" id="timer-${id}">
-            <!-- Sayaç buraya dolacak -->
-          </div>
+          <div class="timer-row" id="timer-${id}"></div>
 
           <div class="card-buttons">
             <button class="btn-detay" onclick="window.openDetails('${id}', '${data.title}')">Detaylar</button>
-            <button class="btn-status" id="btn-${id}" onclick="window.openTaskModal('${id}')">Çekilişe Katıl</button>
+            <button class="btn-status" id="btn-${id}" style="${hasJoined ? 'background:#374151; cursor:not-allowed;' : ''}" onclick="${hasJoined ? '' : `window.openTaskModal('${id}')`}">${hasJoined ? 'Katıldın ✅' : 'Çekilişe Katıl'}</button>
           </div>
           <button class="btn-share" onclick="alert('Çekiliş bağlantısı kopyalandı!')">Çekilişi Paylaş</button>
         `;
@@ -204,7 +231,7 @@
         }
 
         const btnEl = document.getElementById(`btn-${id}`);
-        if (btnEl && timeLeft <= 0) {
+        if (btnEl && timeLeft <= 0 && !data.hasJoined) {
           btnEl.innerText = "Sonuçlandı";
           btnEl.style.background = "#374151";
           btnEl.disabled = true;
@@ -221,6 +248,16 @@
         return;
       }
       activeGiveawayIdForTask = giveawayId;
+      
+      clickedInsta = false;
+      clickedKick = false;
+      const confirmBtn = document.getElementById("confirmTaskBtn");
+      confirmBtn.disabled = true;
+      confirmBtn.style.background = "#374151";
+      confirmBtn.style.color = "#888";
+      confirmBtn.style.cursor = "not-allowed";
+      confirmBtn.innerText = "Önce Linklere Tıkla 🔒";
+
       document.getElementById("taskModal").style.display = "flex";
     };
 
@@ -236,6 +273,7 @@
           joinedAt: serverTimestamp()
         });
         alert("Tebrikler kanka! Çekilişe başarıyla katıldın 🚀");
+        location.reload();
       } catch (e) {
         alert("Zaten katılmışsın veya bir hata oluştu!");
       }
