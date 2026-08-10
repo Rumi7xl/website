@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RUMİ7XL - Çekiliş Ekranı</title>
+  <link rel="stylesheet" href="style.css"> <!-- Kendi stil dosyan varsa -->
+  <style>
+    body { background: #0b0b0f; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; }
+    .container { max-width: 600px; margin: 50px auto; background: #121218; border: 1px solid rgba(145,70,255,0.3); border-radius: 20px; padding: 30px; box-shadow: 0 0 30px rgba(145,70,255,0.2); text-align: center; }
+    .btn-join { background: linear-gradient(135deg, #9146ff, #772ce8); color: white; border: none; padding: 14px 30px; font-size: 1.1rem; font-weight: bold; border-radius: 12px; cursor: pointer; transition: 0.3s; box-shadow: 0 0 15px rgba(145,70,255,0.4); }
+    .btn-join:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(145,70,255,0.7); }
+    .participant-list { margin-top: 20px; text-align: left; background: rgba(255,255,255,0.02); border-radius: 10px; padding: 15px; max-height: 200px; overflow-y: auto; }
+    .participant-item { padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.95rem; display: flex; justify-content: space-between; }
+  </style>
+</head>
+<body>
+
+  <!-- Profil / Giriş Alanı (auth.js burayı otomatik dolduracak) -->
+  <div class="account-box" style="position: absolute; top: 20px; right: 20px;"></div>
+
+  <div class="container">
+    <h1>🎁 Büyük Çekiliş</h1>
+    <p style="color: #aaa;">Çekilişe katılmak için aşağıdaki butona tıkla! (Her cihaz/IP başına sadece 1 katılım hakkı vardır).</p>
+    
+    <div id="joinSection" style="margin: 30px 0;">
+      <button id="joinBtn" class="btn-join">🎉 Çekilişe Katıl</button>
+    </div>
+
+    <div style="margin-top: 30px;">
+      <h3>📋 Katılımcılar (<span id="participantCount">0</span>)</h3>
+      <div class="participant-list" id="participantList">
+        <div style="color: #666; text-align: center;">Yükleniyor...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase ve Çekiliş Mantığı -->
+  <script type="module">
+    import { auth, db } from "./auth.js";
+    import { collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+
+    const joinBtn = document.getElementById("joinBtn");
+    const participantList = document.getElementById("participantList");
+    const participantCount = document.getElementById("participantCount");
+
+    // Katılımcıları Listele
+    async function loadParticipants() {
+      try {
+        const q = query(collection(db, "giveaway"), orderBy("joinedAt", "desc"));
+        const snapshot = await getDocs(q);
+        
+        participantList.innerHTML = "";
+        participantCount.innerText = snapshot.size;
+
+        if (snapshot.empty) {
+          participantList.innerHTML = `<div style="color: #666; text-align: center;">Henüz katılan kimse yok. İlk sen ol! 🔥</div>`;
+          return;
+        }
+
+        snapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          const item = document.createElement("div");
+          item.className = "participant-item";
+          item.innerHTML = `<span>👤 ${data.username}</span> <span style="color: #888; font-size: 0.85rem;">Katıldı</span>`;
+          participantList.appendChild(item);
+        });
+      } catch (err) {
+        console.error("Listeleme hatası:", err);
+      }
+    }
+
+    loadParticipants();
+
+    // Çekilişe Katılma Butonu ve IP Kontrolü
+    joinBtn.onclick = async () => {
+      const user = auth.currentUser;
+      if (!user) {
+        alert("Kanka önce siteye giriş yapman gerekiyor! 👤");
+        return;
+      }
+
+      joinBtn.innerText = "Kontrol Ediliyor...";
+      joinBtn.disabled = true;
+
+      try {
+        // 1. Ücretsiz API ile kullanıcının IP adresini çekiyoruz
+        const ipRes = await fetch("https://api.ipify.org?format=json");
+        const ipData = await ipRes.json();
+        const userIp = ipData.ip;
+
+        // 2. Bu IP daha önce katılmış mı kontrol et
+        const snapshot = await getDocs(collection(db, "giveaway"));
+        let alreadyJoinedByIp = false;
+        let alreadyJoinedByUser = false;
+
+        snapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          if (data.ip === userIp) alreadyJoinedByIp = true;
+          if (data.uid === user.uid) alreadyJoinedByUser = true;
+        });
+
+        if (alreadyJoinedByIp) {
+          alert("❌ Bu internet ağından (IP) zaten bir katılım yapılmış! Yan hesap açmak yasak kanka 😄");
+          joinBtn.innerText = "🎉 Çekilişe Katıl";
+          joinBtn.disabled = false;
+          return;
+        }
+
+        if (alreadyJoinedByUser) {
+          alert("❌ Bu hesapla zaten çekilişe katılmışsın!");
+          joinBtn.innerText = "🎉 Çekilişe Katıl";
+          joinBtn.disabled = false;
+          return;
+        }
+
+        // 3. Hiçbir engel yoksa veritabanına kaydet
+        const username = user.displayName || user.email.split("@")[0];
+        await addDoc(collection(db, "giveaway"), {
+          uid: user.uid,
+          username: username,
+          ip: userIp,
+          joinedAt: serverTimestamp()
+        });
+
+        alert("Tebrikler kanka! Çekilişe başarıyla katıldın 🚀");
+        joinBtn.innerText = "Katıldın ✅";
+        loadParticipants();
+
+      } catch (err) {
+        alert("Bir hata oluştu: " + err.message);
+        joinBtn.innerText = "🎉 Çekilişe Katıl";
+        joinBtn.disabled = false;
+      }
+    };
+  </script>
+</body>
+</html>
