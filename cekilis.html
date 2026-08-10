@@ -105,10 +105,8 @@
 
   <script type="module" src="auth.js?v=1.2"></script>
   
-  <!-- YENİ VE DÜZELTİLMİŞ SCRIPT BÖLÜMÜ -->
   <script type="module">
     import { auth, db } from "./auth.js";
-    // YENİ: Firebase Firestore'dan veriyi güncellemek için doc ve updateDoc eklendi
     import { collection, onSnapshot, addDoc, serverTimestamp, getDocs, query, where, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
     const giveawayGrid = document.getElementById("giveawayGrid");
@@ -155,7 +153,6 @@
       }
     };
 
-    // YENİ: Firebase üzerinden rastgele kazananı seçip kaydeden fonksiyon
     async function pickWinner(giveawayId) {
       try {
         const partRef = collection(db, `giveaways_${giveawayId}_participants`);
@@ -166,17 +163,14 @@
           const participants = [];
           partSnap.forEach(d => participants.push(d.data().username));
           
-          // Rastgele bir katılımcı seç
           const randomIndex = Math.floor(Math.random() * participants.length);
           const winnerName = participants[randomIndex];
           
-          // Firebase'e kazananı kaydet ve çekilişi sonlandır
           await updateDoc(giveawayRef, {
             winner: winnerName,
             isFinished: true
           });
         } else {
-          // Katılımcı yoksa hata vermemesi için
           await updateDoc(giveawayRef, {
             winner: "Katılımcı Bulunamadı",
             isFinished: true
@@ -215,7 +209,6 @@
           }
         }
 
-        // Verileri map'e ekliyoruz ki kazananı vb. kolayca okuyabilelim
         giveawaysMap.set(id, { ...data, participantCount, hasJoined });
 
         const card = document.createElement("div");
@@ -289,7 +282,6 @@
 
         const btnEl = document.getElementById(`btn-${id}`);
         
-        // YENİ: Süre 0'a ulaştığında kazanan çekiliş tetikleyicisi
         if (timeLeft <= 0) {
           if (btnEl) {
             btnEl.innerText = "Sonuçlandı";
@@ -297,9 +289,8 @@
             btnEl.disabled = true;
           }
 
-          // Eğer süre bitmişse ve henüz kazanan seçilmemişse Firebase'i güncelle
           if (!data.isFinished) {
-            data.isFinished = true; // Fonksiyonun art arda çalışmasını engellemek için
+            data.isFinished = true; 
             pickWinner(id);
           }
         }
@@ -328,25 +319,47 @@
       document.getElementById("taskModal").style.display = "flex";
     };
 
+    // IP KONTROLÜNÜN EKLENDİĞİ GÜNCEL BÖLÜM
     document.getElementById("confirmTaskBtn").onclick = async () => {
       const user = auth.currentUser;
       document.getElementById("taskModal").style.display = "none";
 
       try {
+        // 1. Kullanıcının IP adresini anlık olarak çekiyoruz
+        const ipRes = await fetch('https://api.ipify.org?format=json');
+        const ipData = await ipRes.json();
+        const userIP = ipData.ip;
+
+        const partRef = collection(db, `giveaways_${activeGiveawayIdForTask}_participants`);
+        
+        // 2. Firebase'de bu IP adresi daha önce bu çekilişe kaydedilmiş mi diye bakıyoruz
+        const ipQuery = query(partRef, where("ip", "==", userIP));
+        const ipSnap = await getDocs(ipQuery);
+
+        if (!ipSnap.empty) {
+          // Eğer IP veritabanında çıkarsa engeli basıyoruz
+          showToast("Bu internet ağından (IP) çekilişe zaten katılınmış! Adaletli olalım kanka 🚫", "error");
+          return; 
+        }
+
+        // 3. Her şey temizse kullanıcıyı IP adresiyle beraber Firebase'e kaydediyoruz
         const username = user.displayName || user.email.split("@")[0];
-        await addDoc(collection(db, `giveaways_${activeGiveawayIdForTask}_participants`), {
+        await addDoc(partRef, {
           uid: user.uid,
           username: username,
-          joinedAt: serverTimestamp()
+          joinedAt: serverTimestamp(),
+          ip: userIP // IP Adresini buraya ekledik
         });
+        
         showToast("Tebrikler kanka! Çekilişe başarıyla katıldın 🚀");
         setTimeout(() => location.reload(), 1500);
+        
       } catch (e) {
-        showToast("Zaten katılmışsın veya bir hata oluştu!", "error");
+        showToast("Bir hata oluştu veya zaten katıldın!", "error");
+        console.error("Katılım Hatası:", e);
       }
     };
 
-    // YENİ: Detaylara tıklandığında kazananı ekranda gösterme mantığı eklendi
     window.openDetails = async function(giveawayId, title) {
       document.getElementById("modalGiveawayTitle").innerText = title;
       const listContainer = document.getElementById("modalParticipantsList");
@@ -355,7 +368,6 @@
       listContainer.innerHTML = "Yükleniyor...";
       document.getElementById("detailModal").style.display = "flex";
 
-      // Firebase'den gelen kazanan bilgisini kontrol edip ekrana yazıyoruz
       const gData = giveawaysMap.get(giveawayId);
       if (gData && gData.winner) {
         winnerArea.innerHTML = `<span style="color:#22c55e; font-size:1.1rem; font-weight:bold;">🎉 KAZANAN: ${gData.winner} 🎉</span>`;
@@ -372,7 +384,6 @@
         }
         snap.forEach(d => {
           const pData = d.data();
-          // Eğer katılımcı kazanansa, isminin yanına kupa koy
           const isWinner = (gData && gData.winner === pData.username);
           listContainer.innerHTML += `<div style="padding: 6px 0; border-bottom: 1px solid #222; ${isWinner ? 'color:#22c55e; font-weight:bold;' : ''}">
             ${isWinner ? '🏆' : '👤'} ${pData.username}
