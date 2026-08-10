@@ -245,7 +245,7 @@ async function loadAdminPanelData() {
   });
 }
 
-// ÇEKİLİŞ YÖNETİMİ (YENİ)
+// ÇEKİLİŞ YÖNETİMİ
 const createGiveawayBtn = document.getElementById("createGiveawayBtn");
 if (createGiveawayBtn) {
   createGiveawayBtn.onclick = async () => {
