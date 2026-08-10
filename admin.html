@@ -71,7 +71,7 @@
       margin-bottom: 25px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
-    input[type="text"], textarea {
+    input[type="text"], input[type="number"], textarea {
       width: 100%;
       padding: 12px;
       background: #111;
@@ -150,6 +150,7 @@
       <button onclick="switchPanel('announce', this)">📢 Duyuru Paylaş</button>
       <button onclick="switchPanel('chat', this)">💬 Sohbet Yönetimi</button>
       <button onclick="switchPanel('icerikler', this)">🎬 İçerikler Yönetimi</button>
+      <button onclick="switchPanel('giveawayAdmin', this)">🎁 Çekiliş Yönetimi</button>
     </nav>
 
     <a href="index.html" style="display: flex; align-items: center; justify-content: center; gap: 8px; background: #ef4444; color: #fff; padding: 12px; border-radius: 10px; text-decoration: none; font-weight: bold; margin-top: auto; font-size: 0.95rem;">🏠 Siteye Dön</a>
@@ -296,6 +297,31 @@
       </div>
     </div>
 
+    <!-- 5. ÇEKİLİŞ YÖNETİMİ SEKMESİ -->
+    <div id="giveawayAdminPanel" class="panel-section">
+      <div class="card">
+        <h2 style="color: #c084fc; margin-top: 0;">🎁 Yeni Çekiliş Başlat</h2>
+        
+        <label style="color: #aaa; font-size: 0.85rem; display: block; margin-bottom: 5px;">Çekiliş Başlığı:</label>
+        <input type="text" id="admGiveawayTitle" placeholder="Örn: VİDEOYA ÖZEL 3 KİŞİYE MUMYA ÇEKİLİŞİ!!">
+        
+        <label style="color: #aaa; font-size: 0.85rem; display: block; margin-bottom: 5px;">Toplam Ödül Değeri / Açıklama:</label>
+        <input type="text" id="admGiveawayReward" placeholder="Örn: 12884.43 TL">
+
+        <label style="color: #aaa; font-size: 0.85rem; display: block; margin-bottom: 5px;">Süre (Saat cinsinden):</label>
+        <input type="number" id="admGiveawayHours" placeholder="20" value="20">
+        
+        <button id="createGiveawayBtn" class="primary-btn" style="margin-top: 10px;">Çekilişi Başlat 🚀</button>
+      </div>
+
+      <div class="card">
+        <h3 style="color: #c084fc; margin-top: 0;">Aktif ve Geçmiş Çekilişler</h3>
+        <div id="adminGiveawayListContainer">
+          <p style="color: #aaa;">Çekilişler yükleniyor...</p>
+        </div>
+      </div>
+    </div>
+
   </main>
 
   <!-- ONAY MODALI -->
@@ -322,6 +348,7 @@
       if (panelName === 'announce') document.getElementById('announcePanel').classList.add('active');
       if (panelName === 'chat') document.getElementById('chatPanel').classList.add('active');
       if (panelName === 'icerikler') document.getElementById('iceriklerPanel').classList.add('active');
+      if (panelName === 'giveawayAdmin') document.getElementById('giveawayAdminPanel').classList.add('active');
 
       if (btnEl) btnEl.classList.add('active');
     }
