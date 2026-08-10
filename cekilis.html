@@ -3,15 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RUMİ7XL - Çekiliş Ekranı</title>
+  <title>RUMİ7XL - Çekilişler</title>
   <link href="favicon.png?v=2" rel="icon" type="image/png"/>
   <link rel="stylesheet" href="style.css?v=1.2">
   <style>
-    .container { max-width: 600px; margin: 40px auto; background: #121218; border: 1px solid rgba(145,70,255,0.3); border-radius: 20px; padding: 30px; box-shadow: 0 0 30px rgba(145,70,255,0.2); text-align: center; }
-    .btn-join { background: linear-gradient(135deg, #9146ff, #772ce8); color: white; border: none; padding: 14px 30px; font-size: 1.1rem; font-weight: bold; border-radius: 12px; cursor: pointer; transition: 0.3s; box-shadow: 0 0 15px rgba(145,70,255,0.4); }
-    .btn-join:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(145,70,255,0.7); }
-    .participant-list { margin-top: 20px; text-align: left; background: rgba(255,255,255,0.02); border-radius: 10px; padding: 15px; max-height: 200px; overflow-y: auto; }
-    .participant-item { padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.95rem; display: flex; justify-content: space-between; }
+    .giveaway-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+    .giveaway-card { background: #141418; border: 1px solid rgba(145,70,255,0.3); border-radius: 16px; padding: 20px; text-align: center; box-shadow: 0 0 20px rgba(145,70,255,0.15); display: flex; flex-direction: column; justify-content: space-between; }
+    .timer-box { display: flex; justify-content: center; gap: 8px; margin: 15px 0; background: #0c0c10; padding: 10px; border-radius: 10px; border: 1px solid #222; }
+    .timer-item { font-size: 0.9rem; color: #c084fc; font-weight: bold; }
+    .btn-join { background: #9146ff; color: white; border: none; padding: 12px; font-weight: bold; border-radius: 10px; cursor: pointer; width: 100%; transition: 0.3s; margin-top: 10px; }
+    .btn-join:hover { background: #772ce8; }
+    .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:none; align-items:center; justify-content:center; z-index:999999; }
+    .modal-content { background:#18181c; border:1px solid #9146ff; padding:25px; border-radius:16px; width:90%; max-width:400px; text-align:center; color:#fff; }
   </style>
 </head>
 <body>
@@ -23,25 +26,45 @@
       <a href="topluluk.html">Topluluk</a>
       <a href="oneriler.html">Öneriler</a>
       <a href="icerikler.html">İçerikler</a>
-      <a href="cekilis.html" class="active"> Çekiliş</a>
+      <a href="cekilis.html" class="active">🎁 Çekiliş</a>
       <a href="duyurular.html">Duyurular</a>
     </div>
     <div class="account-box"></div>
   </nav>
 
-  <div class="container">
-    <h1>🎁 Büyük Çekiliş</h1>
-    <p style="color: #aaa;">Çekilişe katılmak için aşağıdaki butona tıkla! (Her cihaz/IP başına sadece 1 katılım hakkı vardır).</p>
-    
-    <div id="joinSection" style="margin: 30px 0;">
-      <button id="joinBtn" class="btn-join">🎉 Çekilişe Katıl</button>
-    </div>
+  <div style="text-align: center; margin-top: 30px;">
+    <h1 style="font-size: 40px; color: #9146ff; text-shadow: 0 0 20px rgba(145,70,255,0.5);">🎁 Aktif Çekilişler</h1>
+    <p style="color: #aaa;">Görevleri tamamla, çekilişe katıl ve büyük ödülü kazan!</p>
+  </div>
 
-    <div style="margin-top: 30px;">
-      <h3>📋 Katılımcılar (<span id="participantCount">0</span>)</h3>
-      <div class="participant-list" id="participantList">
-        <div style="color: #666; text-align: center;">Yükleniyor...</div>
+  <div class="giveaway-grid" id="giveawayGrid">
+    <p style="color: #aaa; text-align: center; grid-column: 1/-1;">Çekilişler yükleniyor...</p>
+  </div>
+
+  <!-- GÖREV MODALI -->
+  <div id="taskModal" class="modal-overlay">
+    <div class="modal-content">
+      <h3 style="color: #c084fc; margin-bottom: 10px;">📌 Katılım Görevleri</h3>
+      <p style="font-size: 0.9rem; color: #aaa; margin-bottom: 20px;">Çekilişe katılmak için aşağıdaki sosyal medya hesaplarını takip etmelisin:</p>
+      
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+        <a href="https://www.instagram.com/rumi7vip" target="_blank" style="background: #222; color: #fff; padding: 10px; border-radius: 8px; text-decoration: none; font-weight: bold; border: 1px solid #444;">1️⃣ Instagram'ı Takip Et</a>
+        <a href="https://kick.com/rumi7xl" target="_blank" style="background: #222; color: #22c55e; padding: 10px; border-radius: 8px; text-decoration: none; font-weight: bold; border: 1px solid #444;">2️⃣ Kick Kanalını Takip Et</a>
       </div>
+
+      <button id="confirmTaskBtn" style="background: #22c55e; color: #fff; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer;">Görevleri Yaptım, Katıl ✅</button>
+      <button onclick="document.getElementById('taskModal').style.display='none'" style="background: transparent; color: #aaa; border: none; margin-top: 10px; cursor: pointer;">İptal</button>
+    </div>
+  </div>
+
+  <!-- DETAY MODALI -->
+  <div id="detailModal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 500px;">
+      <h3 style="color: #c084fc; margin-bottom: 10px;" id="modalGiveawayTitle">Çekiliş Detayları</h3>
+      <div id="modalWinnerArea" style="margin-bottom: 15px; padding: 10px; background: #111; border-radius: 8px; border: 1px solid #333;">Kazanan henüz açıklanmadı.</div>
+      <h4 style="text-align: left; color: #aaa; font-size: 0.9rem; margin-bottom: 5px;">Katılanlar:</h4>
+      <div id="modalParticipantsList" style="max-height: 200px; overflow-y: auto; background: #111; border-radius: 8px; padding: 10px; text-align: left; font-size: 0.9rem; color: #ccc;">Yükleniyor...</div>
+      <button onclick="document.getElementById('detailModal').style.display='none'" style="background: #333; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; margin-top: 15px; cursor: pointer;">Kapat</button>
     </div>
   </div>
 
@@ -49,7 +72,7 @@
     <p>© 2026 RUMİ7XL - Tüm Hakları Saklıdır.</p>
   </footer>
 
-  <!-- Modal Alanları -->
+  <!-- Modal Alanları (Giriş/Profil/Şifre için standart pencereler) -->
   <div id="accountModal" class="account-modal">
     <div class="account-window">
       <button class="close-account" onclick="document.getElementById('accountModal').style.display='none'">✕</button>
@@ -71,123 +94,111 @@
     </div>
   </div>
 
-  <div id="photoModal" class="account-modal">
-    <div class="account-window">
-      <button class="close-account" onclick="document.getElementById('photoModal').style.display='none'">✕</button>
-      <h2 style="color:#9146ff; margin-bottom:15px; font-size:20px; text-align:center;">Profil Fotoğrafı Değiştir</h2>
-      <form id="photoSettingsForm" class="account-form">
-        <label for="photoFileInput" style="border: 2px dashed #333; padding: 20px; text-align: center; border-radius: 15px; cursor: pointer; display: block; background: #181818;">
-          <span id="uploadLabelText">📁 Galeriden Resim Seç</span>
-          <input type="file" id="photoFileInput" accept="image/*" style="display:none;">
-          <img id="photoPreview" style="display:none; width:80px; height:80px; border-radius:50%; margin: 10px auto 0; object-fit:cover; border:2px solid #9146ff;">
-        </label>
-        <button type="submit" class="account-submit">Yükle ve Kaydet</button>
-      </form>
-    </div>
-  </div>
-
-  <div id="passwordModal" class="account-modal">
-    <div class="account-window">
-      <button class="close-account" onclick="document.getElementById('passwordModal').style.display='none'">✕</button>
-      <h2 style="color:#9146ff; margin-bottom:15px; font-size:20px; text-align:center;">Şifre Değiştir</h2>
-      <form id="passwordSettingsForm" class="account-form">
-        <input type="password" name="changePassword" placeholder="Yeni Şifreniz" required>
-        <button type="submit" class="account-submit">Şifreyi Güncelle</button>
-      </form>
-    </div>
-  </div>
-
   <script type="module" src="auth.js?v=1.2"></script>
   <script type="module">
     import { auth, db } from "./auth.js";
-    import { collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+    import { collection, getDocs, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
-    const joinBtn = document.getElementById("joinBtn");
-    const participantList = document.getElementById("participantList");
-    const participantCount = document.getElementById("participantCount");
+    const giveawayGrid = document.getElementById("giveawayGrid");
+    let activeGiveawayIdForTask = null;
 
-    async function loadParticipants() {
+    async function loadGiveaways() {
       try {
-        const q = query(collection(db, "giveaway"), orderBy("joinedAt", "desc"));
-        const snapshot = await getDocs(q);
-        
-        participantList.innerHTML = "";
-        participantCount.innerText = snapshot.size;
+        const snap = await getDocs(collection(db, "giveaways"));
+        giveawayGrid.innerHTML = "";
 
-        if (snapshot.empty) {
-          participantList.innerHTML = `<div style="color: #666; text-align: center;">Henüz katılan kimse yok. İlk sen ol! 🔥</div>`;
+        if (snap.empty) {
+          giveawayGrid.innerHTML = `<p style="color: #aaa; text-align: center; grid-column: 1/-1;">Şu an aktif bir çekiliş bulunmuyor.</p>`;
           return;
         }
 
-        snapshot.forEach((docSnap) => {
+        snap.forEach(docSnap => {
           const data = docSnap.data();
-          const item = document.createElement("div");
-          item.className = "participant-item";
-          item.innerHTML = `<span>👤 ${data.username}</span> <span style="color: #888; font-size: 0.85rem;">Katıldı</span>`;
-          participantList.appendChild(item);
+          const id = docSnap.id;
+          
+          const now = Date.now();
+          const timeLeft = data.endTime - now;
+          let timeText = "Sona Erdi";
+          
+          if (timeLeft > 0) {
+            const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            timeText = `${hours} Saat ${minutes} Dakika ${seconds} Saniye`;
+          }
+
+          const card = document.createElement("div");
+          card.className = "giveaway-card";
+          card.innerHTML = `
+            <div>
+              <h3 style="color: #c084fc; margin-bottom: 8px;">${data.title}</h3>
+              <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 15px;">Toplam Ödül: <b style="color:#22c55e;">${data.reward}</b></p>
+              <div class="timer-box">
+                <span class="timer-item">⏳ Kalan Süre: ${timeText}</span>
+              </div>
+            </div>
+            <div>
+              <button class="btn-join" onclick="window.openTaskModal('${id}')">🎁 Çekilişe Katıl</button>
+              <button style="background: transparent; border: 1px solid #444; color: #aaa; padding: 8px; width: 100%; border-radius: 10px; margin-top: 8px; cursor: pointer; font-size: 0.85rem;" onclick="window.openDetails('${id}', '${data.title}')">📋 Detaylar & Katılımcılar</button>
+            </div>
+          `;
+          giveawayGrid.appendChild(card);
         });
-      } catch (err) {
-        console.error("Listeleme hatası:", err);
+      } catch (e) {
+        console.error(e);
       }
     }
 
-    loadParticipants();
+    loadGiveaways();
+    setInterval(loadGiveaways, 1000);
 
-    joinBtn.onclick = async () => {
+    window.openTaskModal = function(giveawayId) {
       const user = auth.currentUser;
       if (!user) {
-        alert("Kanka önce siteye giriş yapman gerekiyor! 👤");
+        alert("Önce siteye giriş yapmalısın kanka! 👤");
         return;
       }
+      activeGiveawayIdForTask = giveawayId;
+      document.getElementById("taskModal").style.display = "flex";
+    };
 
-      joinBtn.innerText = "Kontrol Ediliyor...";
-      joinBtn.disabled = true;
+    document.getElementById("confirmTaskBtn").onclick = async () => {
+      const user = auth.currentUser;
+      document.getElementById("taskModal").style.display = "none";
 
       try {
-        const ipRes = await fetch("https://api.ipify.org?format=json");
-        const ipData = await ipRes.json();
-        const userIp = ipData.ip;
-
-        const snapshot = await getDocs(collection(db, "giveaway"));
-        let alreadyJoinedByIp = false;
-        let alreadyJoinedByUser = false;
-
-        snapshot.forEach((docSnap) => {
-          const data = docSnap.data();
-          if (data.ip === userIp) alreadyJoinedByIp = true;
-          if (data.uid === user.uid) alreadyJoinedByUser = true;
-        });
-
-        if (alreadyJoinedByIp) {
-          alert("❌ Bu internet ağından (IP) zaten bir katılım yapılmış! Yan hesap açmak yasak kanka 😄");
-          joinBtn.innerText = "🎉 Çekilişe Katıl";
-          joinBtn.disabled = false;
-          return;
-        }
-
-        if (alreadyJoinedByUser) {
-          alert("❌ Bu hesapla zaten çekilişe katılmışsın!");
-          joinBtn.innerText = "🎉 Çekilişe Katıl";
-          joinBtn.disabled = false;
-          return;
-        }
-
         const username = user.displayName || user.email.split("@")[0];
-        await addDoc(collection(db, "giveaway"), {
+        await addDoc(collection(db, `giveaways_${activeGiveawayIdForTask}_participants`), {
           uid: user.uid,
           username: username,
-          ip: userIp,
           joinedAt: serverTimestamp()
         });
-
         alert("Tebrikler kanka! Çekilişe başarıyla katıldın 🚀");
-        joinBtn.innerText = "Katıldın ✅";
-        loadParticipants();
+      } catch (e) {
+        alert("Zaten katılmışsın veya bir hata oluştu!");
+      }
+    };
 
-      } catch (err) {
-        alert("Bir hata oluştu: " + err.message);
-        joinBtn.innerText = "🎉 Çekilişe Katıl";
-        joinBtn.disabled = false;
+    window.openDetails = async function(giveawayId, title) {
+      document.getElementById("modalGiveawayTitle").innerText = title;
+      const listContainer = document.getElementById("modalParticipantsList");
+      listContainer.innerHTML = "Yükleniyor...";
+
+      document.getElementById("detailModal").style.display = "flex";
+
+      try {
+        const snap = await getDocs(collection(db, `giveaways_${giveawayId}_participants`));
+        listContainer.innerHTML = "";
+        if (snap.empty) {
+          listContainer.innerHTML = "<p style='color:#777; text-align:center;'>Henüz katılan yok.</p>";
+          return;
+        }
+        snap.forEach(d => {
+          const pData = d.data();
+          listContainer.innerHTML += `<div style="padding: 6px 0; border-bottom: 1px solid #222;">👤 ${pData.username}</div>`;
+        });
+      } catch (e) {
+        listContainer.innerHTML = "<p style='color:#ef4444;'>Yüklenirken hata oluştu.</p>";
       }
     };
   </script>
