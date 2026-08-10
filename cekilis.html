@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RUMİ7XL - Çekiliş Ekranı</title>
-  <link rel="stylesheet" href="style.css"> <!-- Kendi stil dosyan varsa -->
+  <link href="favicon.png?v=2" rel="icon" type="image/png"/>
+  <link rel="stylesheet" href="style.css?v=1.2">
   <style>
-    body { background: #0b0b0f; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; }
-    .container { max-width: 600px; margin: 50px auto; background: #121218; border: 1px solid rgba(145,70,255,0.3); border-radius: 20px; padding: 30px; box-shadow: 0 0 30px rgba(145,70,255,0.2); text-align: center; }
+    .container { max-width: 600px; margin: 40px auto; background: #121218; border: 1px solid rgba(145,70,255,0.3); border-radius: 20px; padding: 30px; box-shadow: 0 0 30px rgba(145,70,255,0.2); text-align: center; }
     .btn-join { background: linear-gradient(135deg, #9146ff, #772ce8); color: white; border: none; padding: 14px 30px; font-size: 1.1rem; font-weight: bold; border-radius: 12px; cursor: pointer; transition: 0.3s; box-shadow: 0 0 15px rgba(145,70,255,0.4); }
     .btn-join:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(145,70,255,0.7); }
     .participant-list { margin-top: 20px; text-align: left; background: rgba(255,255,255,0.02); border-radius: 10px; padding: 15px; max-height: 200px; overflow-y: auto; }
@@ -16,8 +16,18 @@
 </head>
 <body>
 
-  <!-- Profil / Giriş Alanı (auth.js burayı otomatik dolduracak) -->
-  <div class="account-box" style="position: absolute; top: 20px; right: 20px;"></div>
+  <nav class="navbar">
+    <a href="index.html" class="logo">RUMİ7XL</a>
+    <div class="nav-links">
+      <a href="index.html">Ana Sayfa</a>
+      <a href="topluluk.html">Topluluk</a>
+      <a href="oneriler.html">Öneriler</a>
+      <a href="icerikler.html">İçerikler</a>
+      <a href="cekilis.html" class="active">🎁 Çekiliş</a>
+      <a href="duyurular.html">Duyurular</a>
+    </div>
+    <div class="account-box"></div>
+  </nav>
 
   <div class="container">
     <h1>🎁 Büyük Çekiliş</h1>
@@ -35,7 +45,59 @@
     </div>
   </div>
 
-  <!-- Firebase ve Çekiliş Mantığı -->
+  <footer>
+    <p>© 2026 RUMİ7XL - Tüm Hakları Saklıdır.</p>
+  </footer>
+
+  <!-- Modal Alanları -->
+  <div id="accountModal" class="account-modal">
+    <div class="account-window">
+      <button class="close-account" onclick="document.getElementById('accountModal').style.display='none'">✕</button>
+      <div class="account-tabs">
+        <button id="loginTabBtn" class="active" onclick="switchTab('login')">Giriş Yap</button>
+        <button id="registerTabBtn" onclick="switchTab('register')">Kayıt Ol</button>
+      </div>
+      <form id="loginForm" class="account-form">
+        <input type="email" name="email" placeholder="E-posta" required>
+        <input type="password" name="password" placeholder="Şifre" required>
+        <button type="submit" class="account-submit">Giriş Yap</button>
+      </form>
+      <form id="registerForm" class="account-form" style="display:none;">
+        <input type="text" name="username" placeholder="Kullanıcı Adı" required>
+        <input type="email" name="register-email" placeholder="E-posta" required>
+        <input type="password" name="new-password" placeholder="Şifre" required>
+        <button type="submit" class="account-submit">Kayıt Ol</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="photoModal" class="account-modal">
+    <div class="account-window">
+      <button class="close-account" onclick="document.getElementById('photoModal').style.display='none'">✕</button>
+      <h2 style="color:#9146ff; margin-bottom:15px; font-size:20px; text-align:center;">Profil Fotoğrafı Değiştir</h2>
+      <form id="photoSettingsForm" class="account-form">
+        <label for="photoFileInput" style="border: 2px dashed #333; padding: 20px; text-align: center; border-radius: 15px; cursor: pointer; display: block; background: #181818;">
+          <span id="uploadLabelText">📁 Galeriden Resim Seç</span>
+          <input type="file" id="photoFileInput" accept="image/*" style="display:none;">
+          <img id="photoPreview" style="display:none; width:80px; height:80px; border-radius:50%; margin: 10px auto 0; object-fit:cover; border:2px solid #9146ff;">
+        </label>
+        <button type="submit" class="account-submit">Yükle ve Kaydet</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="passwordModal" class="account-modal">
+    <div class="account-window">
+      <button class="close-account" onclick="document.getElementById('passwordModal').style.display='none'">✕</button>
+      <h2 style="color:#9146ff; margin-bottom:15px; font-size:20px; text-align:center;">Şifre Değiştir</h2>
+      <form id="passwordSettingsForm" class="account-form">
+        <input type="password" name="changePassword" placeholder="Yeni Şifreniz" required>
+        <button type="submit" class="account-submit">Şifreyi Güncelle</button>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="auth.js?v=1.2"></script>
   <script type="module">
     import { auth, db } from "./auth.js";
     import { collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
@@ -44,7 +106,6 @@
     const participantList = document.getElementById("participantList");
     const participantCount = document.getElementById("participantCount");
 
-    // Katılımcıları Listele
     async function loadParticipants() {
       try {
         const q = query(collection(db, "giveaway"), orderBy("joinedAt", "desc"));
@@ -72,7 +133,6 @@
 
     loadParticipants();
 
-    // Çekilişe Katılma Butonu ve IP Kontrolü
     joinBtn.onclick = async () => {
       const user = auth.currentUser;
       if (!user) {
@@ -84,12 +144,10 @@
       joinBtn.disabled = true;
 
       try {
-        // 1. Ücretsiz API ile kullanıcının IP adresini çekiyoruz
         const ipRes = await fetch("https://api.ipify.org?format=json");
         const ipData = await ipRes.json();
         const userIp = ipData.ip;
 
-        // 2. Bu IP daha önce katılmış mı kontrol et
         const snapshot = await getDocs(collection(db, "giveaway"));
         let alreadyJoinedByIp = false;
         let alreadyJoinedByUser = false;
@@ -114,7 +172,6 @@
           return;
         }
 
-        // 3. Hiçbir engel yoksa veritabanına kaydet
         const username = user.displayName || user.email.split("@")[0];
         await addDoc(collection(db, "giveaway"), {
           uid: user.uid,
