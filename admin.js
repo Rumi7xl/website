@@ -245,20 +245,30 @@ async function loadAdminPanelData() {
   });
 }
 
-// ÇEKİLİŞ YÖNETİMİ
+// ÇEKİLİŞ YÖNETİMİ (GÜNCELLENDİ: Dakika, Saat, Gün Desteği)
 const createGiveawayBtn = document.getElementById("createGiveawayBtn");
 if (createGiveawayBtn) {
   createGiveawayBtn.onclick = async () => {
     const title = document.getElementById("admGiveawayTitle").value.trim();
     const reward = document.getElementById("admGiveawayReward").value.trim();
-    const hours = parseInt(document.getElementById("admGiveawayHours").value);
+    const durationVal = parseFloat(document.getElementById("admGiveawayDuration").value);
+    const unit = document.getElementById("admGiveawayUnit").value;
 
-    if (!title || !reward || isNaN(hours)) {
-      showToast("Lütfen tüm alanları eksiksiz doldur kanka!", "error");
+    if (!title || !reward || isNaN(durationVal) || durationVal <= 0) {
+      showToast("Lütfen tüm alanları eksiksiz ve geçerli doldur kanka!", "error");
       return;
     }
 
-    const endTime = Date.now() + (hours * 60 * 60 * 1000);
+    let durationMs = 0;
+    if (unit === "minutes") {
+      durationMs = durationVal * 60 * 1000;
+    } else if (unit === "hours") {
+      durationMs = durationVal * 60 * 60 * 1000;
+    } else if (unit === "days") {
+      durationMs = durationVal * 24 * 60 * 60 * 1000;
+    }
+
+    const endTime = Date.now() + durationMs;
 
     try {
       await addDoc(collection(db, "giveaways"), {
@@ -271,6 +281,7 @@ if (createGiveawayBtn) {
       showToast("Çekiliş başarıyla başlatıldı! 🎉");
       document.getElementById("admGiveawayTitle").value = "";
       document.getElementById("admGiveawayReward").value = "";
+      document.getElementById("admGiveawayDuration").value = "20";
       loadAdminGiveaways();
     } catch (e) {
       showToast("Çekiliş oluşturulurken hata oluştu!", "error");
