@@ -7,17 +7,21 @@
   <link href="favicon.png?v=2" rel="icon" type="image/png"/>
   <link rel="stylesheet" href="style.css?v=1.2">
   <style>
-    body { background-color: #0c0c10; color: #fff; font-family: sans-serif; margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh; align-items: center; justify-content: center; }
+    body { background-color: #0c0c10; color: #fff; font-family: sans-serif; margin: 0; padding: 20px 0; display: flex; flex-direction: column; min-height: 100vh; align-items: center; justify-content: center; }
     
-    .love-container { width: 90%; max-width: 600px; background: #141418; border: 1px solid rgba(145,70,255,0.4); border-radius: 20px; padding: 30px; box-shadow: 0 0 30px rgba(145,70,255,0.2); text-align: center; margin: 20px 0; }
+    .love-container { width: 90%; max-width: 800px; background: #141418; border: 1px solid rgba(145,70,255,0.4); border-radius: 20px; padding: 30px; box-shadow: 0 0 30px rgba(145,70,255,0.2); text-align: center; margin: 20px 0; }
     
     h1 { color: #c084fc; font-size: 2rem; margin-bottom: 10px; text-shadow: 0 0 15px rgba(192,132,252,0.4); }
     p { color: #aaa; font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px; }
 
-    /* Fotoğraf Alanı */
-    .photo-frame { width: 100%; height: 280px; background: #1c1c24; border-radius: 12px; border: 2px dashed #9146ff; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 20px; position: relative; }
-    .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
-    .photo-placeholder { color: #666; font-size: 0.9rem; }
+    /* Fotoğraf Galerisi Alanı (14 Fotoğraf İçin Uyumlu) */
+    .photo-gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 25px; max-height: 400px; overflow-y: auto; padding-right: 5px; }
+    .photo-gallery::-webkit-scrollbar { width: 6px; }
+    .photo-gallery::-webkit-scrollbar-thumb { background: #9146ff; border-radius: 10px; }
+
+    .photo-item { width: 100%; height: 150px; background: #1c1c24; border-radius: 10px; border: 1px solid rgba(145,70,255,0.3); overflow: hidden; position: relative; transition: transform 0.3s ease; }
+    .photo-item:hover { transform: scale(1.03); border-color: #c084fc; }
+    .photo-item img { width: 100%; height: 100%; object-fit: cover; }
 
     /* Sayaç Kutusu */
     .counter-box { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 25px; }
@@ -38,11 +42,22 @@
     <h1>İyi ki Varsın Sevgilim ❤️</h1>
     <p>Bu sayfa tamamen sana özel, dünyadaki en değerli varlığım için saklandı...</p>
 
-    <!-- FOTOĞRAF ALANI: Buraya birlikte olduğunuz bir fotoğrafın dosya adını yazabilirsin (örn: sevgili.jpg) -->
-    <div class="photo-frame">
-      <!-- Fotoğrafın projede ise alttaki yorum satırını açıp src kısmına adını yazabilirsin -->
-      <!-- <img src="sevgili.jpg" alt="Biz"> -->
-      <span class="photo-placeholder">📸 En güzel anımız buraya gelecek</span>
+    <!-- 14 FOTOĞRAFIN OLDUĞU GALERİ -->
+    <div class="photo-gallery">
+      <div class="photo-item"><img src="fotograflar/1 (1).jpeg" alt="Anı 1"></div>
+      <div class="photo-item"><img src="fotograflar/1 (2).jpeg" alt="Anı 2"></div>
+      <div class="photo-item"><img src="fotograflar/1 (3).jpeg" alt="Anı 3"></div>
+      <div class="photo-item"><img src="fotograflar/1 (4).jpeg" alt="Anı 4"></div>
+      <div class="photo-item"><img src="fotograflar/1 (5).jpeg" alt="Anı 5"></div>
+      <div class="photo-item"><img src="fotograflar/1 (6).jpeg" alt="Anı 6"></div>
+      <div class="photo-item"><img src="fotograflar/1 (7).jpeg" alt="Anı 7"></div>
+      <div class="photo-item"><img src="fotograflar/1 (8).jpeg" alt="Anı 8"></div>
+      <div class="photo-item"><img src="fotograflar/1 (9).jpeg" alt="Anı 9"></div>
+      <div class="photo-item"><img src="fotograflar/1 (10).jpeg" alt="Anı 10"></div>
+      <div class="photo-item"><img src="fotograflar/1 (11).jpeg" alt="Anı 11"></div>
+      <div class="photo-item"><img src="fotograflar/1 (12).jpeg" alt="Anı 12"></div>
+      <div class="photo-item"><img src="fotograflar/1 (13).jpeg" alt="Anı 13"></div>
+      <div class="photo-item"><img src="fotograflar/1 (14).jpeg" alt="Anı 14"></div>
     </div>
 
     <!-- BİRLİKTE GEÇEN SÜRE SAYACI -->
@@ -65,8 +80,8 @@
 
   <script>
     // SEVGİLİNİZLE İLİŞKİYE BAŞLADIĞINIZ TARİHİ BURAYA YAZIN (Yıl, Ay-1, Gün, Saat, Dakika)
-    // Örnek: 2024 yılı 5. ay (Haziran) 14 ü için -> new Date(2024, 5, 14, 0, 0, 0)
-    const startDate = new Date(2025, 9, 14, 0, 0, 0); // Burayı kendi tarihinize göre değiştirebilirsin!
+    // Örnek: Ocak = 0, Şubat = 1, Mart = 2 ...
+    const startDate = new Date(2024, 0, 1, 0, 0, 0); // Kendi tarihinize göre güncelleyebilirsin!
 
     function updateCounter() {
       const now = new Date();
