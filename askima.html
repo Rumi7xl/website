@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sana Özel ❤️</title>
+  <link href="favicon.png?v=2" rel="icon" type="image/png"/>
+  <link rel="stylesheet" href="style.css?v=1.2">
+  <style>
+    body { background-color: #0c0c10; color: #fff; font-family: sans-serif; margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh; align-items: center; justify-content: center; }
+    
+    .love-container { width: 90%; max-width: 600px; background: #141418; border: 1px solid rgba(145,70,255,0.4); border-radius: 20px; padding: 30px; box-shadow: 0 0 30px rgba(145,70,255,0.2); text-align: center; margin: 20px 0; }
+    
+    h1 { color: #c084fc; font-size: 2rem; margin-bottom: 10px; text-shadow: 0 0 15px rgba(192,132,252,0.4); }
+    p { color: #aaa; font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px; }
+
+    /* Fotoğraf Alanı */
+    .photo-frame { width: 100%; height: 280px; background: #1c1c24; border-radius: 12px; border: 2px dashed #9146ff; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 20px; position: relative; }
+    .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+    .photo-placeholder { color: #666; font-size: 0.9rem; }
+
+    /* Sayaç Kutusu */
+    .counter-box { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 25px; }
+    .c-item { background: #0c0c10; padding: 10px; border-radius: 10px; border: 1px solid #222; }
+    .c-num { font-size: 1.2rem; font-weight: bold; color: #c084fc; display: block; }
+    .c-lbl { font-size: 0.7rem; color: #777; }
+
+    /* Notlar / Mesaj Kutusu */
+    .note-box { background: #1c1c24; padding: 15px; border-radius: 10px; border-left: 4px solid #9146ff; text-align: left; font-size: 0.9rem; color: #ddd; margin-bottom: 20px; }
+    
+    .back-btn { background: transparent; color: #888; border: none; font-size: 0.8rem; cursor: pointer; text-decoration: underline; margin-top: 10px; }
+    .back-btn:hover { color: #fff; }
+  </style>
+</head>
+<body>
+
+  <div class="love-container">
+    <h1>İyi ki Varsın Sevgilim ❤️</h1>
+    <p>Bu sayfa tamamen sana özel, dünyadaki en değerli varlığım için saklandı...</p>
+
+    <!-- FOTOĞRAF ALANI: Buraya birlikte olduğunuz bir fotoğrafın dosya adını yazabilirsin (örn: sevgili.jpg) -->
+    <div class="photo-frame">
+      <!-- Fotoğrafın projede ise alttaki yorum satırını açıp src kısmına adını yazabilirsin -->
+      <!-- <img src="sevgili.jpg" alt="Biz"> -->
+      <span class="photo-placeholder">📸 En güzel anımız buraya gelecek</span>
+    </div>
+
+    <!-- BİRLİKTE GEÇEN SÜRE SAYACI -->
+    <h3 style="font-size: 1rem; color: #fff; margin-bottom: 10px;">Birlikte Geçen Zamanımız ✨</h3>
+    <div class="counter-box" id="loveCounter">
+      <div class="c-item"><span class="c-num" id="days">0</span><span class="c-lbl">Gün</span></div>
+      <div class="c-item"><span class="c-num" id="hours">0</span><span class="c-lbl">Saat</span></div>
+      <div class="c-item"><span class="c-num" id="minutes">0</span><span class="c-lbl">Dakika</span></div>
+      <div class="c-item"><span class="c-num" id="seconds">0</span><span class="c-lbl">Saniye</span></div>
+    </div>
+
+    <!-- ÖZEL NOT / MESAJ -->
+    <div class="note-box">
+      <strong>💌 Sana Notum:</strong><br>
+      "Gönlümün sultanı, hayatıma kattığın tüm güzellikler için teşekkür ederim. İyi ki doğdun, iyi ki benimlesin..."
+    </div>
+
+    <button class="back-btn" onclick="window.location.href='index.html'">Ana Sayfaya Dön</button>
+  </div>
+
+  <script>
+    // SEVGİLİNİZLE İLİŞKİYE BAŞLADIĞINIZ TARİHİ BURAYA YAZIN (Yıl, Ay-1, Gün, Saat, Dakika)
+    // Örnek: 2024 yılı 5. ay (Haziran) 14 ü için -> new Date(2024, 5, 14, 0, 0, 0)
+    const startDate = new Date(2024, 0, 1, 0, 0, 0); // Burayı kendi tarihinize göre değiştirebilirsin!
+
+    function updateCounter() {
+      const now = new Date();
+      const diff = now - startDate;
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / 1000 / 60) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      document.getElementById("days").innerText = days;
+      document.getElementById("hours").innerText = hours;
+      document.getElementById("minutes").innerText = minutes;
+      document.getElementById("seconds").innerText = seconds;
+    }
+
+    setInterval(updateCounter, 1000);
+    updateCounter();
+  </script>
+
+</body>
+</html>
