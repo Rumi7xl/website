@@ -3,104 +3,111 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sana Özel ❤️</title>
-  <link href="favicon.png?v=2" rel="icon" type="image/png"/>
-  <link rel="stylesheet" href="style.css?v=1.2">
+  <title>Doğum Günün Kutlu Olsun Aşkım ❤️</title>
   <style>
-    body { background-color: #0c0c10; color: #fff; font-family: sans-serif; margin: 0; padding: 20px 0; display: flex; flex-direction: column; min-height: 100vh; align-items: center; justify-content: center; }
+    body { 
+        background-color: #0c0c10; 
+        color: #fff; 
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        margin: 0; 
+        padding: 60px 20px; 
+        text-align: center; 
+    }
     
-    .love-container { width: 90%; max-width: 800px; background: #141418; border: 1px solid rgba(145,70,255,0.4); border-radius: 20px; padding: 30px; box-shadow: 0 0 30px rgba(145,70,255,0.2); text-align: center; margin: 20px 0; }
+    h1 { 
+        color: #c084fc; 
+        font-size: 3.5rem; 
+        margin-bottom: 20px; 
+        text-shadow: 0 0 20px rgba(192,132,252,0.6); 
+        text-transform: uppercase;
+    }
     
-    h1 { color: #c084fc; font-size: 2rem; margin-bottom: 10px; text-shadow: 0 0 15px rgba(192,132,252,0.4); }
-    p { color: #aaa; font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px; }
+    h2 { 
+        color: #ddd; 
+        font-size: 1.6rem; 
+        margin-bottom: 70px; 
+        font-weight: 400; 
+        max-width: 800px; 
+        margin-left: auto; 
+        margin-right: auto;
+    }
 
-    /* Fotoğraf Galerisi Alanı (14 Fotoğraf İçin Uyumlu) */
-    .photo-gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 25px; max-height: 400px; overflow-y: auto; padding-right: 5px; }
-    .photo-gallery::-webkit-scrollbar { width: 6px; }
-    .photo-gallery::-webkit-scrollbar-thumb { background: #9146ff; border-radius: 10px; }
-
-    .photo-item { width: 100%; height: 150px; background: #1c1c24; border-radius: 10px; border: 1px solid rgba(145,70,255,0.3); overflow: hidden; position: relative; transition: transform 0.3s ease; }
-    .photo-item:hover { transform: scale(1.03); border-color: #c084fc; }
-    .photo-item img { width: 100%; height: 100%; object-fit: cover; }
-
-    /* Sayaç Kutusu */
-    .counter-box { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 25px; }
-    .c-item { background: #0c0c10; padding: 10px; border-radius: 10px; border: 1px solid #222; }
-    .c-num { font-size: 1.2rem; font-weight: bold; color: #c084fc; display: block; }
-    .c-lbl { font-size: 0.7rem; color: #777; }
-
-    /* Notlar / Mesaj Kutusu */
-    .note-box { background: #1c1c24; padding: 15px; border-radius: 10px; border-left: 4px solid #9146ff; text-align: left; font-size: 0.9rem; color: #ddd; margin-bottom: 20px; }
+    /* Fotoğraf Galerisi: Çapraz ve Büyük */
+    .photo-grid { 
+        display: flex; 
+        flex-wrap: wrap; 
+        justify-content: center; 
+        gap: 40px; 
+        max-width: 1100px; 
+        margin: 0 auto; 
+    }
     
-    .back-btn { background: transparent; color: #888; border: none; font-size: 0.8rem; cursor: pointer; text-decoration: underline; margin-top: 10px; }
-    .back-btn:hover { color: #fff; }
+    .photo-item { 
+        width: 320px; 
+        height: 320px; 
+        border: 8px solid #fff; 
+        box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+        transition: transform 0.4s ease, z-index 0.4s ease;
+        overflow: hidden;
+        background: #222;
+    }
+    
+    /* Çapraz efekt */
+    .photo-item:nth-child(odd) { transform: rotate(-6deg); }
+    .photo-item:nth-child(even) { transform: rotate(6deg); }
+    
+    .photo-item:hover { 
+        transform: rotate(0deg) scale(1.1); 
+        z-index: 10; 
+        border-color: #c084fc;
+    }
+    
+    .photo-item img { 
+        width: 100%; 
+        height: 100%; 
+        object-fit: cover; 
+    }
+
+    .back-btn { 
+        margin-top: 80px; 
+        padding: 15px 30px; 
+        background: #9146ff; 
+        color: #fff; 
+        border: none; 
+        border-radius: 50px; 
+        cursor: pointer; 
+        font-size: 1rem;
+        transition: background 0.3s;
+    }
+    
+    .back-btn:hover { background: #772ce8; }
   </style>
 </head>
 <body>
 
-  <div class="love-container">
-    <h1>İyi ki Varsın Sevgilim ❤️</h1>
-    <p>Bu sayfa tamamen sana özel, dünyadaki en değerli varlığım için saklandı...</p>
+  <h1>DOĞUM GÜNÜN KUTLU OLSUN AŞKIM ❤️</h1>
+  <h2>SENİNLE GEÇEN HER ANIM ÇOK GÜZEL İYİKİ VARSIN AŞKIM İYİKİ DOĞMUŞSUN BİR ÖMÜR BOYU BİRLİKTE SEVGİLİM</h2>
 
-    <!-- 14 FOTOĞRAFIN OLDUĞU GALERİ -->
-    <div class="photo-gallery">
-      <div class="photo-item"><img src="fotograflar/1 (1).jpeg" alt="Anı 1"></div>
-      <div class="photo-item"><img src="fotograflar/1 (2).jpeg" alt="Anı 2"></div>
-      <div class="photo-item"><img src="fotograflar/1 (3).jpeg" alt="Anı 3"></div>
-      <div class="photo-item"><img src="fotograflar/1 (4).jpeg" alt="Anı 4"></div>
-      <div class="photo-item"><img src="fotograflar/1 (5).jpeg" alt="Anı 5"></div>
-      <div class="photo-item"><img src="fotograflar/1 (6).jpeg" alt="Anı 6"></div>
-      <div class="photo-item"><img src="fotograflar/1 (7).jpeg" alt="Anı 7"></div>
-      <div class="photo-item"><img src="fotograflar/1 (8).jpeg" alt="Anı 8"></div>
-      <div class="photo-item"><img src="fotograflar/1 (9).jpeg" alt="Anı 9"></div>
-      <div class="photo-item"><img src="fotograflar/1 (10).jpeg" alt="Anı 10"></div>
-      <div class="photo-item"><img src="fotograflar/1 (11).jpeg" alt="Anı 11"></div>
-      <div class="photo-item"><img src="fotograflar/1 (12).jpeg" alt="Anı 12"></div>
-      <div class="photo-item"><img src="fotograflar/1 (13).jpeg" alt="Anı 13"></div>
-      <div class="photo-item"><img src="fotograflar/1 (14).jpeg" alt="Anı 14"></div>
-    </div>
-
-    <!-- BİRLİKTE GEÇEN SÜRE SAYACI -->
-    <h3 style="font-size: 1rem; color: #fff; margin-bottom: 10px;">Birlikte Geçen Zamanımız ✨</h3>
-    <div class="counter-box" id="loveCounter">
-      <div class="c-item"><span class="c-num" id="days">0</span><span class="c-lbl">Gün</span></div>
-      <div class="c-item"><span class="c-num" id="hours">0</span><span class="c-lbl">Saat</span></div>
-      <div class="c-item"><span class="c-num" id="minutes">0</span><span class="c-lbl">Dakika</span></div>
-      <div class="c-item"><span class="c-num" id="seconds">0</span><span class="c-lbl">Saniye</span></div>
-    </div>
-
-    <!-- ÖZEL NOT / MESAJ -->
-    <div class="note-box">
-      <strong>💌 Sana Notum:</strong><br>
-      "Gönlümün sultanı, hayatıma kattığın tüm güzellikler için teşekkür ederim. İyi ki doğdun, iyi ki benimlesin..."
-    </div>
-
-    <button class="back-btn" onclick="window.location.href='index.html'">Ana Sayfaya Dön</button>
+  <div class="photo-grid">
+    <!-- 14 FOTOĞRAF -->
+    <div class="photo-item"><img src="fotograflar/1 (1).jpeg"></div>
+    <div class="photo-item"><img src="fotograflar/1 (2).jpeg"></div>
+    <div class="photo-item"><img src="fotograflar/1 (3).jpeg"></div>
+    <div class="photo-item"><img src="fotograflar/1 (4).jpeg"></div>
+    <div class="photo-item"><img src="fotograflar/1 (5).jpeg"></div>
+    <div class="photo-item"><img src="fotograflar/1 (6).jpeg"></div>
+    <div class="photo-item"><img src="fotograflar/1 (7).jpeg"></div>
+    <div class="photo-item"><img src="fotograflar/1 (8).jpeg"></div>
+    <div class="photo-item"><img src="fotograflar/1 (9).jpeg"></div>
+    <div class="photo-item"><img src="fotograflar/1 (10).jpeg"></div>
+    <div class="photo-item"><img src="fotograflar/1 (11).jpeg"></div>
+    <div class="photo-item"><img src="fotograflar/1 (12).jpeg"></div>
+    <div class="photo-item"><img src="fotograflar/1 (13).jpeg"></div>
+    <div class="photo-item"><img src="fotograflar/1 (14).jpeg"></div>
   </div>
 
-  <script>
-    // SEVGİLİNİZLE İLİŞKİYE BAŞLADIĞINIZ TARİHİ BURAYA YAZIN (Yıl, Ay-1, Gün, Saat, Dakika)
-    // Örnek: Ocak = 0, Şubat = 1, Mart = 2 ...
-    const startDate = new Date(2024, 0, 1, 0, 0, 0); // Kendi tarihinize göre güncelleyebilirsin!
-
-    function updateCounter() {
-      const now = new Date();
-      const diff = now - startDate;
-
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((diff / 1000 / 60) % 60);
-      const seconds = Math.floor((diff / 1000) % 60);
-
-      document.getElementById("days").innerText = days;
-      document.getElementById("hours").innerText = hours;
-      document.getElementById("minutes").innerText = minutes;
-      document.getElementById("seconds").innerText = seconds;
-    }
-
-    setInterval(updateCounter, 1000);
-    updateCounter();
-  </script>
+  <br><br>
+  <button class="back-btn" onclick="window.location.href='index.html'">Ana Sayfaya Dön</button>
 
 </body>
 </html>
