@@ -25,12 +25,18 @@
     h2 { 
         color: #ddd; 
         font-size: 1.6rem; 
-        margin-bottom: 70px; 
+        margin-bottom: 30px; 
         font-weight: 400; 
         max-width: 800px; 
         margin-left: auto; 
         margin-right: auto;
     }
+
+    /* Sayaç Stili */
+    .counter-container { margin-bottom: 50px; display: flex; justify-content: center; gap: 20px; }
+    .c-box { background: #1c1c24; padding: 15px 25px; border-radius: 15px; border: 1px solid #c084fc; }
+    .c-val { font-size: 1.8rem; font-weight: bold; color: #fff; display: block; }
+    .c-lbl { font-size: 0.8rem; color: #c084fc; text-transform: uppercase; }
 
     /* Fotoğraf Galerisi: Çapraz ve Büyük */
     .photo-grid { 
@@ -52,7 +58,6 @@
         background: #222;
     }
     
-    /* Çapraz efekt */
     .photo-item:nth-child(odd) { transform: rotate(-6deg); }
     .photo-item:nth-child(even) { transform: rotate(6deg); }
     
@@ -62,11 +67,7 @@
         border-color: #c084fc;
     }
     
-    .photo-item img { 
-        width: 100%; 
-        height: 100%; 
-        object-fit: cover; 
-    }
+    .photo-item img { width: 100%; height: 100%; object-fit: cover; }
 
     .back-btn { 
         margin-top: 80px; 
@@ -86,10 +87,17 @@
 <body>
 
   <h1>DOĞUM GÜNÜN KUTLU OLSUN AŞKIM ❤️</h1>
-  <h2>SENİNLE GEÇEN HER ANIM ÇOK GÜZEL İYİKİ VARSIN AŞKIM İYİKİ DOĞMUŞSUN BİR ÖMÜR BOYU BİRLİKTE SEVGİLİM</h2>
+  <h2>SENİNLE GEÇEN HER ANIM ÇOK GÜZEL İYİKİ VARSIN AŞKIM İYİKİ DOĞMUŞSUN BİR ÖMÜR BOYU BİRLİKTE SEVGİLİM SENİ ÇOK SEVİYORUM</h2>
+
+  <!-- Sayaç Alanı -->
+  <div class="counter-container">
+    <div class="c-box"><span class="c-val" id="days">0</span><span class="c-lbl">Gün</span></div>
+    <div class="c-box"><span class="c-val" id="hours">0</span><span class="c-lbl">Saat</span></div>
+    <div class="c-box"><span class="c-val" id="minutes">0</span><span class="c-lbl">Dakika</span></div>
+    <div class="c-box"><span class="c-val" id="seconds">0</span><span class="c-lbl">Saniye</span></div>
+  </div>
 
   <div class="photo-grid">
-    <!-- 14 FOTOĞRAF -->
     <div class="photo-item"><img src="fotograflar/1 (1).jpeg"></div>
     <div class="photo-item"><img src="fotograflar/1 (2).jpeg"></div>
     <div class="photo-item"><img src="fotograflar/1 (3).jpeg"></div>
@@ -109,5 +117,27 @@
   <br><br>
   <button class="back-btn" onclick="window.location.href='index.html'">Ana Sayfaya Dön</button>
 
+  <script>
+    // 14 Eylül 2025 tarihi için sayaç
+    const startDate = new Date(2025, 8, 14, 0, 0, 0); 
+
+    function updateCounter() {
+      const now = new Date();
+      const diff = now - startDate;
+      if (diff < 0) return;
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / 1000 / 60) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      document.getElementById("days").innerText = days;
+      document.getElementById("hours").innerText = hours;
+      document.getElementById("minutes").innerText = minutes;
+      document.getElementById("seconds").innerText = seconds;
+    }
+    setInterval(updateCounter, 1000);
+    updateCounter();
+  </script>
 </body>
 </html>
